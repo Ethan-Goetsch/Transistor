@@ -6,8 +6,7 @@ public class Program
 {
     public static void main(String[] args)
     {
-        System.out.println("test");
-        LocationResolver.lrtest();
-        UI.uitest();
+        System.out.println("Program entry");
+        LocationResolver.debug();
     }
 }
