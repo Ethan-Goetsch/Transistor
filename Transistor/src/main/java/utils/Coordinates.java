@@ -2,10 +2,9 @@ package utils;
 
 public class Coordinates
 {
-    private double longtitude;
     private double latitude;
-
-    public Coordinates(double longtitude, double latitude)
+    private double longtitude;
+    public Coordinates(double latitude, double longtitude)
     {
         this.longtitude = longtitude;
         this.latitude = latitude;
