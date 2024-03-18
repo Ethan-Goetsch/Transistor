@@ -9,7 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import resolvers.Exceptions.CallNotPossibleException;
 import utils.Coordinates;
 
 public class APICaller
@@ -19,12 +19,15 @@ public class APICaller
 
     public static void main(String[] args)
     {
-        Coordinates cr = APICaller.call("6227BP");
-        System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
+//        Coordinates cr = APICaller.call("6227BP");
+//        System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
     }
 
-    public static Coordinates call(String postcode)
+    public static Coordinates call(String postcode)throws CallNotPossibleException
     {
+        if(!CallRateAdmin.authouriseRequst()){
+            throw new CallNotPossibleException("Call is not possible for postcode: " + postcode + ". Too many requests!");
+        }
         String response = "";
         try
         {
