@@ -1,7 +1,11 @@
 package resolvers;
+
 import java.util.List;
-public class CallRateAdmin {
-    public static boolean authouriseRequst(){
+
+public class CallRateAdmin
+{
+    public static boolean authouriseRequst()
+    {
         // TokenBucket tokenBucket = new TokenBucket(1, 1, 5*1000);
         // TokenBucket tokenBucket1 = new TokenBucket(5, 5, 60*1000);
         // TokenBucket tokenBucket2 = new TokenBucket(40, 40, 60*60*1000);
@@ -15,9 +19,11 @@ public class CallRateAdmin {
 
         List<TokenBucket> tokenBuckets = TokenBucket.deserializeTokenBucket("TokenBuckets.txt");
         boolean canRequest = true;
-        for(TokenBucket tokenBucket: tokenBuckets){
+        for (TokenBucket tokenBucket : tokenBuckets)
+        {
             canRequest = tokenBucket.tryConsume();
-            if(!canRequest){
+            if (!canRequest)
+            {
                 break;
             }
         }

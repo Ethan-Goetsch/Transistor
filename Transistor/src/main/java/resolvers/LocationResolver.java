@@ -62,6 +62,37 @@ public class LocationResolver
         System.out.println("Loaded " + postCodes.size() + " post codes");
     }
 
+    public Coordinates getCordsFromPostCode(String postName)
+    {
+        Coordinates cords = getCordsFromFile(postName);
+
+        if (cords == null)
+        {
+            try
+            {
+                cords = APICaller.call(postName);
+            }
+            catch (Exception e)
+            {
+                System.out.println("API call failed with message: " + e.getMessage());
+            }
+        }
+
+        return cords;
+    }
+
+    private Coordinates getCordsFromFile(String postName)
+    {
+        for (PostCode postCode : postCodes)
+        {
+            if (postCode.getName().equalsIgnoreCase(postName))
+            {
+                return postCode.getCords();
+            }
+        }
+        return null;
+    }
+
     // https://stackoverflow.com/questions/37811334/how-to-read-excel-xlsx-file-in-java
     private void loadData()
     {
@@ -127,31 +158,10 @@ public class LocationResolver
         }
         catch (Exception e)
         {
-            System.out.println("fe: " + e.getMessage());
+            System.out.println("Loading data from spreadsheet failed with message: " + e.getMessage());
             return;
         }
     }
-
-    public Coordinates getCordsFromFile(String postName)
-    {
-        for (PostCode postCode : postCodes)
-        {
-            if (postCode.getName().equalsIgnoreCase(postName))
-            {
-                return postCode.getCords();
-            }
-        }
-        return null;
-    }
-
-    public void printCodes()
-    {
-        for (PostCode postCode : postCodes)
-        {
-            System.out.println(postCode.getName() + " " + postCode.getCords().getLatitude() + " " + postCode.getCords().getLongitude());
-        }
-    }
-
     public static void debug()
     {
         //6211AL	50.85523285	5.692237193
@@ -160,8 +170,8 @@ public class LocationResolver
 
         System.out.println("ltest");
         LocationResolver locationResolver = new LocationResolver("Transistor\\MassZipLatLon.xlsx");
-        System.out.println(locationResolver.getCordsFromFile("6211AL").getLatitude() + " " + locationResolver.getCordsFromFile("6211AL").getLongitude());
-        System.out.println(locationResolver.getCordsFromFile("6212EA").getLatitude() + " " + locationResolver.getCordsFromFile("6212EA").getLongitude());
-        System.out.println(locationResolver.getCordsFromFile("6229ze").getLatitude() + " " + locationResolver.getCordsFromFile("6229ze").getLongitude());
+        System.out.println(locationResolver.getCordsFromPostCode("6211AL").getLatitude() + " " + locationResolver.getCordsFromPostCode("6211AL").getLongitude());
+        System.out.println(locationResolver.getCordsFromPostCode("6212EA").getLatitude() + " " + locationResolver.getCordsFromPostCode("6212EA").getLongitude());
+        System.out.println(locationResolver.getCordsFromPostCode("6229ze").getLatitude() + " " + locationResolver.getCordsFromPostCode("6229ze").getLongitude());
     }
 }

@@ -19,13 +19,14 @@ public class APICaller
 
     public static void main(String[] args)
     {
-//        Coordinates cr = APICaller.call("6227BP");
-//        System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
+        // Coordinates cr = APICaller.call("6227BP");
+        // System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
     }
 
-    public static Coordinates call(String postcode)throws CallNotPossibleException
+    public static Coordinates call(String postcode) throws CallNotPossibleException
     {
-        if(!CallRateAdmin.authouriseRequst()){
+        if (!CallRateAdmin.authouriseRequst())
+        {
             throw new CallNotPossibleException("Call is not possible for postcode: " + postcode + ". Too many requests!");
         }
         String response = "";
