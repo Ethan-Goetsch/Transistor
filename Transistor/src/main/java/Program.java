@@ -8,5 +8,6 @@ public class Program
     {
         System.out.println("Program entry");
         LocationResolver.debug();
+        UI.uitest();
     }
 }
