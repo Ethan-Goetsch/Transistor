@@ -35,7 +35,6 @@ public class API_Caller
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
-            connection.setDoInput(true);
 
             String jsonData = getJsonData(postcode);
 
