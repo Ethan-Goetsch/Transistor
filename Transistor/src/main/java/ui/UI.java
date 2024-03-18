@@ -14,9 +14,9 @@ public class UI {
         JFrame mainFrame = new JFrame("Aerial Distance Calculator");
 
         mainFrame.setSize(1400, 700);
+        int mainWidth = mainFrame.getWidth();
+        int mainHeight = mainFrame.getHeight();
         mainFrame.setLayout(new BorderLayout());
-        final int mainWidth = mainFrame.getWidth();
-        final int mainHeight = mainFrame.getHeight();
 
         MapPanel mapPanel = new MapPanel(mainWidth, mainHeight);
         mainFrame.add(mapPanel, BorderLayout.WEST);
