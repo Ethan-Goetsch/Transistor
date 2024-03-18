@@ -5,12 +5,17 @@ import javax.swing.border.Border;
 
 import java.awt.*;
 
-public class UI {
-    public static void uitest() {
+// Probably change this to a UIManager that will create a frame and handle access to that frame
+// Such as handling the request to display a route
+public class UI
+{
+    public static void uitest()
+    {
         Window();
     }
 
-    public static void Window() {
+    public static void Window()
+    {
         JFrame mainFrame = new JFrame("Aerial Distance Calculator");
 
         mainFrame.setSize(1400, 700);

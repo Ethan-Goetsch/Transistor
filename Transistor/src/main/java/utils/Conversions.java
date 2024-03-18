@@ -1,7 +1,7 @@
-package calculators;
+package utils;
 
-public class Conversions {
-
+public class Conversions
+{
     public static double KPHtoMPS(double speedInKPHFromMPS){
         return speedInKPHFromMPS/3.6;
     }
@@ -10,10 +10,8 @@ public class Conversions {
         return speedInMPSFromKPH*3.6;
     }
 
-//    public static double SecondsToMinutesAndSeconds(double time){
+//    public static double SecondsToMinutesAndSeconds(double time)
+//    {
 //        return String (time/60) + " minutes and "+ (time%60) + " seconds";
 //    }
-
-
-
 }
