@@ -13,22 +13,18 @@ public class UI {
     public static void Window() {
         JFrame mainFrame = new JFrame("Aerial Distance Calculator");
 
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        int mainWidth = ((int) tk.getScreenSize().getWidth()); // Set size of the mainFrame to the screen size
-        int mainHeight = ((int) tk.getScreenSize().getHeight());
-        mainFrame.setSize(mainWidth, mainHeight);
+        mainFrame.setSize(1400, 700);
+        mainFrame.setLayout(new BorderLayout());
+        final int mainWidth = mainFrame.getWidth();
+        final int mainHeight = mainFrame.getHeight();
 
-        JPanel mapPanel = new JPanel();
+        MapPanel mapPanel = new MapPanel(mainWidth, mainHeight);
         mainFrame.add(mapPanel, BorderLayout.WEST);
-        mapPanel.setBackground(Color.BLUE);
-        mapPanel.setPreferredSize(new Dimension(mainWidth / 2, mainHeight));
 
-        JTextField test = new JTextField("Hello");
-
-        mapPanel.add(test);
+        SettingsPanel settingsPanel = new SettingsPanel(mainWidth, mainHeight);
+        mainFrame.add(settingsPanel, BorderLayout.EAST);
 
         mainFrame.setVisible(true);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
 }
