@@ -82,6 +82,7 @@ public class LocationResolver
             rowCount = sheet.getPhysicalNumberOfRows();
             System.out.println("row count: " + rowCount);
 
+            DataFormatter df = new DataFormatter();
             // i = 1 since we skip the first row
             int i = 1;
             Iterator<Row> rowIterator = sheet.iterator();
@@ -102,17 +103,14 @@ public class LocationResolver
                     Cell cell = cellIterator.next();
                     if (cell.getColumnIndex() == 0)
                     {
-                        DataFormatter df = new DataFormatter();
                         postName = df.formatCellValue(cell);
                     }
                     if (cell.getColumnIndex() == 1)
                     {
-                        DataFormatter df = new DataFormatter();
                         postLatitudeStr = df.formatCellValue(cell);
                     }
                     if (cell.getColumnIndex() == 2)
                     {
-                        DataFormatter df = new DataFormatter();
                         postLongtitudeStr = df.formatCellValue(cell);
                     }
                 }
