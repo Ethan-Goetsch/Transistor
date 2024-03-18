@@ -8,7 +8,6 @@ public class Program
     {
         System.out.println("test");
         LocationResolver.lrtest();
-        RouteCalculator.rctest();
         UI.uitest();
     }
 }
