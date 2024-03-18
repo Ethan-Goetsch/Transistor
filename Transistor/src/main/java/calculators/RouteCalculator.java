@@ -28,7 +28,7 @@ public class RouteCalculator
         double distanceAerial = Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1))*radiusEarthInM;
         return  distanceAerial;
     }
-    
+
     public double KilometerTimeTaken(double distance)
     {
         double kiloPerHour=(distance/1000)/5;

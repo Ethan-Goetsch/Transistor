@@ -59,9 +59,9 @@ public class APICaller
         }
         System.out.println(response);
         return generateCoordinates(response);
-
     }
 
+    // Probably rename to toCoordinates
     private static Coordinates generateCoordinates(String response)
     {
         double latitude = 0.0;
@@ -85,6 +85,7 @@ public class APICaller
         return new Coordinates(latitude, longitude);
     }
 
+    // Probably rename to toJsonData
     private static String getJsonData(String postcode)
     {
         return "{ \"postcode\": \"" + postcode + "\" }";

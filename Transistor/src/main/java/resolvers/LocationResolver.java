@@ -2,18 +2,11 @@ package resolvers;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -157,7 +150,7 @@ public class LocationResolver
     {
         for (PostCode postCode : postCodes)
         {
-            System.out.println(postCode.getName() + " " + postCode.getCords().getLatitude() + " " + postCode.getCords().getLongtitude());
+            System.out.println(postCode.getName() + " " + postCode.getCords().getLatitude() + " " + postCode.getCords().getLongitude());
         }
     }
 
@@ -169,10 +162,8 @@ public class LocationResolver
 
         System.out.println("ltest");
         LocationResolver locationResolver = new LocationResolver("Transistor\\MassZipLatLon.xlsx");
-        System.out.println(locationResolver.getCordsFromFile("6211AL").getLatitude() + " " + locationResolver.getCordsFromFile("6211AL").getLongtitude());
-        System.out.println(locationResolver.getCordsFromFile("6212EA").getLatitude() + " " + locationResolver.getCordsFromFile("6212EA").getLongtitude());
-        System.out.println(locationResolver.getCordsFromFile("6229ze").getLatitude() + " " + locationResolver.getCordsFromFile("6229ze").getLongtitude());
-        
+        System.out.println(locationResolver.getCordsFromFile("6211AL").getLatitude() + " " + locationResolver.getCordsFromFile("6211AL").getLongitude());
+        System.out.println(locationResolver.getCordsFromFile("6212EA").getLatitude() + " " + locationResolver.getCordsFromFile("6212EA").getLongitude());
+        System.out.println(locationResolver.getCordsFromFile("6229ze").getLatitude() + " " + locationResolver.getCordsFromFile("6229ze").getLongitude());
     }
-
 }
