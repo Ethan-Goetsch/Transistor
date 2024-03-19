@@ -47,7 +47,6 @@ public class TokenBucket implements Serializable
         {
             return;
         }
-        System.out.println("refilling");
         this.lastRefillTime = System.currentTimeMillis();
         this.nextRefillTime = this.lastRefillTime + this.windowSizeForRateLimitInMilliseconds;
         this.availableTokens = Math.min(this.maxBucketSize, this.availableTokens + this.numberOfRequests);
@@ -66,7 +65,7 @@ public class TokenBucket implements Serializable
             }
             out.close();
             fileOut.close();
-            System.out.println("Serialized data is saved in " + filename);
+//            System.out.println("Serialized data is saved in " + filename);
         }
         catch (IOException i)
         {
