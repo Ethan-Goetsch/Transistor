@@ -23,11 +23,15 @@ public class UIController
     {
 
         var route = manager.calculateRouteRequest(request);
-        if (route.responseMessage().isEmpty())
+        if (!route.responseMessage().isEmpty())
         {
-
+            System.out.println(route.responseMessage().length() + "  lenlen");
             JOptionPane.showMessageDialog(new JFrame(), route.responseMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
             return;
+        }
+        else
+        {
+            System.out.println(route.distance());
         }
     }
 }
