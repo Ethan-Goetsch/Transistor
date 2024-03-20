@@ -39,7 +39,6 @@ public class MainWindow extends JFrame {
 
     public void configureWindow() {
         this.setSize(mainWidth, mainHeight);
-        // this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setLayout(layout);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
