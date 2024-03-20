@@ -70,7 +70,7 @@ public class LocationResolver
         {
             try
             {
-                cords = APICaller.call(postName);
+                cords = APICaller.getCoordinates(postName);
             }
             catch (Exception e)
             {
