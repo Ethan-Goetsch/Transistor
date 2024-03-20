@@ -48,8 +48,8 @@ public class PathCalculator
         var response = graphHopper.route(request);
         var path = response.getBest();
 
-        var distance = path.getDistance();
-        var time = path.getTime();
+        var distance = path.getDistance() / 1000; // TEMPORARY
+        var time = (distance * 1000) / calculationRequest.transportType().getSpeedInMetersPerSecond(); // TEMPORARY
 
         return new RouteCalculationResult(distance, time);
     }
