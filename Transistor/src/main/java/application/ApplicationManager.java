@@ -7,8 +7,6 @@ import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
 import utils.Coordinates;
 
-import javax.swing.*;
-
 public class ApplicationManager
 {
     private final LocationResolver locationResolver;
@@ -32,7 +30,7 @@ public class ApplicationManager
         {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.destination());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
-            distance = routeCalculator.Distance2P(departureCoordinates.getLatitude(), departureCoordinates.getLongitude(), arrivalCoordinates.getLatitude(), arrivalCoordinates.getLongitude());
+            distance = routeCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
             time = routeCalculator.calculateTime(request.transportType(), distance);
         }
         catch (CallNotPossibleException e)
@@ -40,6 +38,6 @@ public class ApplicationManager
             message = e.getMessage();
         }
 
-        return new Route(departureCoordinates, arrivalCoordinates, distance, time, message);
+        return new Route(departureCoordinates, arrivalCoordinates, distance, time, request.transportType(), message);
     }
 }
