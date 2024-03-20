@@ -1,13 +1,15 @@
-import resolvers.APICaller;
+import application.ApplicationManager;
+import calculators.RouteCalculator;
 import resolvers.LocationResolver;
-import resolvers.Exceptions.CallNotPossibleException;
-import ui.UI;
-import utils.Coordinates;
+import ui.UIController;
 
 public class Program
 {
     public static void main(String[] args)
     {
-        UI.initializeUI();
+        LocationResolver locationResolver = new LocationResolver("Transistor/src/main/resources/MassZipLatLon.xlsx");
+        RouteCalculator routeCalculator = new RouteCalculator();
+        ApplicationManager manager = new ApplicationManager(locationResolver, routeCalculator);
+        UIController controller = new UIController(manager);
     }
 }

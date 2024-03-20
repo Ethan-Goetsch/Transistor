@@ -1,25 +1,26 @@
 package ui;
 
-import java.awt.*;
+import entities.RouteRequest;
+import entities.TransportType;
+import utils.IAction;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
-public class SettingsPanel extends JPanel {
-    InputPanelFactory inputPanelFactory;
+public class SettingsPanel extends JPanel
+{
+    private InputPanelFactory inputPanelFactory;
+    private final IAction<RouteRequest> onCalculateClicked;
 
-    public SettingsPanel() {
-
-    }
-
-    public SettingsPanel(int mainWidth, int mainHeight) {
+    public SettingsPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked) {
         this.setLayout(new GridLayout(3, 1));
         this.setPreferredSize(new Dimension(mainWidth / 3, mainHeight));
         this.setBorder(new EmptyBorder(25, 0, 0, 20)); // top, left, bottom, right padding
 
         JPanel calculatePanel = createPanel();
         this.add(calculatePanel);
-
+        this.onCalculateClicked = onCalculateCLicked;
     }
 
     public JPanel createPanel() {
@@ -40,6 +41,8 @@ public class SettingsPanel extends JPanel {
 
         JButton calculateButton = new JButton("Calculate");
         calculatePanel.add(calculateButton);
+
+        calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest("", "", TransportType.WALKING)));
 
         JLabel resultPanel = new JLabel("This is where the result is: ");
         calculatePanel.add(resultPanel);

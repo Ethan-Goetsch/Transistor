@@ -12,45 +12,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import utils.Coordinates;
+import utils.PostCode;
 
 public class LocationResolver
 {
     // "Transistor\\MassZipLatLon.xlsx"
     private String spreadsheetPath;
     private ArrayList<PostCode> postCodes;
-
-    private class PostCode
-    {
-        String name;
-        Coordinates cords;
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public void setName(String name)
-        {
-            this.name = name;
-        }
-
-        public Coordinates getCords()
-        {
-            return cords;
-        }
-
-        public void setCords(Coordinates cords)
-        {
-            this.cords = cords;
-        }
-
-        public PostCode(String name, Coordinates cords)
-        {
-            this.name = name;
-            this.cords = cords;
-        }
-
-    }
 
     public LocationResolver(String spreadsheetPath)
     {

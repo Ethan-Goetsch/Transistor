@@ -22,11 +22,6 @@ public class PlottingPanel extends JPanel {
         setVisible(true);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setOpaque(false);
-        System.out.println(this.isVisible());
-        System.out.println("Testing plotting Wyck 6221AC to 6224XM");
-
-
-
     }
 
     @Override
@@ -52,9 +47,6 @@ public class PlottingPanel extends JPanel {
         int x2 = latLonPixelConverter.convertLongitudeToPixel(arrivalLong, PANEL_WIDTH);
         int y2 = latLonPixelConverter.convertLatitudeToPixel(arrivalLat, PANEL_HEIGHT);
         g.drawImage(Icon.getImage(), x2 - 20, y2 - 35, null); // Draw arrival image
-
-
-        System.out.println("X: " + x1 + ", Y: " + y1); // Print to the console
 
         g.setColor(Color.RED);
         g.fillOval(x1 - 5, y1 - 5, 10, 10); // Circle size of 10
