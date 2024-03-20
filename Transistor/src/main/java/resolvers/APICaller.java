@@ -9,22 +9,42 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import resolvers.Exceptions.CallNotPossibleException;
 import utils.Coordinates;
 
-public class API_Caller
+public class APICaller
 {
     private static final String API_URL = "https://computerscience.dacs.unimaas.nl/get_coordinates";
     // TODO restrict api calls
 
     public static void main(String[] args)
     {
-        Coordinates cr = API_Caller.call("6227BP");
-        System.out.println(cr.getLatitude() + "/" + cr.getLongtitude());
+        try{
+            Coordinates cr = APICaller.call("6227BP");
+            System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
+        }catch(CallNotPossibleException c){
+            c.printStackTrace();
+        }
+        try{
+            Thread.sleep(10000);
+        }catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
+        try{
+            Coordinates cr = APICaller.call("6225AP");
+            System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
+        }catch(CallNotPossibleException c){
+            c.printStackTrace();
+        }
+
     }
 
-    public static Coordinates call(String postcode)
+    public static Coordinates call(String postcode) throws CallNotPossibleException
     {
+        if (!CallRateAdmin.authouriseRequst())
+        {
+            throw new CallNotPossibleException("Call is not possible for postcode: " + postcode + ". Too many requests!");
+        }
         String response = "";
         try
         {
@@ -59,9 +79,9 @@ public class API_Caller
         }
         System.out.println(response);
         return generateCoordinates(response);
-
     }
 
+    // Probably rename to toCoordinates
     private static Coordinates generateCoordinates(String response)
     {
         double latitude = 0.0;
@@ -85,6 +105,7 @@ public class API_Caller
         return new Coordinates(latitude, longitude);
     }
 
+    // Probably rename to toJsonData
     private static String getJsonData(String postcode)
     {
         return "{ \"postcode\": \"" + postcode + "\" }";

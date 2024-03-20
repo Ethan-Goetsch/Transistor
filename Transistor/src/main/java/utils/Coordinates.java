@@ -3,21 +3,22 @@ package utils;
 public class Coordinates
 {
     private double latitude;
-    private double longtitude;
+    private double longitude;
+    
     public Coordinates(double latitude, double longtitude)
     {
-        this.longtitude = longtitude;
+        this.longitude = longtitude;
         this.latitude = latitude;
     }
 
-    public double getLongtitude()
+    public double getLongitude()
     {
-        return longtitude;
+        return longitude;
     }
 
-    public void setLongtitude(double longtitude)
+    public void setLongitude(double longitude)
     {
-        this.longtitude = longtitude;
+        this.longitude = longitude;
     }
 
     public double getLatitude()

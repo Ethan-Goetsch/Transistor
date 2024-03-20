@@ -2,18 +2,11 @@ package resolvers;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -69,6 +62,37 @@ public class LocationResolver
         System.out.println("Loaded " + postCodes.size() + " post codes");
     }
 
+    public Coordinates getCordsFromPostCode(String postName)
+    {
+        Coordinates cords = getCordsFromFile(postName);
+
+        if (cords == null)
+        {
+            try
+            {
+                cords = APICaller.call(postName);
+            }
+            catch (Exception e)
+            {
+                System.out.println("API call failed with message: " + e.getMessage());
+            }
+        }
+
+        return cords;
+    }
+
+    private Coordinates getCordsFromFile(String postName)
+    {
+        for (PostCode postCode : postCodes)
+        {
+            if (postCode.getName().equalsIgnoreCase(postName))
+            {
+                return postCode.getCords();
+            }
+        }
+        return null;
+    }
+
     // https://stackoverflow.com/questions/37811334/how-to-read-excel-xlsx-file-in-java
     private void loadData()
     {
@@ -82,6 +106,7 @@ public class LocationResolver
             rowCount = sheet.getPhysicalNumberOfRows();
             System.out.println("row count: " + rowCount);
 
+            DataFormatter df = new DataFormatter();
             // i = 1 since we skip the first row
             int i = 1;
             Iterator<Row> rowIterator = sheet.iterator();
@@ -102,17 +127,14 @@ public class LocationResolver
                     Cell cell = cellIterator.next();
                     if (cell.getColumnIndex() == 0)
                     {
-                        DataFormatter df = new DataFormatter();
                         postName = df.formatCellValue(cell);
                     }
                     if (cell.getColumnIndex() == 1)
                     {
-                        DataFormatter df = new DataFormatter();
                         postLatitudeStr = df.formatCellValue(cell);
                     }
                     if (cell.getColumnIndex() == 2)
                     {
-                        DataFormatter df = new DataFormatter();
                         postLongtitudeStr = df.formatCellValue(cell);
                     }
                 }
@@ -136,31 +158,10 @@ public class LocationResolver
         }
         catch (Exception e)
         {
-            System.out.println("fe: " + e.getMessage());
+            System.out.println("Loading data from spreadsheet failed with message: " + e.getMessage());
             return;
         }
     }
-
-    public Coordinates getCordsFromFile(String postName)
-    {
-        for (PostCode postCode : postCodes)
-        {
-            if (postCode.getName().equalsIgnoreCase(postName))
-            {
-                return postCode.getCords();
-            }
-        }
-        return null;
-    }
-
-    public void printCodes()
-    {
-        for (PostCode postCode : postCodes)
-        {
-            System.out.println(postCode.getName() + " " + postCode.getCords().getLatitude() + " " + postCode.getCords().getLongtitude());
-        }
-    }
-
     public static void debug()
     {
         //6211AL	50.85523285	5.692237193
@@ -169,10 +170,8 @@ public class LocationResolver
 
         System.out.println("ltest");
         LocationResolver locationResolver = new LocationResolver("Transistor\\MassZipLatLon.xlsx");
-        System.out.println(locationResolver.getCordsFromFile("6211AL").getLatitude() + " " + locationResolver.getCordsFromFile("6211AL").getLongtitude());
-        System.out.println(locationResolver.getCordsFromFile("6212EA").getLatitude() + " " + locationResolver.getCordsFromFile("6212EA").getLongtitude());
-        System.out.println(locationResolver.getCordsFromFile("6229ze").getLatitude() + " " + locationResolver.getCordsFromFile("6229ze").getLongtitude());
-        
+        System.out.println(locationResolver.getCordsFromPostCode("6211AL").getLatitude() + " " + locationResolver.getCordsFromPostCode("6211AL").getLongitude());
+        System.out.println(locationResolver.getCordsFromPostCode("6212EA").getLatitude() + " " + locationResolver.getCordsFromPostCode("6212EA").getLongitude());
+        System.out.println(locationResolver.getCordsFromPostCode("6229ze").getLatitude() + " " + locationResolver.getCordsFromPostCode("6229ze").getLongitude());
     }
-
 }
