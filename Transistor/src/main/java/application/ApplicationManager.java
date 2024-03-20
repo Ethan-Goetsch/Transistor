@@ -7,8 +7,6 @@ import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
 import utils.Coordinates;
 
-import javax.swing.*;
-
 public class ApplicationManager
 {
     private final LocationResolver locationResolver;

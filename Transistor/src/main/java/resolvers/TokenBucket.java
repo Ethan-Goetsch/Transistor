@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,12 +50,29 @@ public class TokenBucket implements Serializable
         this.availableTokens = Math.min(this.maxBucketSize, this.availableTokens + this.numberOfRequests);
     }
 
+    private static void emptyFile(String filename){
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(filename);
+
+            FileChannel fileChannel = fileOutputStream.getChannel();
+
+            fileChannel.truncate(0);
+
+            fileChannel.close();
+            fileOutputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Method to serialize a TokenBucket object
     public static void serializeTokenBuckets(List<TokenBucket> tokenBuckets, String filename)
     {
         try
         {
-            FileOutputStream fileOut = new FileOutputStream(filename, false);
+            emptyFile(filename);
+            FileOutputStream fileOut = new FileOutputStream(filename, true);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             for (TokenBucket tokenBucket : tokenBuckets)
             {
