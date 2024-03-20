@@ -5,7 +5,7 @@ import entities.Route;
 import entities.RouteRequest;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
-import utils.Coordinates;
+import entities.Coordinates;
 
 public class ApplicationManager
 {

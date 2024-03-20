@@ -12,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import resolvers.Exceptions.CallNotPossibleException;
-import utils.Coordinates;
+import entities.Coordinates;
 import utils.PostCode;
 
 public class LocationResolver

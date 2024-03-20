@@ -10,9 +10,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import resolvers.Exceptions.CallNotPossibleException;
-import utils.Coordinates;
-
-import javax.swing.*;
+import entities.Coordinates;
 
 public class APICaller
 {
