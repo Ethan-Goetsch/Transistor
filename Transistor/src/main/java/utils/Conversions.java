@@ -1,23 +1,16 @@
 package utils;
 
-public class Conversions {
-
-    public static double KPHtoMPS(double speedInKPHFromMPS){
-        return speedInKPHFromMPS/3.6;
+public class Conversions{
+    public static String timeDivision(double time){
+        int hours = (int)(time/60)/60;
+        int minutes= (int) (time/60);
+        int seconds= (int) (time%60);
+           return hours + " hours " + minutes + " minutes and "+ seconds;
     }
-
-    public static double MPStoKPH(double speedInMPSFromKPH){
-        return speedInMPSFromKPH*3.6;
+    public static String toKm(double distance){
+        double km=distance/1000;
+        return km + " km";
     }
-
-    public static double MetersToKilometers(double metersToKilometers){ return metersToKilometers/1000; }
-
-    public static double KilometersToMeters(double kilometersToMeters){ return kilometersToMeters*1000; }
-
-//    public static double SecondsToMinutesAndSeconds(double time){
-//        return String (time/60) + " minutes and "+ (time%60) + " seconds";
-//    }
-
-
 
 }
+
