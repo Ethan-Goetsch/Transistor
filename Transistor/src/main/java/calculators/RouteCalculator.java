@@ -2,7 +2,7 @@ package calculators;
 
 import entities.TransportType;
 import utils.Conversions;
-import utils.Coordinates;
+import entities.Coordinates;
 
 public class RouteCalculator extends Conversions
 {

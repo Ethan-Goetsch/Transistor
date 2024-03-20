@@ -1,6 +1,6 @@
 package ui;
 
-import utils.Coordinates;
+import entities.Coordinates;
 
 import javax.swing.*;
 import java.awt.*;

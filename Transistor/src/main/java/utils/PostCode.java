@@ -1,6 +1,6 @@
 package utils;
 
-import utils.Coordinates;
+import entities.Coordinates;
 
 public class PostCode
 {
