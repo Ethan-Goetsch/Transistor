@@ -33,6 +33,7 @@ public class SettingsPanel extends JPanel {
         JPanel arrivalInput = inputPanelFactory.createInputPanel("Arrival Postal Code");
         calculatePanel.add(arrivalInput);
 
+        // Change to enums for later
         String[] options = { "Walking 🚶", "Biking 🚴" };
         JComboBox<String> comboBox = new JComboBox<>(options);
         calculatePanel.add(comboBox);

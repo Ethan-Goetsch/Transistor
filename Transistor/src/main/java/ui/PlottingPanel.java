@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PlottingPanel extends JPanel {
+
+    // Change to UI Controller to set the plotting pannels
     double departureLong = 5.69962724999999;
     double departureLat = 50.8504953534482;
 

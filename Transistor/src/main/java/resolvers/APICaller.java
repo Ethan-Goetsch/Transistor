@@ -15,8 +15,7 @@ import utils.Coordinates;
 public class APICaller
 {
     private static final String API_URL = "https://computerscience.dacs.unimaas.nl/get_coordinates";
-    // TODO restrict api calls
-
+    /*
     public static void main(String[] args)
     {
         try{
@@ -37,12 +36,13 @@ public class APICaller
             c.printStackTrace();
         }
 
-    }
+    }*/
 
     public static Coordinates call(String postcode) throws CallNotPossibleException
     {
         if (!CallRateAdmin.authouriseRequst())
         {
+            // What do we want to do with rejected calls?
             throw new CallNotPossibleException("Call is not possible for postcode: " + postcode + ". Too many requests!");
         }
         String response = "";
@@ -82,6 +82,7 @@ public class APICaller
     }
 
     // Probably rename to toCoordinates
+    // Do we want a Json library for this or is too much?
     private static Coordinates generateCoordinates(String response)
     {
         double latitude = 0.0;
