@@ -19,7 +19,7 @@ public class APICaller
     public static void main(String[] args)
     {
         try{
-            Coordinates cr = APICaller.call("6227BP");
+            Coordinates cr = APICaller.getCoordinates("6227BP");
             System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
         }catch(CallNotPossibleException c){
             c.printStackTrace();
@@ -30,7 +30,7 @@ public class APICaller
             ex.printStackTrace();
         }
         try{
-            Coordinates cr = APICaller.call("6225AP");
+            Coordinates cr = APICaller.getCoordinates("6225AP");
             System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
         }catch(CallNotPossibleException c){
             c.printStackTrace();
@@ -38,7 +38,7 @@ public class APICaller
 
     }*/
 
-    public static Coordinates call(String postcode) throws CallNotPossibleException
+    public static Coordinates getCoordinates(String postcode) throws CallNotPossibleException
     {
         if (!CallRateAdmin.authouriseRequst())
         {
@@ -71,13 +71,11 @@ public class APICaller
 
             // Disconnect the HttpURLConnection
             connection.disconnect();
-
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-        System.out.println(response);
         return generateCoordinates(response);
     }
 

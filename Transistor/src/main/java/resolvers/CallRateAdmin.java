@@ -8,7 +8,7 @@ public class CallRateAdmin
     public static boolean authouriseRequst()
     {
 
-        List<TokenBucket> tokenBuckets = TokenBucket.deserializeTokenBucket("Transistor\\src\\main\\java\\resolvers\\TokenBuckets.txt");
+        List<TokenBucket> tokenBuckets = TokenBucket.deserializeTokenBucket("Transistor\\src\\main\\resources\\TokenBuckets.txt");
         boolean canRequest = true;
         for (TokenBucket tokenBucket : tokenBuckets)
         {
@@ -18,7 +18,7 @@ public class CallRateAdmin
                 break;
             }
         }
-        TokenBucket.serializeTokenBuckets(tokenBuckets, "Transistor\\src\\main\\java\\resolvers\\TokenBuckets.txt");
+        TokenBucket.serializeTokenBuckets(tokenBuckets, "Transistor\\src\\main\\resources\\TokenBuckets.txt");
         return canRequest;
 
     }
@@ -33,6 +33,6 @@ public class CallRateAdmin
 //         tokenBuckets.add(tokenBucket1);
 //         tokenBuckets.add(tokenBucket2);
 //         tokenBuckets.add(tokenBucket3);
-//         TokenBucket.serializeTokenBuckets(tokenBuckets, "Transistor\\src\\main\\java\\resolvers\\TokenBuckets.txt");
+//         TokenBucket.serializeTokenBuckets(tokenBuckets, "Transistor\\src\\main\\resources\\TokenBuckets.txt");
 //    }
 }
