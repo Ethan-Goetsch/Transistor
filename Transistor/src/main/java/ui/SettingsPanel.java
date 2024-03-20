@@ -53,18 +53,19 @@ public class SettingsPanel extends JPanel {
                 arrivalField.getText(), (TransportType) comboBox.getSelectedItem())));
 
         resultPanel = new JPanel();
+        resultPanel.setLayout(new GridLayout(2,1));
         distanceLabel = new JLabel();
         timeLabel = new JLabel();
         resultPanel.add(distanceLabel);
         resultPanel.add(timeLabel);
-        // calculatePanel.add(resultPanel);
+         calculatePanel.add(resultPanel);
 
         return calculatePanel;
     }
 
     public void updateResults(String distance, String time) {
-        distanceLabel.setText(distance);
-        timeLabel.setText(time);
+        distanceLabel.setText("The distance is: " + distance + " meters.");
+        timeLabel.setText("It takes you: " + time + " s");
     }
 
     private static final int TEXT_FIELD_WIDTH = 20;
