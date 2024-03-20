@@ -30,11 +30,12 @@ public class ApplicationManager
         {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.destination());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
-            distance = routeCalculator.Distance2P(departureCoordinates.getLatitude(), departureCoordinates.getLongitude(), arrivalCoordinates.getLatitude(), arrivalCoordinates.getLongitude());
+            distance = routeCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
             time = routeCalculator.calculateTime(request.transportType(), distance);
         }
         catch (CallNotPossibleException e)
         {
+            System.out.println("setting error message");
             message = e.getMessage();
         }
 
