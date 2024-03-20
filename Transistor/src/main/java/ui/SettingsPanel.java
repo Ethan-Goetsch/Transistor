@@ -15,7 +15,7 @@ public class SettingsPanel extends JPanel {
     public SettingsPanel(int mainWidth, int mainHeight) {
         this.setLayout(new GridLayout(3, 1));
         this.setPreferredSize(new Dimension(mainWidth / 3, mainHeight));
-        this.setBorder(new EmptyBorder(25, 0, 0, 10)); // top, left, bottom, right padding
+        this.setBorder(new EmptyBorder(25, 0, 0, 20)); // top, left, bottom, right padding
 
         JPanel calculatePanel = createPanel();
         this.add(calculatePanel);
@@ -24,7 +24,7 @@ public class SettingsPanel extends JPanel {
 
     public JPanel createPanel() {
         JPanel calculatePanel = new JPanel();
-        calculatePanel.setLayout(new GridLayout(4, 1));
+        calculatePanel.setLayout(new GridLayout(5, 1));
 
         inputPanelFactory = new InputPanelFactory();
         JPanel departureInput = inputPanelFactory.createInputPanel("Departure Postal Code");
@@ -39,6 +39,9 @@ public class SettingsPanel extends JPanel {
 
         JButton calculateButton = new JButton("Calculate");
         calculatePanel.add(calculateButton);
+
+        JLabel resultPanel = new JLabel("This is where the result is: ");
+        calculatePanel.add(resultPanel);
 
         return calculatePanel;
     }
