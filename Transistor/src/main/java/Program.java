@@ -1,4 +1,5 @@
 import resolvers.APICaller;
+import resolvers.LocationResolver;
 import resolvers.Exceptions.CallNotPossibleException;
 import ui.UI;
 import utils.Coordinates;
