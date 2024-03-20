@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import resolvers.Exceptions.CallNotPossibleException;
 import utils.Coordinates;
 import utils.PostCode;
 
@@ -30,23 +31,10 @@ public class LocationResolver
         System.out.println("Loaded " + postCodes.size() + " post codes");
     }
 
-    public Coordinates getCordsFromPostCode(String postName)
+    public Coordinates getCordsFromPostCode(String postName) throws CallNotPossibleException
     {
         Coordinates cords = getCordsFromFile(postName);
-
-        if (cords == null)
-        {
-            try
-            {
-                cords = APICaller.getCoordinates(postName);
-            }
-            catch (Exception e)
-            {
-                System.out.println("API call failed with message: " + e.getMessage());
-            }
-        }
-
-        return cords;
+        return cords == null ? cords = APICaller.getCoordinates(postName) : cords;
     }
 
     private Coordinates getCordsFromFile(String postName)
@@ -129,17 +117,5 @@ public class LocationResolver
             System.out.println("Loading data from spreadsheet failed with message: " + e.getMessage());
             return;
         }
-    }
-    public static void debug()
-    {
-        //6211AL	50.85523285	5.692237193
-        //6212EA	50.83560203	5.689429256
-        //6229ZE	50.82092283	5.708232104
-
-        System.out.println("ltest");
-        LocationResolver locationResolver = new LocationResolver("Transistor\\MassZipLatLon.xlsx");
-        System.out.println(locationResolver.getCordsFromPostCode("6211AL").getLatitude() + " " + locationResolver.getCordsFromPostCode("6211AL").getLongitude());
-        System.out.println(locationResolver.getCordsFromPostCode("6212EA").getLatitude() + " " + locationResolver.getCordsFromPostCode("6212EA").getLongitude());
-        System.out.println(locationResolver.getCordsFromPostCode("6229ze").getLatitude() + " " + locationResolver.getCordsFromPostCode("6229ze").getLongitude());
     }
 }

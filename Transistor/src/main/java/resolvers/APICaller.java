@@ -44,7 +44,6 @@ public class APICaller
     {
         if (!CallRateAdmin.authouriseRequst())
         {
-            // What do we want to do with rejected calls?
             throw new CallNotPossibleException("Call is not possible for postcode: " + postcode + ". Too many requests!");
         }
         String response = "";
@@ -76,7 +75,7 @@ public class APICaller
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            throw new CallNotPossibleException(e.getMessage());
         }
 
         return generateCoordinates(response);

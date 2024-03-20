@@ -3,7 +3,11 @@ package application;
 import calculators.RouteCalculator;
 import entities.Route;
 import entities.RouteRequest;
+import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
+import utils.Coordinates;
+
+import javax.swing.*;
 
 public class ApplicationManager
 {
@@ -18,12 +22,24 @@ public class ApplicationManager
 
     public Route calculateRouteRequest(RouteRequest request)
     {
-        var departureCoordinates = locationResolver.getCordsFromPostCode(request.destination());
-        var arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
+        String message = "";
+        Coordinates departureCoordinates = null;
+        Coordinates arrivalCoordinates = null;
+        double distance = 0.0;
+        double time = 0.0;
 
-        var distance = routeCalculator.Distance2P(departureCoordinates.getLatitude(), departureCoordinates.getLongitude(), arrivalCoordinates.getLatitude(), arrivalCoordinates.getLongitude());
-        var time = routeCalculator.calculateTime(request.transportType(), distance);
+        try
+        {
+            departureCoordinates = locationResolver.getCordsFromPostCode(request.destination());
+            arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
+            distance = routeCalculator.Distance2P(departureCoordinates.getLatitude(), departureCoordinates.getLongitude(), arrivalCoordinates.getLatitude(), arrivalCoordinates.getLongitude());
+            time = routeCalculator.calculateTime(request.transportType(), distance);
+        }
+        catch (CallNotPossibleException e)
+        {
+            message = e.getMessage();
+        }
 
-        return new Route(departureCoordinates, arrivalCoordinates, distance, time);
+        return new Route(departureCoordinates, arrivalCoordinates, distance, time, message);
     }
 }
