@@ -29,13 +29,8 @@ public class ApplicationManager
         try
         {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.destination());
-            try
-            {
-                Thread.sleep(10000);// prevents braking
-            }
-            catch(InterruptedException ex){}
-
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
+
             distance = routeCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
             time = routeCalculator.calculateTime(request.transportType(), distance);
         }
