@@ -35,6 +35,7 @@ public class ApplicationManager
         }
         catch (CallNotPossibleException e)
         {
+            System.out.println("setting error message");
             message = e.getMessage();
         }
 
