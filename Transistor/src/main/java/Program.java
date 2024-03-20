@@ -1,12 +1,10 @@
-import calculators.RouteCalculator;
-import resolvers.LocationResolver;
-import ui.UI;
+import resolvers.APICaller;
+import resolvers.Exceptions.CallNotPossibleException;
+import utils.Coordinates;
 
-public class Program {
-    public static void main(String[] args) {
-        System.out.println("Program entry");
-        // LocationResolver.debug();
-        UI.initializeUI();
-
+public class Program
+{
+    public static void main(String[] args)
+    {
     }
 }

@@ -19,8 +19,24 @@ public class APICaller
 
     public static void main(String[] args)
     {
-        // Coordinates cr = APICaller.call("6227BP");
-        // System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
+        try{
+            Coordinates cr = APICaller.call("6227BP");
+            System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
+        }catch(CallNotPossibleException c){
+            c.printStackTrace();
+        }
+        try{
+            Thread.sleep(10000);
+        }catch(InterruptedException ex){
+            ex.printStackTrace();
+        }
+        try{
+            Coordinates cr = APICaller.call("6225AP");
+            System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
+        }catch(CallNotPossibleException c){
+            c.printStackTrace();
+        }
+
     }
 
     public static Coordinates call(String postcode) throws CallNotPossibleException
