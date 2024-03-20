@@ -17,6 +17,7 @@ public class ImagePanel extends JPanel {
     public ImagePanel() {
         ImageProcessor imageProcessor = new ImageProcessor();
         image = imageProcessor.readAndResize(filePath);
+
     }
 
     @Override
