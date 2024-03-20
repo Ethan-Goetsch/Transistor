@@ -9,11 +9,17 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MainWindow extends JFrame
-{
+public class MainWindow extends JFrame {
+
     private LayoutManager layout = new BorderLayout();
     private final int mainWidth = 1200;
     private final int mainHeight = 961;
+
+    SettingsPanel settingsPanel;
+
+    public SettingsPanel getSettingsPanel() {
+        return this.settingsPanel;
+    }
 
     private final Subject<RouteRequest> onRouteRequested;
 
@@ -25,7 +31,9 @@ public class MainWindow extends JFrame
         this.setVisible(true);
     }
 
-    public IObservable<RouteRequest> getRouteRequested() { return onRouteRequested; }
+    public IObservable<RouteRequest> getRouteRequested() {
+        return onRouteRequested;
+    }
 
     public void configureWindow() {
         this.setSize(mainWidth, mainHeight);
@@ -41,7 +49,7 @@ public class MainWindow extends JFrame
         MapPanel mapPanel = new MapPanel(mainWidth, mainHeight);
         this.add(mapPanel, BorderLayout.CENTER);
 
-        SettingsPanel settingsPanel = new SettingsPanel(mainWidth, mainHeight, onRouteRequested::execute);
+        settingsPanel = new SettingsPanel(mainWidth, mainHeight, onRouteRequested::execute);
         this.add(settingsPanel, BorderLayout.EAST);
     }
 }
