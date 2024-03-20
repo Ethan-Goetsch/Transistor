@@ -1,10 +1,12 @@
 package ui;
+
 import utils.Coordinates;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PlottingPanel extends JPanel {
+public class PlottingPanel extends JPanel
+{
 
     // Change to UI Controller to set the plotting pannels
     double departureLong = 0;
@@ -16,8 +18,8 @@ public class PlottingPanel extends JPanel {
     private final int PANEL_WIDTH;
     private final int PANEL_HEIGHT;
 
-
-    public PlottingPanel(int width, int height) {
+    public PlottingPanel(int width, int height)
+    {
         this.PANEL_WIDTH = width;
         this.PANEL_HEIGHT = height;
         latLonPixelConverter = new LatLonPixelConverter();
@@ -25,7 +27,8 @@ public class PlottingPanel extends JPanel {
         setOpaque(false);
     }
 
-    public void updateResults(Coordinates departure, Coordinates arrival) {
+    public void updateResults(Coordinates departure, Coordinates arrival)
+    {
         this.departureLong = departure.getLongitude();
         this.departureLat = departure.getLatitude();
         this.arrivalLong = arrival.getLongitude();
@@ -34,10 +37,11 @@ public class PlottingPanel extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g)
+    {
         super.paintComponent(g);
 
-        g.translate(130,78);
+        g.translate(130, 78);
 
         int x1 = latLonPixelConverter.convertLongitudeToPixel(departureLong, PANEL_WIDTH);
         int y1 = latLonPixelConverter.convertLatitudeToPixel(departureLat, PANEL_HEIGHT);
@@ -51,12 +55,13 @@ public class PlottingPanel extends JPanel {
 
         int x2 = latLonPixelConverter.convertLongitudeToPixel(arrivalLong, PANEL_WIDTH);
         int y2 = latLonPixelConverter.convertLatitudeToPixel(arrivalLat, PANEL_HEIGHT);
-        g.drawImage(Icon.getImage(), x2 - 20, y2 - 35, null); // Draw arrival image
+        g.drawImage(Icon.getImage(), x2 - 20, y2 - 35, null); // Draw arrival
+                                                              // image
 
         g.setColor(Color.RED);
         g.fillOval(x1 - 5, y1 - 5, 10, 10); // Circle size of 10
 
-        g.drawLine(x1,y1,x2,y2);
+        g.drawLine(x1, y1, x2, y2);
 
     }
 

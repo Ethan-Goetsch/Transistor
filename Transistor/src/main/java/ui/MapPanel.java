@@ -4,9 +4,12 @@ import java.awt.*;
 
 import javax.swing.*;
 
-public class MapPanel extends JPanel {
+public class MapPanel extends JPanel
+{
         ImageHolder imageHolder;
-        public MapPanel(int mainWidth, int mainHeight) {
+
+        public MapPanel(int mainWidth, int mainHeight)
+        {
                 this.setPreferredSize(new Dimension(2 * mainWidth / 3, mainHeight));
                 this.setLayout(new BorderLayout());
                 imageHolder = new ImageHolder();
