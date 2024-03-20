@@ -10,12 +10,14 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class SettingsPanel extends JPanel
-{
+public class SettingsPanel extends JPanel {
     private final IAction<RouteRequest> onCalculateClicked;
 
     private JTextField departureField;
     private JTextField arrivalField;
+    JPanel resultPanel;
+    JLabel distanceLabel;
+    JLabel timeLabel;
 
     public SettingsPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked) {
         this.setLayout(new GridLayout(3, 1));
@@ -27,8 +29,7 @@ public class SettingsPanel extends JPanel
         this.onCalculateClicked = onCalculateCLicked;
     }
 
-    public JPanel createPanel()
-    {
+    public JPanel createPanel() {
         departureField = createTextField();
         arrivalField = createTextField();
 
@@ -48,12 +49,22 @@ public class SettingsPanel extends JPanel
         JButton calculateButton = new JButton("Calculate");
         calculatePanel.add(calculateButton);
 
-        calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest(departureField.getText(), arrivalField.getText(), (TransportType) comboBox.getSelectedItem())));
+        calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest(departureField.getText(),
+                arrivalField.getText(), (TransportType) comboBox.getSelectedItem())));
 
-        JLabel resultPanel = new JLabel("This is where the result is: ");
-        calculatePanel.add(resultPanel);
+        resultPanel = new JPanel();
+        distanceLabel = new JLabel();
+        timeLabel = new JLabel();
+        resultPanel.add(distanceLabel);
+        resultPanel.add(timeLabel);
+        // calculatePanel.add(resultPanel);
 
         return calculatePanel;
+    }
+
+    public void updateResults(String distance, String time) {
+        distanceLabel.setText(distance);
+        timeLabel.setText(time);
     }
 
     private static final int TEXT_FIELD_WIDTH = 20;
@@ -84,8 +95,7 @@ public class SettingsPanel extends JPanel
         return textFieldPanel;
     }
 
-    private JTextField createTextField()
-    {
+    private JTextField createTextField() {
         JTextField textField = new JTextField(TEXT_FIELD_WIDTH);
         textField.setForeground(GRAY_OPAQUE_COLOR); // Gray with someopacity
         textField.setText("1234AB");
