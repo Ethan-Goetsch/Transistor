@@ -38,6 +38,6 @@ public class ApplicationManager
             message = e.getMessage();
         }
 
-        return new Route(departureCoordinates, arrivalCoordinates, distance, time, message);
+        return new Route(departureCoordinates, arrivalCoordinates, distance, time, request.transportType(), message);
     }
 }
