@@ -17,6 +17,8 @@ public class MainWindow extends JFrame {
 
     SettingsPanel settingsPanel;
 
+    MapPanel mapPanel;
+
     public SettingsPanel getSettingsPanel() {
         return this.settingsPanel;
     }
@@ -46,7 +48,7 @@ public class MainWindow extends JFrame {
     public void initializeElements() {
         System.out.println("test" + getWidth());
 
-        MapPanel mapPanel = new MapPanel(mainWidth, mainHeight);
+        mapPanel = new MapPanel(mainWidth, mainHeight);
         this.add(mapPanel, BorderLayout.CENTER);
 
         settingsPanel = new SettingsPanel(mainWidth, mainHeight, onRouteRequested::execute);

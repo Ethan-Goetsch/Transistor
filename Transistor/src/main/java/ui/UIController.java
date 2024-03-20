@@ -21,6 +21,7 @@ public class UIController {
     private void handleRouteRequested(RouteRequest request) {
 
         var route = manager.calculateRouteRequest(request);
+
         if (!route.responseMessage().isEmpty())
         {
             JOptionPane.showMessageDialog(new JFrame(), route.responseMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
@@ -28,5 +29,6 @@ public class UIController {
         }
 
         window.settingsPanel.updateResults(String.valueOf(route.distance()), String.valueOf(route.time()));
+        window.mapPanel.imageHolder.plottingPanel.updateResults(route.departure(), route.arrival());
     }
 }

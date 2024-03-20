@@ -1,18 +1,20 @@
 package ui;
+import utils.Coordinates;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class PlottingPanel extends JPanel {
 
     // Change to UI Controller to set the plotting pannels
-    double departureLong = 5.69962724999999;
-    double departureLat = 50.8504953534482;
+    double departureLong = 0;
+    double departureLat = 0;
 
-    double arrivalLong = 5.71148493333333;
-    double arrivalLat = 50.85796175 ;
+    double arrivalLong = 0;
+    double arrivalLat = 0;
     LatLonPixelConverter latLonPixelConverter;
-    private int PANEL_WIDTH;
-    private int PANEL_HEIGHT;
+    private final int PANEL_WIDTH;
+    private final int PANEL_HEIGHT;
 
 
     public PlottingPanel(int width, int height) {
@@ -20,8 +22,22 @@ public class PlottingPanel extends JPanel {
         this.PANEL_HEIGHT = height;
         latLonPixelConverter = new LatLonPixelConverter();
         setVisible(true);
-        setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setOpaque(false);
+    }
+
+    public void updateResults(Coordinates departure, Coordinates arrival) {
+        this.departureLong = departure.getLongitude();
+        this.departureLat = departure.getLatitude();
+        this.arrivalLong = arrival.getLongitude();
+        this.arrivalLat = arrival.getLatitude();
+        this.repaint();
+        System.out.println(departureLong);
+        System.out.println(departureLat);
+
+        System.out.println(arrivalLong);
+
+        System.out.println(arrivalLat);
+
     }
 
     @Override
@@ -30,10 +46,11 @@ public class PlottingPanel extends JPanel {
         super.paintComponent(g);
 
         g.translate(130,78);
-
+        System.out.println(departureLong);
         int x1 = latLonPixelConverter.convertLongitudeToPixel(departureLong, PANEL_WIDTH);
         int y1 = latLonPixelConverter.convertLatitudeToPixel(departureLat, PANEL_HEIGHT);
 
+        System.out.println("x1: " + x1 + " y1: " + y1);
         ImageIcon Icon = new ImageIcon("Transistor/src/main/resources/LocationIcon.png");
 
 
