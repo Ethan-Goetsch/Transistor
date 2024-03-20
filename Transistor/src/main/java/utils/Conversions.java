@@ -1,4 +1,4 @@
-package calculators;
+package utils;
 
 public class Conversions {
 
