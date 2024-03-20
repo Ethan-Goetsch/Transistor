@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import resolvers.Exceptions.CallNotPossibleException;
 import utils.Coordinates;
 
+import javax.swing.*;
+
 public class APICaller
 {
     private static final String API_URL = "https://computerscience.dacs.unimaas.nl/get_coordinates";
@@ -76,6 +78,7 @@ public class APICaller
         {
             e.printStackTrace();
         }
+
         return generateCoordinates(response);
     }
 

@@ -19,6 +19,6 @@ public class UIController
 
     private void handleRouteRequested(RouteRequest request)
     {
-        var route = manager.generateRouteRequest(request);
+        var route = manager.calculateRouteRequest(request);
     }
 }

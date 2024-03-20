@@ -16,7 +16,7 @@ public class ApplicationManager
         this.routeCalculator = routeCalculator;
     }
 
-    public Route generateRouteRequest(RouteRequest request)
+    public Route calculateRouteRequest(RouteRequest request)
     {
         var departureCoordinates = locationResolver.getCordsFromPostCode(request.destination());
         var arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
