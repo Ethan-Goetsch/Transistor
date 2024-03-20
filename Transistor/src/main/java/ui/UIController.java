@@ -28,7 +28,7 @@ public class UIController {
             return;
         }
 
-        window.settingsPanel.updateResults(String.valueOf(route.distance()), String.valueOf(route.time()));
+        window.settingsPanel.updateResults(String.valueOf((int) route.distance()), Conversions.timeDivision(route.time()));
         window.mapPanel.imageHolder.plottingPanel.updateResults(route.departure(), route.arrival());
     }
 }
