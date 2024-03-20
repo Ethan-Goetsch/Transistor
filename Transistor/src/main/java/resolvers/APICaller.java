@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import resolvers.Exceptions.CallNotPossibleException;
-import entities.Coordinates;
+import entities.Coordinate;
 
 public class APICaller
 {
@@ -38,7 +38,7 @@ public class APICaller
 
     }*/
 
-    public static Coordinates getCoordinates(String postcode) throws CallNotPossibleException
+    public static Coordinate getCoordinates(String postcode) throws CallNotPossibleException
     {
         if (!CallRateAdmin.authouriseRequst())
         {
@@ -81,7 +81,7 @@ public class APICaller
 
     // Probably rename to toCoordinates
     // Do we want a Json library for this or is too much?
-    private static Coordinates generateCoordinates(String response)
+    private static Coordinate generateCoordinates(String response)
     {
         double latitude = 0.0;
         double longitude = 0.0;
@@ -101,7 +101,7 @@ public class APICaller
             longitude = Double.parseDouble(longitudeMatcher.group(1));
         }
 
-        return new Coordinates(latitude, longitude);
+        return new Coordinate(latitude, longitude);
     }
 
     // Probably rename to toJsonData

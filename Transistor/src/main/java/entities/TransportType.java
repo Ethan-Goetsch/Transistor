@@ -2,8 +2,8 @@ package entities;
 
 public enum TransportType
 {
-    WALKING(1.42),
-    BICYCLE(7),
+    FOOT(1.42),
+    BIKE(7),
     CAR(22.5),
     PLANE(268.224000);
 

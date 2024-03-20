@@ -1,6 +1,6 @@
 package ui;
 
-import entities.Coordinates;
+import entities.Coordinate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +27,7 @@ public class PlottingPanel extends JPanel
         setOpaque(false);
     }
 
-    public void updateResults(Coordinates departure, Coordinates arrival)
+    public void updateResults(Coordinate departure, Coordinate arrival)
     {
         this.departureLong = departure.getLongitude();
         this.departureLat = departure.getLatitude();

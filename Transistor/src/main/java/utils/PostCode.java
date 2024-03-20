@@ -1,11 +1,11 @@
 package utils;
 
-import entities.Coordinates;
+import entities.Coordinate;
 
 public class PostCode
 {
     String name;
-    Coordinates cords;
+    Coordinate cords;
 
     public String getName()
     {
@@ -17,17 +17,17 @@ public class PostCode
         this.name = name;
     }
 
-    public Coordinates getCords()
+    public Coordinate getCords()
     {
         return cords;
     }
 
-    public void setCords(Coordinates cords)
+    public void setCords(Coordinate cords)
     {
         this.cords = cords;
     }
 
-    public PostCode(String name, Coordinates cords)
+    public PostCode(String name, Coordinate cords)
     {
         this.name = name;
         this.cords = cords;

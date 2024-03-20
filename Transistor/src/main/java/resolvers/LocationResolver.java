@@ -12,7 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import resolvers.Exceptions.CallNotPossibleException;
-import entities.Coordinates;
+import entities.Coordinate;
 import utils.PostCode;
 
 public class LocationResolver
@@ -31,13 +31,13 @@ public class LocationResolver
         System.out.println("Loaded " + postCodes.size() + " post codes");
     }
 
-    public Coordinates getCordsFromPostCode(String postName) throws CallNotPossibleException
+    public Coordinate getCordsFromPostCode(String postName) throws CallNotPossibleException
     {
-        Coordinates cords = getCordsFromFile(postName);
+        Coordinate cords = getCordsFromFile(postName);
         return cords == null ? cords = APICaller.getCoordinates(postName) : cords;
     }
 
-    private Coordinates getCordsFromFile(String postName)
+    private Coordinate getCordsFromFile(String postName)
     {
         for (PostCode postCode : postCodes)
         {
@@ -95,7 +95,7 @@ public class LocationResolver
                     }
                 }
 
-                Coordinates newCords = new Coordinates(Double.parseDouble(postLatitudeStr), Double.parseDouble(postLongtitudeStr));
+                Coordinate newCords = new Coordinate(Double.parseDouble(postLatitudeStr), Double.parseDouble(postLongtitudeStr));
                 PostCode newPostCode = new PostCode(postName, newCords);
 
                 postCodes.add(newPostCode);
