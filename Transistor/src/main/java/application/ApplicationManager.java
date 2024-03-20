@@ -29,9 +29,12 @@ public class ApplicationManager
         try
         {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.destination());
-            try{
+            try
+            {
                 Thread.sleep(10000);// prevents braking
-            }catch(InterruptedException ex){}
+            }
+            catch(InterruptedException ex){}
+
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
             distance = routeCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
             time = routeCalculator.calculateTime(request.transportType(), distance);
@@ -41,7 +44,6 @@ public class ApplicationManager
             System.out.println("setting error message");
             message = e.getMessage();
         }
-
 
         return new Route(departureCoordinates, arrivalCoordinates, distance, time, request.transportType(), message);
     }
