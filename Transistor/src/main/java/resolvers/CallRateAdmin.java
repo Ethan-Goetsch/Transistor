@@ -1,43 +1,77 @@
 package resolvers;
 
+import com.google.gson.Gson;
 import utils.PathLocations;
 
+import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 
 public class CallRateAdmin
 {
-    public static boolean authouriseRequst()
+    private static Bucket bucket;
+
+    public static boolean canRequest()
     {
-        List<TokenBucket> tokenBuckets = TokenBucket.deserializeTokenBucket(PathLocations.TOKEN_BUCKET);
-
-        if(tokenBuckets == null){
-            initIfDeserializationFail();
-        }
-        boolean canRequest = true;
-        for (TokenBucket tokenBucket : tokenBuckets)
+        bucket = loadBucket();
+        if (bucket.getTokenBuckets().isEmpty())
         {
-            canRequest = tokenBucket.tryConsume();
-            if (!canRequest)
-            {
-                break;
-            }
+            bucket = new Bucket();
         }
-        TokenBucket.serializeTokenBuckets(tokenBuckets, PathLocations.TOKEN_BUCKET);
-        return canRequest;
 
+        var isAuthorized = bucket.getTokenBuckets()
+                .stream()
+                .anyMatch(tokenBucket -> !tokenBucket.tryConsume());
+
+        saveBucket();
+        return isAuthorized;
     }
 
-    public static void initIfDeserializationFail(){
-         TokenBucket tokenBucket = new TokenBucket(1, 1, 5*1000);
-         TokenBucket tokenBucket1 = new TokenBucket(5, 5, 60*1000);
-         TokenBucket tokenBucket2 = new TokenBucket(40, 40, 60*60*1000);
-         TokenBucket tokenBucket3 = new TokenBucket(100, 100, 24*60*60*1000);
-         List<TokenBucket> tokenBuckets = new ArrayList<>();
-         tokenBuckets.add(tokenBucket);
-         tokenBuckets.add(tokenBucket1);
-         tokenBuckets.add(tokenBucket2);
-         tokenBuckets.add(tokenBucket3);
-         TokenBucket.serializeTokenBuckets(tokenBuckets, PathLocations.TOKEN_BUCKET);
+    private static Bucket loadBucket()
+    {
+        var gson = new Gson();
+        var json = readData(PathLocations.TOKEN_BUCKET);
+        return gson.fromJson(json, Bucket.class);
+    }
+
+    private static void saveBucket()
+    {
+        var gson = new Gson();
+        var json = gson.toJson(bucket);
+        storeData(json, PathLocations.TOKEN_BUCKET);
+    }
+
+    private static void storeData(String data, String filePath)
+    {
+        try
+        {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            writer.write(data);
+            writer.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private static String readData(String filePath)
+    {
+        StringBuilder data = new StringBuilder();
+
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line;
+
+            while ((line = reader.readLine()) != null)
+                data.append(line);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return data.toString();
     }
 }

@@ -17,7 +17,7 @@ public class APICaller
 {
     public static Coordinate getCoordinates(String postcode) throws CallNotPossibleException
     {
-        if (!CallRateAdmin.authouriseRequst())
+        if (!CallRateAdmin.canRequest())
         {
             throw new CallNotPossibleException("Call is not possible for postcode: " + postcode + ". Too many requests!");
         }
