@@ -1,6 +1,7 @@
 package resolvers;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import utils.PathLocations;
 
 import java.io.*;
@@ -21,7 +22,7 @@ public class CallRateAdmin
 
         var isAuthorized = bucket.getTokenBuckets()
                 .stream()
-                .anyMatch(tokenBucket -> !tokenBucket.tryConsume());
+                .anyMatch(TokenBucket::tryConsume);
 
         saveBucket();
         return isAuthorized;
@@ -29,7 +30,9 @@ public class CallRateAdmin
 
     private static Bucket loadBucket()
     {
-        var gson = new Gson();
+        var gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
         var json = readData(PathLocations.TOKEN_BUCKET);
         return gson.fromJson(json, Bucket.class);
     }
