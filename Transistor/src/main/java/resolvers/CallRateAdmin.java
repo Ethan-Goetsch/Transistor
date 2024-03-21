@@ -14,7 +14,7 @@ public class CallRateAdmin
     public static boolean canRequest()
     {
         bucket = loadBucket();
-        if (bucket.getTokenBuckets().isEmpty())
+        if (bucket == null || bucket.getTokenBuckets().isEmpty())
         {
             bucket = new Bucket();
         }
