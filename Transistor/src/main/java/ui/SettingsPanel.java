@@ -12,7 +12,7 @@ import java.awt.event.FocusEvent;
 
 public class SettingsPanel extends JPanel {
     private final IAction<RouteRequest> onCalculateClicked;
-
+    private final RequestValidator validator;
     private JTextField departureField;
     private JTextField arrivalField;
     JPanel resultPanel;
@@ -27,6 +27,7 @@ public class SettingsPanel extends JPanel {
         JPanel calculatePanel = createPanel();
         this.add(calculatePanel);
         this.onCalculateClicked = onCalculateCLicked;
+        this. validator = new RequestValidator();
     }
 
     public JPanel createPanel() {
@@ -49,23 +50,32 @@ public class SettingsPanel extends JPanel {
         JButton calculateButton = new JButton("Calculate");
         calculatePanel.add(calculateButton);
 
-        calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest(departureField.getText(),
-                arrivalField.getText(), (TransportType) comboBox.getSelectedItem())));
+        calculateButton.addActionListener(e -> {
+            String departurePostCode = departureField.getText();
+            String arrivalPostCode = arrivalField.getText();
+            if(validator.validateRequest(departurePostCode, arrivalPostCode)){
+                onCalculateClicked.execute(new RouteRequest(departurePostCode,
+                        arrivalPostCode, (TransportType) comboBox.getSelectedItem()));
+            }
+            else{
+                onCalculateClicked.execute(null);
+            }
+
+        });
 
         resultPanel = new JPanel();
-        resultPanel.setLayout(new GridLayout(2,1));
         distanceLabel = new JLabel();
         timeLabel = new JLabel();
         resultPanel.add(distanceLabel);
         resultPanel.add(timeLabel);
-         calculatePanel.add(resultPanel);
+        // calculatePanel.add(resultPanel);
 
         return calculatePanel;
     }
 
     public void updateResults(String distance, String time) {
-        distanceLabel.setText("The distance is: " + distance + " meters.");
-        timeLabel.setText("It takes you: " + time + " s");
+        distanceLabel.setText(distance);
+        timeLabel.setText(time);
     }
 
     private static final int TEXT_FIELD_WIDTH = 20;

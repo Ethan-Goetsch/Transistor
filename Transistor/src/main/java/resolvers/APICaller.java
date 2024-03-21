@@ -11,10 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import resolvers.Exceptions.CallNotPossibleException;
 import entities.Coordinate;
-import utils.PathLocations;
 
 public class APICaller
 {
+    private static final String API_URL = "https://computerscience.dacs.unimaas.nl/get_coordinates";
+
     public static Coordinate getCoordinates(String postcode) throws CallNotPossibleException
     {
         if (!CallRateAdmin.canRequest())
@@ -25,7 +26,7 @@ public class APICaller
         try
         {
             // Create URL object
-            URL url = new URL(PathLocations.API_URL);
+            URL url = new URL(API_URL);
 
             // Create HttpURLConnection
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
