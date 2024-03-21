@@ -7,7 +7,7 @@ import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
 import entities.RouteCalculationRequest;
 import entities.RouteCalculationResult;
 import utils.Conversions;
-import utils.PathFiles;
+import utils.PathLocations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +27,9 @@ public class PathCalculator
         profiles.add(new Profile(VehicleEncodedValuesFactory.BIKE));
         profiles.add(new Profile(VehicleEncodedValuesFactory.CAR));
 
-        graphHopper.setOSMFile(PathFiles.GraphFile);
+        graphHopper.setOSMFile(PathLocations.GRAPH_FILE);
         graphHopper.setProfiles(profiles);
-        graphHopper.setGraphHopperLocation(PathFiles.GraphResourceFolder);
+        graphHopper.setGraphHopperLocation(PathLocations.GRAPH_RESOURCE_FOLDER);
         graphHopper.importOrLoad();
     }
 
