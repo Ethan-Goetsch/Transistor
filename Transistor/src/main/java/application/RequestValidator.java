@@ -15,7 +15,7 @@ public class RequestValidator
         return isValidInput(request.departure(), request.arrival());
     }
 
-    private boolean isValidInput(String departurePostcode, String destinationPostCode)
+    private boolean isValidInput(String departurePostcode, String arrivalPostCode)
     {
         // Compile the pattern
         Pattern regex = Pattern.compile(pattern);
@@ -24,10 +24,13 @@ public class RequestValidator
         Matcher departureMatcher = regex.matcher(departurePostcode);
 
         // Match destination postcode against the pattern
-        Matcher destinationMatcher = regex.matcher(destinationPostCode);
+        Matcher destinationMatcher = regex.matcher(arrivalPostCode);
         departurePostcode.toUpperCase();
-        destinationPostCode.toUpperCase();
+        arrivalPostCode.toUpperCase();
+
+        departurePostcode.trim();
+        arrivalPostCode.trim();
         // Return true if both departure and destination postcodes match the pattern, false otherwise
-        return departureMatcher.find() && destinationMatcher.find() && length == departurePostcode.length() && length ==destinationPostCode.length();
+        return departureMatcher.find() && destinationMatcher.find() && length == departurePostcode.length() && length ==arrivalPostCode.length();
     }
 }
