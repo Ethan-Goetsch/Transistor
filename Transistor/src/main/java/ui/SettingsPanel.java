@@ -1,6 +1,7 @@
 package ui;
 
 import entities.RouteRequest;
+import entities.RouteType;
 import entities.TransportType;
 import utils.IAction;
 
@@ -20,7 +21,7 @@ public class SettingsPanel extends JPanel {
     JLabel timeLabel;
 
     public SettingsPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked) {
-        this.setLayout(new GridLayout(3, 1));
+        this.setLayout(new GridLayout(2, 1));
         this.setPreferredSize(new Dimension(mainWidth / 3, mainHeight));
         this.setBorder(new EmptyBorder(25, 0, 0, 20)); // top, left, bottom, right padding
 
@@ -36,37 +37,59 @@ public class SettingsPanel extends JPanel {
         JPanel calculatePanel = new JPanel();
         calculatePanel.setLayout(new GridLayout(5, 1));
 
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(2,1));
+
+
         JPanel departureInput = createInputPanel("Departure Postal Code", departureField);
-        calculatePanel.add(departureInput);
+        inputPanel.add(departureInput);
 
         JPanel arrivalInput = createInputPanel("Arrival Postal Code", arrivalField);
-        calculatePanel.add(arrivalInput);
+        inputPanel.add(arrivalInput);
+
+        JPanel selectionPanel = new JPanel();
+        selectionPanel.setLayout(new GridLayout(2,2));
 
         // Change to enums for later
-        JComboBox<TransportType> comboBox = new JComboBox<>(TransportType.values());
-        calculatePanel.add(comboBox);
+        JComboBox<TransportType> transportTypeJComboBox = new JComboBox<>(TransportType.values());
+        JComboBox<RouteType> routeTypeJComboBox = new JComboBox<>(RouteType.values());
+
+        selectionPanel.add(new Label("Transportation Type: "));
+        selectionPanel.add(transportTypeJComboBox);
+
+        selectionPanel.add(new Label("Route Selection: "));
+        selectionPanel.add(routeTypeJComboBox);
 
         JButton calculateButton = new JButton("Calculate");
-        calculatePanel.add(calculateButton);
 
         calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest(departureField.getText(),
-                arrivalField.getText(), (TransportType) comboBox.getSelectedItem())));
+                arrivalField.getText(), (TransportType) transportTypeJComboBox.getSelectedItem(), (RouteType) routeTypeJComboBox.getSelectedItem())));
 
         resultPanel = new JPanel();
-        resultPanel.setLayout(new GridLayout(2,1));
+        configureResultPanel();
+
+        calculatePanel.add(inputPanel);
+        calculatePanel.add(selectionPanel);
+        calculatePanel.add(calculateButton);
+        calculatePanel.add(resultPanel);
+
+        return calculatePanel;
+    }
+
+    //Helper method to create result Panel
+    private void configureResultPanel(){
+        resultPanel.setLayout(new GridLayout(2,2));
         distanceLabel = new JLabel();
         timeLabel = new JLabel();
         resultPanel.add(distanceLabel);
         resultPanel.add(timeLabel);
-         calculatePanel.add(resultPanel);
-
-        return calculatePanel;
     }
 
     public void updateResults(String distance, String time) {
         distanceLabel.setText("The distance is: " + distance + " meters.");
         timeLabel.setText("It takes you: " + time + " s");
     }
+
 
     private static final int TEXT_FIELD_WIDTH = 20;
     private static final Color GRAY_OPAQUE_COLOR = new Color(128, 128,
