@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PathCalculator
+public class PathCalculator implements ICalculator
 {
     private final GraphHopper graphHopper;
 
@@ -32,7 +32,7 @@ public class PathCalculator
         graphHopper.setGraphHopperLocation(PathLocations.GRAPH_RESOURCE_FOLDER);
         graphHopper.importOrLoad();
     }
-
+    @Override
     public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest)
     {
         var fromLatitude = calculationRequest.departure().getLatitude();
