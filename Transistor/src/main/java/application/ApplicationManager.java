@@ -33,6 +33,8 @@ public class ApplicationManager
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
+            Thread.sleep(10 * 1000);
+
             distance = routeCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
             time = routeCalculator.calculateTime(request.transportType(), distance);
 
@@ -42,9 +44,8 @@ public class ApplicationManager
             distance = calculationResult.distanceInKM();
             time = calculationResult.timeInMinutes();
         }
-        catch (CallNotPossibleException e)
+        catch (CallNotPossibleException | InterruptedException e)
         {
-            System.out.println("setting error message");
             message = e.getMessage();
         }
 
