@@ -9,8 +9,7 @@ public class Program
     public static void main(String[] args)
     {
         LocationResolver locationResolver = new LocationResolver(PathLocations.MASS_LOCATION_FILE);
-        AerialCalculator aerialCalculator = new AerialCalculator();
-        ApplicationManager manager = new ApplicationManager(locationResolver, aerialCalculator);
+        ApplicationManager manager = new ApplicationManager(locationResolver);
         UIController controller = new UIController(manager);
     }
 }

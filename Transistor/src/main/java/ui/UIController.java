@@ -5,7 +5,8 @@ import application.ApplicationManager;
 import entities.RouteRequest;
 import utils.Conversions;
 
-public class UIController {
+public class UIController
+{
     private final MainWindow window;
 
     private final ApplicationManager manager;
@@ -18,7 +19,8 @@ public class UIController {
         window.getRouteRequested().subscribe(this::handleRouteRequested);
     }
 
-    private void handleRouteRequested(RouteRequest request) {
+    private void handleRouteRequested(RouteRequest request)
+    {
 
         var route = manager.calculateRouteRequest(request);
 
@@ -28,7 +30,7 @@ public class UIController {
             return;
         }
 
-        window.settingsPanel.updateResults(String.valueOf((int) route.distance()), Conversions.timeDivision(route.time()));
+        window.settingsPanel.updateResults(String.valueOf((int) route.result().distanceInKM()), Conversions.timeDivision(route.result().timeInMinutes()));
         window.mapPanel.imageHolder.plottingPanel.updateResults(route.departure(), route.arrival());
     }
 }
