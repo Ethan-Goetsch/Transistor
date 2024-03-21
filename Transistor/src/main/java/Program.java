@@ -12,6 +12,8 @@ import java.util.List;
 
 public class Program
 {
+    //6211AL	50.85523285	5.692237193
+    //6216NV	50.84421547	5.655460167
     public static void main(String[] args)
     {
         LocationResolver locationResolver = new LocationResolver(PathLocations.MASS_LOCATION_FILE);

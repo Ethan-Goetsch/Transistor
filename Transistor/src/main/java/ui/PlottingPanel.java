@@ -3,6 +3,12 @@ package ui;
 import entities.Coordinate;
 
 import javax.swing.*;
+
+import org.apache.logging.log4j.core.appender.routing.Route;
+
+import com.graphhopper.ResponsePath;
+import com.graphhopper.util.shapes.GHPoint3D;
+
 import java.awt.*;
 
 public class PlottingPanel extends JPanel
@@ -15,11 +21,15 @@ public class PlottingPanel extends JPanel
     double arrivalLong = 0;
     double arrivalLat = 0;
     LatLonPixelConverter latLonPixelConverter;
+
+    private ResponsePath bestPath; 
+
     private final int PANEL_WIDTH;
     private final int PANEL_HEIGHT;
 
     public PlottingPanel(int width, int height)
     {
+        this.bestPath = null;
         this.PANEL_WIDTH = width;
         this.PANEL_HEIGHT = height;
         latLonPixelConverter = new LatLonPixelConverter();
@@ -27,12 +37,13 @@ public class PlottingPanel extends JPanel
         setOpaque(false);
     }
 
-    public void updateResults(Coordinate departure, Coordinate arrival)
+    public void updateResults(Coordinate departure, Coordinate arrival, ResponsePath bestPath)
     {
         this.departureLong = departure.getLongitude();
         this.departureLat = departure.getLatitude();
         this.arrivalLong = arrival.getLongitude();
         this.arrivalLat = arrival.getLatitude();
+        this.bestPath = bestPath;
         this.repaint();
     }
 
@@ -61,7 +72,30 @@ public class PlottingPanel extends JPanel
         g.setColor(Color.RED);
         g.fillOval(x1 - 5, y1 - 5, 10, 10); // Circle size of 10
 
-        g.drawLine(x1, y1, x2, y2);
+        if (bestPath == null)
+        {
+            g.drawLine(x1, y1, x2, y2);
+        }
+        else
+        {
+            var bestPoints = bestPath.getPoints();
+
+            GHPoint3D lastPoint = bestPoints.get(0);
+            for (int i = 1; i < bestPoints.size(); i++)
+            {
+                GHPoint3D currentPoint3d = bestPoints.get(i);
+                int lx1 = latLonPixelConverter.convertLongitudeToPixel(lastPoint.getLon(), PANEL_WIDTH);
+                int ly1 = latLonPixelConverter.convertLatitudeToPixel(lastPoint.getLat(), PANEL_HEIGHT);
+
+                int lx2 = latLonPixelConverter.convertLongitudeToPixel(currentPoint3d.getLon(), PANEL_WIDTH);
+                int ly2 = latLonPixelConverter.convertLatitudeToPixel(currentPoint3d.getLat(), PANEL_HEIGHT);
+
+                g.drawLine(lx1, ly1, lx2, ly2);
+
+                lastPoint = currentPoint3d;
+
+            }
+        }
 
     }
 
