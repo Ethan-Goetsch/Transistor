@@ -32,6 +32,6 @@ public class UIController
         String time = "Time: " + Conversions.formatTime(route.result().timeInHours());
 
         window.settingsPanel.updateResults(distance, time);
-        window.mapPanel.imageHolder.plottingPanel.updateResults(route.departure(), route.arrival());
+        window.mapPanel.imageHolder.plottingPanel.updateResults(route.departure(), route.arrival(), route.result().path());
     }
 }
