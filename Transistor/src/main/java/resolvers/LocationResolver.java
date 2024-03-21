@@ -27,8 +27,6 @@ public class LocationResolver
         this.postCodes = new ArrayList<PostCode>();
 
         loadData();
-
-        System.out.println("Loaded " + postCodes.size() + " post codes");
     }
 
     public Coordinate getCordsFromPostCode(String postName) throws CallNotPossibleException
@@ -60,7 +58,6 @@ public class LocationResolver
 
             int rowCount;
             rowCount = sheet.getPhysicalNumberOfRows();
-            System.out.println("row count: " + rowCount);
 
             DataFormatter df = new DataFormatter();
             // i = 1 since we skip the first row
