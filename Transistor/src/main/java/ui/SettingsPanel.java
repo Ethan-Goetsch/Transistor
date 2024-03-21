@@ -4,7 +4,6 @@ import entities.RouteRequest;
 import entities.RouteType;
 import entities.TransportType;
 import utils.IAction;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -13,7 +12,6 @@ import java.awt.event.FocusEvent;
 
 public class SettingsPanel extends JPanel {
     private final IAction<RouteRequest> onCalculateClicked;
-
     private JTextField departureField;
     private JTextField arrivalField;
     JPanel resultPanel;
@@ -60,6 +58,8 @@ public class SettingsPanel extends JPanel {
         selectionPanel.add(new Label("Route Selection: "));
         selectionPanel.add(routeTypeJComboBox);
 
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayout(2,2));
         JButton calculateButton = new JButton("Calculate");
 
         calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest(departureField.getText(),
@@ -67,10 +67,10 @@ public class SettingsPanel extends JPanel {
 
         resultPanel = new JPanel();
         configureResultPanel();
-
+        panel2.add(calculateButton);
         calculatePanel.add(inputPanel);
         calculatePanel.add(selectionPanel);
-        calculatePanel.add(calculateButton);
+        calculatePanel.add(panel2);
         calculatePanel.add(resultPanel);
 
         return calculatePanel;
@@ -99,11 +99,24 @@ public class SettingsPanel extends JPanel {
     public JPanel createInputPanel(String postalCodeString, JTextField textField) {
         JPanel inputPanel = new JPanel();
         JLabel label = new JLabel(postalCodeString);
-        JPanel textFieldPanel = createTextFieldPanel(textField);
+        setUpFocusListener(textField);
+        GroupLayout layout = new GroupLayout(inputPanel);
+        inputPanel.setLayout(layout);
 
-        inputPanel.setLayout(new GridLayout(1, 2));
-        inputPanel.add(label);
-        inputPanel.add(textFieldPanel);
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(label, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE)
+                                .addGap(40)
+                                .addComponent(textField, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE))
+
+                )
+        );
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(label, GroupLayout.PREFERRED_SIZE,GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(textField, GroupLayout.PREFERRED_SIZE,GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE))
+        );
         return inputPanel;
     }
 
