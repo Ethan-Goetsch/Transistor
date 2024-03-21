@@ -1,20 +1,24 @@
 package application;
 
-import calculators.AerialCalculator;
-import calculators.ICalculator;
+import calculators.IRouteCalculator;
 import entities.*;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
+
+import java.util.List;
 
 public class ApplicationManager
 {
     private final LocationResolver locationResolver;
     private final RequestValidator requestValidator;
+    private final List<IRouteCalculator> routeCalculators;
 
-    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator)
+
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, List<IRouteCalculator> routeCalculators)
     {
         this.locationResolver = locationResolver;
         this.requestValidator = requestValidator;
+        this.routeCalculators = routeCalculators;
     }
 
     public Route calculateRouteRequest(RouteRequest request)
@@ -33,7 +37,10 @@ public class ApplicationManager
             Thread.sleep(10 * 1000);
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
-            ICalculator calculator = new AerialCalculator();
+            IRouteCalculator calculator = routeCalculators
+                    .stream()
+                    .filter(routeCalculator -> routeCalculator.getRouteType() == request.routeType())
+                    .findFirst().orElseThrow();
             result = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
 
         }

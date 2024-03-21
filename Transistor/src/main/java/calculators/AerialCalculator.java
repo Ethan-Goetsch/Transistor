@@ -1,16 +1,29 @@
 package calculators;
 
-import entities.RouteCalculationRequest;
-import entities.RouteCalculationResult;
-import entities.TransportType;
+import entities.*;
 import utils.Conversions;
-import entities.Coordinate;
 
-public class AerialCalculator implements ICalculator
+public class AerialCalculator implements IRouteCalculator
 {
     private static final int radiusEarthInKM = 6371;
 
-    public double distanceToPoint(Coordinate point1, Coordinate point2)
+    @Override
+    public RouteType getRouteType()
+    {
+        return RouteType.AERIAL;
+    }
+
+    @Override
+    public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest)
+    {
+        double distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
+        double time = calculateTime(calculationRequest.transportType(), distance);
+
+        time = Conversions.secondsToMinutes(time);
+        return new RouteCalculationResult(distance, time);
+    }
+
+    private double distanceToPoint(Coordinate point1, Coordinate point2)
     {
         double lat1 = Math.toRadians(point1.getLatitude());
         double lon1 = Math.toRadians(point1.getLongitude());
@@ -19,23 +32,9 @@ public class AerialCalculator implements ICalculator
         return Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1))* radiusEarthInKM;
     }
 
-    public double calculateTime(TransportType type, Coordinate point1, Coordinate point2)
-    {
-        double distance = distanceToPoint(point1, point2);
-        return calculateTime(type, distance);
-    }
-
-    public double calculateTime(TransportType type, double distance)
+    private double calculateTime(TransportType type, double distance)
     {
         double speed = type.getSpeedInMetersPerSecond();
         return distance/speed;
-    }
-
-    @Override
-    public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest) {
-        double distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
-        double time = calculateTime(calculationRequest.transportType(), distance);
-        time = Conversions.secondsToMinutes(time);
-        return new RouteCalculationResult(distance, time);
     }
 }

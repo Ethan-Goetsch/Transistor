@@ -6,6 +6,7 @@ import com.graphhopper.config.Profile;
 import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
 import entities.RouteCalculationRequest;
 import entities.RouteCalculationResult;
+import entities.RouteType;
 import utils.Conversions;
 import utils.PathLocations;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PathCalculator implements ICalculator
+public class PathCalculator implements IRouteCalculator
 {
     private final GraphHopper graphHopper;
 
@@ -32,6 +33,13 @@ public class PathCalculator implements ICalculator
         graphHopper.setGraphHopperLocation(PathLocations.GRAPH_RESOURCE_FOLDER);
         graphHopper.importOrLoad();
     }
+
+    @Override
+    public RouteType getRouteType()
+    {
+        return RouteType.ACTUAL;
+    }
+
     @Override
     public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest)
     {
