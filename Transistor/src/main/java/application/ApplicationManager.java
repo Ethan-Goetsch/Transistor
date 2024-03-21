@@ -1,54 +1,47 @@
 package application;
 
-import calculators.PathCalculator;
-import calculators.RouteCalculator;
-import entities.Route;
-import entities.RouteCalculationRequest;
-import entities.RouteRequest;
+import calculators.AerialCalculator;
+import calculators.ICalculator;
+import entities.*;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
-import entities.Coordinate;
 
 public class ApplicationManager
 {
     private final LocationResolver locationResolver;
-    private final RouteCalculator routeCalculator;
+    private final RequestValidator requestValidator;
 
-    public ApplicationManager(LocationResolver locationResolver, RouteCalculator routeCalculator)
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator)
     {
         this.locationResolver = locationResolver;
-        this.routeCalculator = routeCalculator;
+        this.requestValidator = requestValidator;
     }
 
     public Route calculateRouteRequest(RouteRequest request)
     {
+        if (!requestValidator.isValidRequest(request))
+            new Route(null, null, null, request.transportType(), "Invalid Input");
+
         String message = "";
         Coordinate departureCoordinates = null;
         Coordinate arrivalCoordinates = null;
-        double distance = 0.0;
-        double time = 0.0;
+        RouteCalculationResult result = null;
 
         try
         {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
+            Thread.sleep(10 * 1000);
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
-            Thread.sleep(10 * 1000);
+            ICalculator calculator = new AerialCalculator();
+            result = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
 
-            distance = routeCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
-            time = routeCalculator.calculateTime(request.transportType(), distance);
-
-            var pathCalculator = new PathCalculator();
-            var calculationResult = pathCalculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
-
-            distance = calculationResult.distanceInKM();
-            time = calculationResult.timeInMinutes();
         }
         catch (CallNotPossibleException | InterruptedException e)
         {
             message = e.getMessage();
         }
 
-        return new Route(departureCoordinates, arrivalCoordinates, distance, time, request.transportType(), message);
+        return new Route(departureCoordinates, arrivalCoordinates, result, request.transportType(), message);
     }
 }

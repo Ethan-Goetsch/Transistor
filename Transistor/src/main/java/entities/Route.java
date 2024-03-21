@@ -1,5 +1,5 @@
 package entities;
 
-public record Route(Coordinate departure, Coordinate arrival, double distance, double time, TransportType transportType, String responseMessage)
+public record Route(Coordinate departure, Coordinate arrival, RouteCalculationResult result, TransportType transportType, String responseMessage)
 {
 }
