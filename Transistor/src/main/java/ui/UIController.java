@@ -28,8 +28,8 @@ public class UIController
             return;
         }
 
-        String distance = Conversions.toKm(route.result().distanceInKM());
-        String time = Conversions.formatTime(route.result().timeInMinutes());
+        String distance = "Distance: " + Conversions.formatDistance(route.result().distanceInKM());
+        String time = "Time: " + Conversions.formatTime(route.result().timeInHours());
 
         window.settingsPanel.updateResults(distance, time);
         window.mapPanel.imageHolder.plottingPanel.updateResults(route.departure(), route.arrival());

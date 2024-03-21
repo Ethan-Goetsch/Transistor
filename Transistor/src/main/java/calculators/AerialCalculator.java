@@ -18,9 +18,7 @@ public class AerialCalculator implements IRouteCalculator
     public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest)
     {
         double distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
-        double time = calculateTime(calculationRequest.transportType(), distance);
-
-        time = Conversions.secondsToMinutes(time);
+        double time = Conversions.calculateTime(distance, calculationRequest.transportType());
         return new RouteCalculationResult(null, distance, time);
     }
 
@@ -31,11 +29,5 @@ public class AerialCalculator implements IRouteCalculator
         double lat2 = Math.toRadians(point2.getLatitude());
         double lon2 = Math.toRadians(point2.getLongitude());
         return Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1))* radiusEarthInKM;
-    }
-
-    private double calculateTime(TransportType type, double distance)
-    {
-        double speed = type.getSpeedInMetersPerSecond();
-        return distance/speed;
     }
 }

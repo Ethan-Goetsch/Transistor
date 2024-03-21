@@ -77,7 +77,8 @@ public class SettingsPanel extends JPanel {
     }
 
     //Helper method to create result Panel
-    private void configureResultPanel(){
+    private void configureResultPanel()
+    {
         resultPanel.setLayout(new GridLayout(2,2));
         distanceLabel = new JLabel();
         timeLabel = new JLabel();
@@ -85,11 +86,11 @@ public class SettingsPanel extends JPanel {
         resultPanel.add(timeLabel);
     }
 
-    public void updateResults(String distance, String time) {
-        distanceLabel.setText("The distance is: " + distance + " meters.");
-        timeLabel.setText("It takes you: " + time + " s");
+    public void updateResults(String distance, String time)
+    {
+        distanceLabel.setText(distance);
+        timeLabel.setText(time);
     }
-
 
     private static final int TEXT_FIELD_WIDTH = 20;
     private static final Color GRAY_OPAQUE_COLOR = new Color(128, 128,

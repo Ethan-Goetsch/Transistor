@@ -24,9 +24,9 @@ public class PathCalculator implements IRouteCalculator
         // If these values are changed delete "PathFile.GraphResourceFolder" content in order to reinitialize GraphHopper configuration
         graphHopper = new GraphHopper();
         List<Profile> profiles = new ArrayList<>();
-        profiles.add(new Profile(VehicleEncodedValuesFactory.FOOT));
-        profiles.add(new Profile(VehicleEncodedValuesFactory.BIKE));
-        profiles.add(new Profile(VehicleEncodedValuesFactory.CAR));
+        profiles.add(new Profile(VehicleEncodedValuesFactory.FOOT).setVehicle(VehicleEncodedValuesFactory.FOOT));
+        profiles.add(new Profile(VehicleEncodedValuesFactory.BIKE).setVehicle(VehicleEncodedValuesFactory.BIKE));
+        profiles.add(new Profile(VehicleEncodedValuesFactory.CAR).setVehicle(VehicleEncodedValuesFactory.CAR));
 
         graphHopper.setOSMFile(PathLocations.GRAPH_FILE);
         graphHopper.setProfiles(profiles);
@@ -56,8 +56,8 @@ public class PathCalculator implements IRouteCalculator
         var response = graphHopper.route(request);
         var path = response.getBest();
 
-        var distance = path.getDistance() / 1000; // TEMPORARY
-        var time = (distance * 1000) / calculationRequest.transportType().getSpeedInMetersPerSecond(); // TEMPORARY
+        var distance =  Conversions.metersToKilometers(path.getDistance());
+        var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
         return new RouteCalculationResult(path, distance, time);
     }

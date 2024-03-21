@@ -5,32 +5,35 @@ import entities.TransportType;
 
 public class Conversions
 {
-    public static String formatTime(double timeInSeconds)
+    public static String formatTime(double totalHours)
     {
-        int hours = (int)(timeInSeconds/60)/60;
-        int minutes= (int) (timeInSeconds/60);
-        int seconds= (int) (timeInSeconds%60);
-        return hours + " hours " + minutes + " minutes and "+ seconds;
+        int hours = (int) totalHours;
+        int minutes = (int) ((totalHours % 1) * 60);
+        int seconds = (int) ((totalHours % 1) * 3600) % 60;
+
+        return hours + " hours " + minutes + " minutes " + seconds + " seconds";
     }
 
-    public static String toKm(double distance)
+    public static String formatDistance(double distanceInKilometers)
     {
-        double km=distance/1000;
-        return km + "" +
-                " km";
+        return String.format("%.2f", distanceInKilometers) + " KM";
     }
-    public static double secondsToMinutes(double timeInSeconds){
-        return timeInSeconds/60;
+
+    public static double metersToKilometers(double meters)
+    {
+        return meters/1000;
+    }
+
+    public static double calculateTime(double distanceInKilometers, TransportType type)
+    {
+        double speed = type.getSpeedInKilometersPerSecond();
+        return distanceInKilometers/speed;
     }
 
     public static String toProfile(TransportType transportType)
     {
         switch (transportType)
         {
-            case FOOT ->
-            {
-                return VehicleEncodedValuesFactory.FOOT;
-            }
             case BIKE ->
             {
                 return VehicleEncodedValuesFactory.BIKE;
@@ -41,7 +44,7 @@ public class Conversions
             }
             default ->
             {
-                return VehicleEncodedValuesFactory.WHEELCHAIR;
+                return VehicleEncodedValuesFactory.FOOT;
             }
         }
     }
