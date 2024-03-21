@@ -20,6 +20,10 @@ public class UIController {
 
     private void handleRouteRequested(RouteRequest request) {
 
+        if(request == null){
+            JOptionPane.showMessageDialog(new JFrame(), "Not valid route!", "Error Message", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         var route = manager.calculateRouteRequest(request);
 
         if (!route.responseMessage().isEmpty())
