@@ -10,35 +10,12 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import resolvers.Exceptions.CallNotPossibleException;
-import entities.Coordinates;
+import entities.Coordinate;
+import utils.PathLocations;
 
 public class APICaller
 {
-    private static final String API_URL = "https://computerscience.dacs.unimaas.nl/get_coordinates";
-    /*
-    public static void main(String[] args)
-    {
-        try{
-            Coordinates cr = APICaller.getCoordinates("6227BP");
-            System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
-        }catch(CallNotPossibleException c){
-            c.printStackTrace();
-        }
-        try{
-            Thread.sleep(10000);
-        }catch(InterruptedException ex){
-            ex.printStackTrace();
-        }
-        try{
-            Coordinates cr = APICaller.getCoordinates("6225AP");
-            System.out.println(cr.getLatitude() + "/" + cr.getLongitude());
-        }catch(CallNotPossibleException c){
-            c.printStackTrace();
-        }
-
-    }*/
-
-    public static Coordinates getCoordinates(String postcode) throws CallNotPossibleException
+    public static Coordinate getCoordinates(String postcode) throws CallNotPossibleException
     {
         if (!CallRateAdmin.authouriseRequst())
         {
@@ -48,7 +25,7 @@ public class APICaller
         try
         {
             // Create URL object
-            URL url = new URL(API_URL);
+            URL url = new URL(PathLocations.API_URL);
 
             // Create HttpURLConnection
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -81,7 +58,7 @@ public class APICaller
 
     // Probably rename to toCoordinates
     // Do we want a Json library for this or is too much?
-    private static Coordinates generateCoordinates(String response)
+    private static Coordinate generateCoordinates(String response)
     {
         double latitude = 0.0;
         double longitude = 0.0;
@@ -101,7 +78,7 @@ public class APICaller
             longitude = Double.parseDouble(longitudeMatcher.group(1));
         }
 
-        return new Coordinates(latitude, longitude);
+        return new Coordinate(latitude, longitude);
     }
 
     // Probably rename to toJsonData

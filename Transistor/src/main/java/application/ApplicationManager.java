@@ -1,11 +1,13 @@
 package application;
 
+import calculators.PathCalculator;
 import calculators.RouteCalculator;
 import entities.Route;
+import entities.RouteCalculationRequest;
 import entities.RouteRequest;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
-import entities.Coordinates;
+import entities.Coordinate;
 
 public class ApplicationManager
 {
@@ -21,18 +23,24 @@ public class ApplicationManager
     public Route calculateRouteRequest(RouteRequest request)
     {
         String message = "";
-        Coordinates departureCoordinates = null;
-        Coordinates arrivalCoordinates = null;
+        Coordinate departureCoordinates = null;
+        Coordinate arrivalCoordinates = null;
         double distance = 0.0;
         double time = 0.0;
 
         try
         {
-            departureCoordinates = locationResolver.getCordsFromPostCode(request.destination());
+            departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
             distance = routeCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
             time = routeCalculator.calculateTime(request.transportType(), distance);
+
+            var pathCalculator = new PathCalculator();
+            var calculationResult = pathCalculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
+
+            distance = calculationResult.distanceInKM();
+            time = calculationResult.timeInMinutes();
         }
         catch (CallNotPossibleException e)
         {

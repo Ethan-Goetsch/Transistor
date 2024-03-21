@@ -45,8 +45,6 @@ public class MainWindow extends JFrame {
     }
 
     public void initializeElements() {
-        System.out.println("test" + getWidth());
-
         mapPanel = new MapPanel(mainWidth, mainHeight);
         this.add(mapPanel, BorderLayout.CENTER);
 

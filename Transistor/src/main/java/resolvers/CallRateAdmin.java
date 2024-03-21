@@ -1,14 +1,15 @@
 package resolvers;
 
+import utils.PathLocations;
+
 import java.util.List;
 import java.util.ArrayList;
 
 public class CallRateAdmin
 {
-    private static final String FILE_PATH = "Transistor\\src\\main\\resources\\TokenBuckets.txt";
     public static boolean authouriseRequst()
     {
-        List<TokenBucket> tokenBuckets = TokenBucket.deserializeTokenBucket(FILE_PATH);
+        List<TokenBucket> tokenBuckets = TokenBucket.deserializeTokenBucket(PathLocations.TOKEN_BUCKET);
 
         if(tokenBuckets == null){
             initIfDeserializationFail();
@@ -22,7 +23,7 @@ public class CallRateAdmin
                 break;
             }
         }
-        TokenBucket.serializeTokenBuckets(tokenBuckets, FILE_PATH);
+        TokenBucket.serializeTokenBuckets(tokenBuckets, PathLocations.TOKEN_BUCKET);
         return canRequest;
 
     }
@@ -37,6 +38,6 @@ public class CallRateAdmin
          tokenBuckets.add(tokenBucket1);
          tokenBuckets.add(tokenBucket2);
          tokenBuckets.add(tokenBucket3);
-         TokenBucket.serializeTokenBuckets(tokenBuckets, FILE_PATH);
+         TokenBucket.serializeTokenBuckets(tokenBuckets, PathLocations.TOKEN_BUCKET);
     }
 }
