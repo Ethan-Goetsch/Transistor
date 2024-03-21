@@ -44,7 +44,7 @@ public class ApplicationManager
             result = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
 
         }
-        catch (InterruptedException | CallNotPossibleException e)
+        catch (CallNotPossibleException | InterruptedException e)
         {
             message = e.getMessage();
         }
