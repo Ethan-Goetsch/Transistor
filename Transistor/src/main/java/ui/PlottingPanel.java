@@ -48,9 +48,11 @@ public class PlottingPanel extends JPanel
     }
 
     @Override
-    protected void paintComponent(Graphics g)
+    protected void paintComponent(Graphics g1)
     {
-        super.paintComponent(g);
+        super.paintComponent(g1);
+
+        Graphics2D g = (Graphics2D)g1;
 
         g.translate(130, 78);
 
@@ -66,11 +68,14 @@ public class PlottingPanel extends JPanel
 
         int x2 = latLonPixelConverter.convertLongitudeToPixel(arrivalLong, PANEL_WIDTH);
         int y2 = latLonPixelConverter.convertLatitudeToPixel(arrivalLat, PANEL_HEIGHT);
-        g.drawImage(Icon.getImage(), x2 - 20, y2 - 35, null); // Draw arrival
-                                                              // image
+        g.drawImage(Icon.getImage(), x2 - 20, y2 - 35, null); // Draw arrival image
+
+        g.setStroke(new BasicStroke(3));
+        g.setColor(Color.BLACK);
+        
+        g.fillOval(x1 - 5, y1 - 5, 10, 10); // Circle size of 10
 
         g.setColor(Color.RED);
-        g.fillOval(x1 - 5, y1 - 5, 10, 10); // Circle size of 10
 
         if (bestPath == null)
         {
