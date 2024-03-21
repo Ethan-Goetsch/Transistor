@@ -12,14 +12,14 @@ import java.awt.event.FocusEvent;
 
 public class SettingsPanel extends JPanel {
     private final IAction<RouteRequest> onCalculateClicked;
-    private final RequestValidator validator;
     private JTextField departureField;
     private JTextField arrivalField;
     JPanel resultPanel;
     JLabel distanceLabel;
     JLabel timeLabel;
 
-    public SettingsPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked) {
+    public SettingsPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked)
+    {
         this.setLayout(new GridLayout(3, 1));
         this.setPreferredSize(new Dimension(mainWidth / 3, mainHeight));
         this.setBorder(new EmptyBorder(25, 0, 0, 20)); // top, left, bottom, right padding
@@ -27,7 +27,6 @@ public class SettingsPanel extends JPanel {
         JPanel calculatePanel = createPanel();
         this.add(calculatePanel);
         this.onCalculateClicked = onCalculateCLicked;
-        this. validator = new RequestValidator();
     }
 
     public JPanel createPanel() {
@@ -50,18 +49,7 @@ public class SettingsPanel extends JPanel {
         JButton calculateButton = new JButton("Calculate");
         calculatePanel.add(calculateButton);
 
-        calculateButton.addActionListener(e -> {
-            String departurePostCode = departureField.getText();
-            String arrivalPostCode = arrivalField.getText();
-            if(validator.validateRequest(departurePostCode, arrivalPostCode)){
-                onCalculateClicked.execute(new RouteRequest(departurePostCode,
-                        arrivalPostCode, (TransportType) comboBox.getSelectedItem()));
-            }
-            else{
-                onCalculateClicked.execute(null);
-            }
-
-        });
+        calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest(departureField.getText(), arrivalField.getText(), (TransportType) comboBox.getSelectedItem())));
 
         resultPanel = new JPanel();
         distanceLabel = new JLabel();

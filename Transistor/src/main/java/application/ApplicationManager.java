@@ -1,8 +1,7 @@
 package application;
 
-import calculators.ICalculator;
-import calculators.PathCalculator;
 import calculators.AerialCalculator;
+import calculators.ICalculator;
 import entities.*;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
@@ -10,14 +9,19 @@ import resolvers.LocationResolver;
 public class ApplicationManager
 {
     private final LocationResolver locationResolver;
+    private final RequestValidator requestValidator;
 
-    public ApplicationManager(LocationResolver locationResolver)
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator)
     {
         this.locationResolver = locationResolver;
+        this.requestValidator = requestValidator;
     }
 
     public Route calculateRouteRequest(RouteRequest request)
     {
+        if (!requestValidator.isValidRequest(request))
+            new Route(null, null, null, request.transportType(), "Invalid Input");
+
         String message = "";
         Coordinate departureCoordinates = null;
         Coordinate arrivalCoordinates = null;

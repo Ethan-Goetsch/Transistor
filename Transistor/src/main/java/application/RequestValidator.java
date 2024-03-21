@@ -1,12 +1,22 @@
-package ui;
+package application;
+
+import entities.RouteRequest;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RequestValidator {
+public class RequestValidator
+{
     private final String pattern = "\\d{4}[A-Z|a-z]{2}";
     private final int length = 6;
-    public boolean validateRequest(String departurePostcode, String destinationPostCode){
+
+    public boolean isValidRequest(RouteRequest request)
+    {
+        return isValidInput(request.departure(), request.arrival());
+    }
+
+    private boolean isValidInput(String departurePostcode, String destinationPostCode)
+    {
         // Compile the pattern
         Pattern regex = Pattern.compile(pattern);
 
