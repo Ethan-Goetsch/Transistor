@@ -1,7 +1,7 @@
 package application;
 
 import calculators.PathCalculator;
-import calculators.RouteCalculator;
+import calculators.AerialCalculator;
 import entities.Route;
 import entities.RouteCalculationRequest;
 import entities.RouteRequest;
@@ -12,12 +12,12 @@ import entities.Coordinate;
 public class ApplicationManager
 {
     private final LocationResolver locationResolver;
-    private final RouteCalculator routeCalculator;
+    private final AerialCalculator aerialCalculator;
 
-    public ApplicationManager(LocationResolver locationResolver, RouteCalculator routeCalculator)
+    public ApplicationManager(LocationResolver locationResolver, AerialCalculator aerialCalculator)
     {
         this.locationResolver = locationResolver;
-        this.routeCalculator = routeCalculator;
+        this.aerialCalculator = aerialCalculator;
     }
 
     public Route calculateRouteRequest(RouteRequest request)
@@ -33,8 +33,8 @@ public class ApplicationManager
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
-            distance = routeCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
-            time = routeCalculator.calculateTime(request.transportType(), distance);
+            distance = aerialCalculator.Distance2P(departureCoordinates, arrivalCoordinates);
+            time = aerialCalculator.calculateTime(request.transportType(), distance);
 
             var pathCalculator = new PathCalculator();
             var calculationResult = pathCalculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
