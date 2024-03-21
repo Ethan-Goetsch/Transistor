@@ -1,5 +1,7 @@
 package entities;
 
-public record RouteCalculationResult(double distanceInKM, double timeInMinutes)
+import com.graphhopper.ResponsePath;
+
+public record RouteCalculationResult(ResponsePath path, double distanceInKM, double timeInMinutes)
 {
 }

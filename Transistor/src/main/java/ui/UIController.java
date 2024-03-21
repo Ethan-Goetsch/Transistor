@@ -21,12 +21,6 @@ public class UIController
 
     private void handleRouteRequested(RouteRequest request)
     {
-        if (request == null)
-        {
-            JOptionPane.showMessageDialog(new JFrame(), "Not valid route!", "Error Message", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         var route = manager.calculateRouteRequest(request);
         if (!route.responseMessage().isEmpty())
         {
@@ -34,7 +28,10 @@ public class UIController
             return;
         }
 
-        window.settingsPanel.updateResults(String.valueOf((int) route.result().distanceInKM()), Conversions.timeDivision(route.result().timeInMinutes()));
+        String distance = Conversions.toKm(route.result().distanceInKM());
+        String time = Conversions.formatTime(route.result().timeInMinutes());
+
+        window.settingsPanel.updateResults(distance, time);
         window.mapPanel.imageHolder.plottingPanel.updateResults(route.departure(), route.arrival());
     }
 }

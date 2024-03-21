@@ -1,5 +1,6 @@
 package calculators;
 
+import com.graphhopper.ResponsePath;
 import entities.*;
 import utils.Conversions;
 
@@ -20,7 +21,7 @@ public class AerialCalculator implements IRouteCalculator
         double time = calculateTime(calculationRequest.transportType(), distance);
 
         time = Conversions.secondsToMinutes(time);
-        return new RouteCalculationResult(distance, time);
+        return new RouteCalculationResult(null, distance, time);
     }
 
     private double distanceToPoint(Coordinate point1, Coordinate point2)

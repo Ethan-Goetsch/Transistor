@@ -59,6 +59,6 @@ public class PathCalculator implements IRouteCalculator
         var distance = path.getDistance() / 1000; // TEMPORARY
         var time = (distance * 1000) / calculationRequest.transportType().getSpeedInMetersPerSecond(); // TEMPORARY
 
-        return new RouteCalculationResult(distance, time);
+        return new RouteCalculationResult(path, distance, time);
     }
 }
