@@ -6,8 +6,6 @@ import utils.Subject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class MainWindow extends JFrame {
 
@@ -45,8 +43,8 @@ public class MainWindow extends JFrame {
     }
 
     public void initializeElements() {
-        mapPanel = new MapPanel(mainWidth, mainHeight);
-        this.add(mapPanel, BorderLayout.CENTER);
+        this.add(new MMap(), BorderLayout.CENTER);
+
 
         settingsPanel = new SettingsPanel(mainWidth, mainHeight, onRouteRequested::execute);
         this.add(settingsPanel, BorderLayout.EAST);
