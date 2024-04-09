@@ -5,8 +5,6 @@ import com.google.gson.GsonBuilder;
 import utils.PathLocations;
 
 import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
 
 public class CallRateAdmin
 {
