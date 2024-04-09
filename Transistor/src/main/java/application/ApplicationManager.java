@@ -34,7 +34,6 @@ public class ApplicationManager
         try
         {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
-            Thread.sleep(10 * 1000);
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
             IRouteCalculator calculator = routeCalculators
@@ -44,7 +43,7 @@ public class ApplicationManager
             result = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
 
         }
-        catch (CallNotPossibleException | InterruptedException e)
+        catch (CallNotPossibleException e)
         {
             message = e.getMessage();
         }
