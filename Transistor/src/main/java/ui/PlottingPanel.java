@@ -1,14 +1,10 @@
 package ui;
 
+import com.graphhopper.ResponsePath;
+import com.graphhopper.util.shapes.GHPoint3D;
 import entities.Coordinate;
 
 import javax.swing.*;
-
-import org.apache.logging.log4j.core.appender.routing.Route;
-
-import com.graphhopper.ResponsePath;
-import com.graphhopper.util.shapes.GHPoint3D;
-
 import java.awt.*;
 
 public class PlottingPanel extends JPanel
