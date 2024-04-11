@@ -9,13 +9,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MapType extends JComboBox {
+public class MapType extends JComboBox<String> {
     private JXMapViewer jXMapViewer;
     public MapType(JXMapViewer jXMapViewer){
         this.jXMapViewer = jXMapViewer;
         this.setModel(new DefaultComboBoxModel<>(new String[] { "Open Stree", "Virtual Earth", "Hybrid", "Satellite" }));
         this.addActionListener(new ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            public void actionPerformed(ActionEvent evt) {
                 comboMapTypeActionPerformed(evt);
             }
         });

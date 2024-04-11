@@ -43,8 +43,7 @@ public class MainWindow extends JFrame {
     }
 
     public void initializeElements() {
-        this.add(new MMap(), BorderLayout.CENTER);
-
+        this.add(new MapPanel(mainWidth, mainHeight), BorderLayout.CENTER);
 
         settingsPanel = new SettingsPanel(mainWidth, mainHeight, onRouteRequested::execute);
         this.add(settingsPanel, BorderLayout.EAST);
