@@ -13,13 +13,20 @@ import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 
+import java.awt.*;
+
 public class MMap extends JPanel{
 
     private final double LAT_CENTER = 50.8471966;
     private final double LON_CENTER = 5.7015544;
+    private final int mainWidth;
+    private final int mainHeight;
     private JXMapViewer jXMapViewer;
 
-    public MMap(JXMapViewer jXMapViewer) {
+    public MMap(JXMapViewer jXMapViewer, int mainWidth, int mainHeight) {
+        this.mainWidth = mainWidth;
+        this.mainHeight = mainHeight;
+        this.setPreferredSize(new Dimension(2 * mainWidth / 3, mainHeight));
         this.jXMapViewer = jXMapViewer;
         initComponents();
         initMap();
@@ -42,18 +49,34 @@ public class MMap extends JPanel{
 
     private void initComponents() {
 
+        GroupLayout layout = new GroupLayout(this);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jXMapViewer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jXMapViewer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+
         GroupLayout jXMapViewerLayout = new javax.swing.GroupLayout(jXMapViewer);
         jXMapViewer.setLayout(jXMapViewerLayout);
         jXMapViewerLayout.setHorizontalGroup(
                 jXMapViewerLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(jXMapViewerLayout.createSequentialGroup()
-                                .addContainerGap(992, Short.MAX_VALUE)
+                                .addContainerGap(mainWidth, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         jXMapViewerLayout.setVerticalGroup(
                 jXMapViewerLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(jXMapViewerLayout.createSequentialGroup()
-                                .addGap(0, 640, Short.MAX_VALUE))
+                                .addGap(0, mainHeight, Short.MAX_VALUE))
         );
 
 
