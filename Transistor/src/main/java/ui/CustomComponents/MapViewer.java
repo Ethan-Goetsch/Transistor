@@ -9,7 +9,6 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.function.Consumer;
 public class MapViewer extends JXMapViewer {
-
     private ResponsePath bestPath;
     private boolean firstPoint;
     public MapViewer(){}
@@ -17,7 +16,6 @@ public class MapViewer extends JXMapViewer {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
 
         if (bestPath != null) {
             Graphics2D g2 = (Graphics2D) g;

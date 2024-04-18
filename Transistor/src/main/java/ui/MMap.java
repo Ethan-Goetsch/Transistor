@@ -105,10 +105,6 @@ public class MMap extends JPanel{
                                 .addGap(0, mainHeight, Short.MAX_VALUE))
         );
     }
-
-
-    private boolean firstPoint = true;
-    ResponsePath path;
     public void updateResults(Coordinate departure, Coordinate arrival, ResponsePath bestPath){
         //TODO remove existing waypoints
         ((MapViewer)jXMapViewer).bestPath(bestPath);
