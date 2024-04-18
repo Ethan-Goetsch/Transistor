@@ -3,6 +3,7 @@ package ui;
 import javax.swing.*;
 import application.ApplicationManager;
 import entities.RouteRequest;
+import org.jxmapviewer.JXMapViewer;
 import utils.Conversions;
 
 public class UIController
@@ -32,7 +33,8 @@ public class UIController
         String time = "Time: " + Conversions.formatTime(route.result().timeInHours());
 
         window.getSearchPanel().updateResults(distance, time);
-//        window.mapPanel.imageHolder.plottingPanel.updateResults(route.departure(), route.arrival(), route.result().path());
+        MMap map= window.getMap();
+        map.updateResults(route.departure(), route.arrival(), route.result().path());
         //TODO change the ploting
     }
 }

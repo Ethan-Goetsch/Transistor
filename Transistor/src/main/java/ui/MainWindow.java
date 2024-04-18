@@ -3,6 +3,7 @@ package ui;
 import entities.RouteRequest;
 import org.jxmapviewer.JXMapViewer;
 import ui.Menues.AplicationMenuBar;
+import ui.CustomComponents.MapViewer;
 import utils.IObservable;
 import utils.Subject;
 
@@ -15,6 +16,7 @@ public class MainWindow extends JFrame {
     private int mainHeight = 700;
     private SearchPanel searchPanel;
     private JXMapViewer jXMapViewer;
+    private MMap map;
     public SearchPanel getSearchPanel() {
         return this.searchPanel;
     }
@@ -45,8 +47,8 @@ public class MainWindow extends JFrame {
 
     public void initializeElements() {
 
-        jXMapViewer = new JXMapViewer();
-        MMap map = new MMap(jXMapViewer,mainWidth, mainHeight);
+        jXMapViewer = new MapViewer();
+        map = new MMap(jXMapViewer,mainWidth, mainHeight);
 
         searchPanel = new SearchPanel(mainWidth, mainHeight, onRouteRequested::execute); // this is the search panel from before
 
@@ -54,8 +56,8 @@ public class MainWindow extends JFrame {
 
         this.add(searchPanel, BorderLayout.EAST);
 
-        JMenuBar menues = new AplicationMenuBar(this);
-        this.setJMenuBar(menues);
+        JMenuBar menus = new AplicationMenuBar(this);
+        this.setJMenuBar(menus);
 
 
         GroupLayout layout = new GroupLayout(getContentPane());
@@ -93,8 +95,9 @@ public class MainWindow extends JFrame {
     public SearchPanel searchPanel() {
         return searchPanel;
     }
-    public JXMapViewer getjXMapViewer() {
-        return jXMapViewer;
+    public JXMapViewer getjXMapViewer() { return jXMapViewer;}
+    public MMap getMap() {
+        return map;
     }
     public void resize(){
         this.setSize(mainWidth, mainHeight);
