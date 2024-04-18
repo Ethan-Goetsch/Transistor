@@ -10,17 +10,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
-
     private LayoutManager layout = new BorderLayout();
-    private final int mainWidth = 900;
-    private final int mainHeight = 700;
-
-    SearchPanel searchPanel;
-
+    private int mainWidth = 900;
+    private int mainHeight = 700;
+    private SearchPanel searchPanel;
+    private JXMapViewer jXMapViewer;
     public SearchPanel getSearchPanel() {
         return this.searchPanel;
     }
-
     private final Subject<RouteRequest> onRouteRequested;
 
     public MainWindow() {
@@ -38,7 +35,9 @@ public class MainWindow extends JFrame {
     }
 
     public void configureWindow() {
-        this.setSize(mainWidth, mainHeight);
+        resize();
+        this.setTitle("Maastricht maps");
+        this.setIconImage((new ImageIcon("Transistor/src/main/resources/images/applicationIcon.png")).getImage());
         this.setLayout(layout);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,13 +45,8 @@ public class MainWindow extends JFrame {
 
     public void initializeElements() {
 
-
-
-        JXMapViewer jXMapViewer = new JXMapViewer();
+        jXMapViewer = new JXMapViewer();
         MMap map = new MMap(jXMapViewer,mainWidth, mainHeight);
-
-
-
 
         searchPanel = new SearchPanel(mainWidth, mainHeight, onRouteRequested::execute); // this is the search panel from before
 
@@ -60,7 +54,7 @@ public class MainWindow extends JFrame {
 
         this.add(searchPanel, BorderLayout.EAST);
 
-        JMenuBar menues = new AplicationMenuBar(jXMapViewer, searchPanel);
+        JMenuBar menues = new AplicationMenuBar(this);
         this.setJMenuBar(menues);
 
 
@@ -86,5 +80,23 @@ public class MainWindow extends JFrame {
 
         pack();
 
+    }
+
+    public void setMainHeight(int mainHeight) {
+        this.mainHeight = mainHeight;
+    }
+
+    public void setMainWidth(int mainWidth) {
+        this.mainWidth = mainWidth;
+    }
+
+    public SearchPanel searchPanel() {
+        return searchPanel;
+    }
+    public JXMapViewer getjXMapViewer() {
+        return jXMapViewer;
+    }
+    public void resize(){
+        this.setSize(mainWidth, mainHeight);
     }
 }

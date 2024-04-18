@@ -3,26 +3,20 @@ package ui;
 import entities.RouteRequest;
 import entities.RouteType;
 import entities.TransportType;
-import ui.CustomComponents.CalculationButton;
-import ui.CustomComponents.CircularIconButton;
-import ui.CustomComponents.CircularIconButtonFactory;
-import ui.CustomComponents.InputTextField;
+import ui.CustomComponents.*;
 import utils.IAction;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 public class SearchPanel extends JPanel {
     private final IAction<RouteRequest> onCalculateClicked;
     private JTextField departureField;
     private JTextField arrivalField;
     private JLabel distanceLabel;
     private JLabel timeLabel;
-
     private RouteType routetypeSetting;
     private TransportType selectedTransport;
+    private AnimatedLine indicator;
 
     public SearchPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked) {
         this.setPreferredSize(new Dimension(mainWidth / 3, mainHeight));
@@ -58,24 +52,28 @@ public class SearchPanel extends JPanel {
 
         JButton calculateButton = new CalculationButton("Calculate");
         calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest(departureField.getText(),
-                arrivalField.getText(), selectedTransport, (RouteType) routetypeSetting)));
+                arrivalField.getText(), selectedTransport, routetypeSetting)));
 
         distanceLabel = new JLabel();
         timeLabel = new JLabel();
         JRadioButton switchButon = buttonFactory.createIconButton("Transistor/src/main/resources/images/switch.png");
 
-        switchButon.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        switchButon.addActionListener(e -> {
 
-                if(!((InputTextField)arrivalField).getDefaultText().equals(arrivalField.getText())
-                        && !((InputTextField)departureField).getDefaultText().equals(departureField.getText())){
-                    String save = arrivalField.getText();
-                    arrivalField.setText(departureField.getText());
-                    departureField.setText(save);
-                }
+            if(!((InputTextField)arrivalField).getDefaultText().equals(arrivalField.getText())
+                    && !((InputTextField)departureField).getDefaultText().equals(departureField.getText())){
+                String save = arrivalField.getText();
+                arrivalField.setText(departureField.getText());
+                departureField.setText(save);
             }
         });
+
+        JPanel contentPane = new JPanel();
+        contentPane.setBackground(Color.white);
+        contentPane.setSize(new Dimension(20,280));
+        contentPane.setLayout(new BorderLayout());
+        indicator = new AnimatedLine(new Point(transportationType1.getX()+20, transportationType1.getY()), new Point(transportationType1.getX()+40, transportationType1.getY()));
+        contentPane.add(indicator);
 
         GroupLayout layout = new GroupLayout(this);
        this.setLayout(layout);
@@ -90,13 +88,14 @@ public class SearchPanel extends JPanel {
                                 .addGroup(layout.createSequentialGroup()
                                         .addContainerGap(10,10)
                                         .addComponent(transportationType1)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED , 35, 35)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED , 30, 30)
                                         .addComponent(transportationType2)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 35, 35)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 30, 30)
                                         .addComponent(transportationType3)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 35, 35)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 30, 30)
                                         .addComponent(transportationType4)
                                         .addContainerGap())
+                                        .addComponent(contentPane, GroupLayout.PREFERRED_SIZE,280, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(distanceLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(timeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
@@ -119,6 +118,7 @@ public class SearchPanel extends JPanel {
                                         .addComponent(transportationType4)
 
                                 )
+                                .addComponent(contentPane, GroupLayout.PREFERRED_SIZE,5, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(calculateButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(distanceLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -129,12 +129,10 @@ public class SearchPanel extends JPanel {
     }
 
     private void addactionListener(JRadioButton button, TransportType type){
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedTransport = type;
+        button.addActionListener(e -> {
+            selectedTransport = type;
+            indicator.moveTo(new Point(button.getX()-2, 0), new Point(button.getX()+20, 0));
 
-            }
         });
     }
     public void updateResults(String distance, String time)
@@ -146,4 +144,5 @@ public class SearchPanel extends JPanel {
     public void setRouteType(RouteType routeType){
         this.routetypeSetting = routeType;
     }
+
 }
