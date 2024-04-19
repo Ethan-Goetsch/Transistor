@@ -106,15 +106,14 @@ public class MMap extends JPanel{
         );
     }
     public void updateResults(Coordinate departure, Coordinate arrival, ResponsePath bestPath){
-        //TODO remove existing waypoints
         ((MapViewer)jXMapViewer).bestPath(bestPath);
         double departureLong = departure.getLongitude();
         double departureLat = departure.getLatitude();
         double arrivalLong = arrival.getLongitude();
         double arrivalLat = arrival.getLatitude();
-
         addWaypoint(new GeoPosition(arrivalLat, arrivalLong), new ImageIcon("Transistor/src/main/resources/locationIcon.png"));//add Arrival
         addWaypoint(new GeoPosition(departureLat, departureLong), new ImageIcon("Transistor/src/main/resources/blueDot.png")); //add Departure
+        //TODO here add the different icons that are needed
         jXMapViewer.repaint();
     }
 }

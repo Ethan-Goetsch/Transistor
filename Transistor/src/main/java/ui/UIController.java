@@ -35,6 +35,5 @@ public class UIController
         window.getSearchPanel().updateResults(distance, time);
         MMap map= window.getMap();
         map.updateResults(route.departure(), route.arrival(), route.result().path());
-        //TODO change the ploting
     }
 }

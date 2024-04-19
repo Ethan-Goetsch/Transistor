@@ -1,14 +1,12 @@
 package ui.CustomComponents;
 
 import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.viewer.WaypointPainter;
-import org.jxmapviewer.viewer.WaypointRenderer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 
-public class WaipointRenderer extends WaypointPainter<Waypoint> {
+public class WaypointPainter extends org.jxmapviewer.viewer.WaypointPainter<Waypoint> {
 
     @Override
     protected void doPaint(Graphics2D graphic, JXMapViewer map, int width, int height) {

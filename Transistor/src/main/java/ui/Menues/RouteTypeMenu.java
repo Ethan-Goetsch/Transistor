@@ -1,6 +1,8 @@
 package ui.Menues;
 
 import entities.RouteType;
+import org.jxmapviewer.JXMapViewer;
+import ui.CustomComponents.MapViewer;
 import ui.SearchPanel;
 
 import javax.swing.*;
@@ -9,8 +11,10 @@ import java.awt.event.ActionListener;
 
 public class RouteTypeMenu extends JMenu {
     private SearchPanel searchPanel;
-    public RouteTypeMenu(SearchPanel searchPanel){
+    private JXMapViewer jxMapViewer;
+    public RouteTypeMenu(SearchPanel searchPanel, JXMapViewer jxMapViewer){
         this.searchPanel = searchPanel;
+        this.jxMapViewer = jxMapViewer;
         this.setText("Route Type");
         JMenuItem it1 = new JMenuItem("Actual route");
         JMenuItem it2 = new JMenuItem("Arial route");
@@ -23,11 +27,13 @@ public class RouteTypeMenu extends JMenu {
         jMenuItems[0].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 searchPanel.setRouteType(RouteType.ACTUAL);
+                ((MapViewer)jxMapViewer).changeRouteType(RouteType.ACTUAL);
             }
         });
         jMenuItems[1].addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                searchPanel.setRouteType(RouteType.AERIAL);
+//                searchPanel.setRouteType(RouteType.AERIAL); //TODO ask Ethan about the way the actual route and areal route is calculated. Currently we use Actual route in both, and just paint what we want
+                ((MapViewer)jxMapViewer).changeRouteType(RouteType.AERIAL);
             }
         });
     }
