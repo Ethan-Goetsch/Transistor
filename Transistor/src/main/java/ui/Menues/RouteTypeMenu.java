@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class RouteTypeMenu extends JMenu {
-    private SearchPanel searchPanel;
-    private JXMapViewer jxMapViewer;
+    private final SearchPanel searchPanel;
+    private final JXMapViewer jxMapViewer;
     public RouteTypeMenu(SearchPanel searchPanel, JXMapViewer jxMapViewer){
         this.searchPanel = searchPanel;
         this.jxMapViewer = jxMapViewer;
@@ -24,17 +24,13 @@ public class RouteTypeMenu extends JMenu {
     }
 
     private void addActions(JMenuItem[] jMenuItems) {
-        jMenuItems[0].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                searchPanel.setRouteType(RouteType.ACTUAL);
-                ((MapViewer)jxMapViewer).changeRouteType(RouteType.ACTUAL);
-            }
+        jMenuItems[0].addActionListener(e -> {
+            searchPanel.setRouteType(RouteType.ACTUAL);
+            ((MapViewer)jxMapViewer).changeRouteType(RouteType.ACTUAL);
         });
-        jMenuItems[1].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        jMenuItems[1].addActionListener(e -> {
 //                searchPanel.setRouteType(RouteType.AERIAL); //TODO ask Ethan about the way the actual route and areal route is calculated. Currently we use Actual route in both, and just paint what we want
-                ((MapViewer)jxMapViewer).changeRouteType(RouteType.AERIAL);
-            }
+            ((MapViewer)jxMapViewer).changeRouteType(RouteType.AERIAL);
         });
     }
 }
