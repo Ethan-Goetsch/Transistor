@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.event.MouseInputListener;
 import com.graphhopper.ResponsePath;
-import com.graphhopper.util.shapes.GHPoint3D;
 import entities.Coordinate;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
@@ -14,11 +13,8 @@ import org.jxmapviewer.viewer.*;
 import ui.CustomComponents.MapViewer;
 import ui.CustomComponents.Waypoint;
 import java.awt.*;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class MMap extends JPanel{
     private final Set<Waypoint> waypoints = new HashSet<>();
@@ -26,7 +22,7 @@ public class MMap extends JPanel{
     private final double LON_CENTER = 5.7015544;
     private final int mainWidth;
     private final int mainHeight;
-    private JXMapViewer jXMapViewer;
+    private final JXMapViewer jXMapViewer;
 
 
     public MMap(JXMapViewer jXMapViewer, int mainWidth, int mainHeight) {

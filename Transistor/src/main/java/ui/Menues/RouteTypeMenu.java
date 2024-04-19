@@ -6,8 +6,6 @@ import ui.CustomComponents.MapViewer;
 import ui.SearchPanel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class RouteTypeMenu extends JMenu {
     private final SearchPanel searchPanel;
