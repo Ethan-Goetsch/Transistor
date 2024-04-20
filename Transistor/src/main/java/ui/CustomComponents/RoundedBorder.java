@@ -1,13 +1,11 @@
 package ui.CustomComponents;
 
-import org.checkerframework.checker.units.qual.C;
-
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
 
 class RoundedBorder extends AbstractBorder {
-    private int radius;
-    private Color color;
+    private final int radius;
+    private final Color color;
 
     public RoundedBorder(int radius, Color color) {
         this.radius = radius;

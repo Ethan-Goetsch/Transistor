@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MapType extends JMenu  {
-    private JXMapViewer jXMapViewer;
+    private final JXMapViewer jXMapViewer;
 
     public MapType(JXMapViewer jXMapViewer){
         super("Map Type");
@@ -34,26 +34,10 @@ public class MapType extends JMenu  {
 
     private void addActions(JMenuItem[] items) {
 
-        items[0].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                changeMap(new OSMTileFactoryInfo());
-            }
-        });
-        items[1].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                changeMap(new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP));
-            }
-        });
-        items[2].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                changeMap(new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.HYBRID));
-            }
-        });
-        items[3].addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                changeMap(new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.SATELLITE));
-            }
-        });
+        items[0].addActionListener(e -> changeMap(new OSMTileFactoryInfo()));
+        items[1].addActionListener(e -> changeMap(new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP)));
+        items[2].addActionListener(e -> changeMap(new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.HYBRID)));
+        items[3].addActionListener(e -> changeMap(new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.SATELLITE)));
 
     }
     private void changeMap(TileFactoryInfo info) {//GEN-FIRST:event_comboMapTypeActionPerformed

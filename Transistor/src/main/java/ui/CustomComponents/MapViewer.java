@@ -27,30 +27,24 @@ public class MapViewer extends JXMapViewer {
             Path2D p = new Path2D.Double();
             firstPoint = true;
             if(routeType == RouteType.ACTUAL){
-                bestPath.getPoints().forEach(new Consumer<GHPoint3D>() {
-                    @Override
-                    public void accept(GHPoint3D ghPoint3D) {
-                        Point2D point = convertGeoPositionToPoint(new GeoPosition(ghPoint3D.getLat(),ghPoint3D.getLon() ));
-                        if(firstPoint){
-                            firstPoint = false;
-                            p.moveTo(point.getX(), point.getY());
-                        }else{
-                            p.lineTo(point.getX(), point.getY());
-                        }
+                bestPath.getPoints().forEach(e -> {
+                    Point2D point = convertGeoPositionToPoint(new GeoPosition(e.getLat(),e.getLon() ));
+                    if(firstPoint){
+                        firstPoint = false;
+                        p.moveTo(point.getX(), point.getY());
+                    }else{
+                        p.lineTo(point.getX(), point.getY());
                     }
                 });
             }
             else{
-                bestPath.getWaypoints().forEach(new Consumer<GHPoint3D>() {
-                    @Override
-                    public void accept(GHPoint3D ghPoint3D) {
-                        Point2D point = convertGeoPositionToPoint(new GeoPosition(ghPoint3D.getLat(),ghPoint3D.getLon() ));
-                        if(firstPoint){
-                            firstPoint = false;
-                            p.moveTo(point.getX(), point.getY());
-                        }else{
-                            p.lineTo(point.getX(), point.getY());
-                        }
+                bestPath.getWaypoints().forEach(e -> {
+                    Point2D point = convertGeoPositionToPoint(new GeoPosition(e.getLat(),e.getLon() ));
+                    if(firstPoint){
+                        firstPoint = false;
+                        p.moveTo(point.getX(), point.getY());
+                    }else{
+                        p.lineTo(point.getX(), point.getY());
                     }
                 });
             }

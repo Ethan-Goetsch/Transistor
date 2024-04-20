@@ -6,8 +6,8 @@ import ui.SearchPanel;
 import javax.swing.*;
 
 public class Settings extends JMenu {
-    private JXMapViewer jXMapViewer;
-    private SearchPanel searchPanel;
+    private final JXMapViewer jXMapViewer;
+    private final SearchPanel searchPanel;
     public Settings(JXMapViewer jXMapViewer, SearchPanel searchPanel){
         super("Settings");
         this.jXMapViewer = jXMapViewer;

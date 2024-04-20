@@ -5,7 +5,7 @@ import ui.MainWindow;
 import javax.swing.*;
 
 public class SizeMenu extends JMenu {
-    private JFrame mainWindow;
+    private final JFrame mainWindow;
     public SizeMenu(JFrame mainWindow){
         super("Size");
         this.mainWindow = mainWindow;

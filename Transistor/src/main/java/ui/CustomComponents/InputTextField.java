@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class InputTextField extends JTextField {
     private static final Color GRAY_OPAQUE_COLOR = new Color(220, 255, 255, 128);
