@@ -12,10 +12,10 @@ public class Settings extends JMenu {
         super("Settings");
         this.jXMapViewer = jXMapViewer;
         this.searchPanel = searchPanel;
-        initComponents();
+        initItems();
     }
 
-    private void initComponents() {
+    private void initItems() {
         JMenuItem mapTypeSelect = new MapType(jXMapViewer);
         this.add(mapTypeSelect);
         JMenuItem routeTypeSelection = new RouteTypeMenu(searchPanel,jXMapViewer);

@@ -11,25 +11,22 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
-    private LayoutManager layout = new BorderLayout();
     private int mainWidth = 900;
     private int mainHeight = 700;
     private SearchPanel searchPanel;
     private JXMapViewer jXMapViewer;
     private MMap map;
-    public SearchPanel getSearchPanel() {
-        return this.searchPanel;
-    }
     private final Subject<RouteRequest> onRouteRequested;
 
     public MainWindow() {
 
         this.onRouteRequested = new Subject<>();
-        configureWindow();
-        initializeElements();
         this.setFocusable(true);
         this.setBackground(Color.white);
         this.setVisible(true);
+        configureWindow();
+        initializeElements();
+        setLayout();
     }
 
     public IObservable<RouteRequest> getRouteRequested() {
@@ -40,7 +37,6 @@ public class MainWindow extends JFrame {
         resize();
         this.setTitle("Maastricht maps");
         this.setIconImage((new ImageIcon("Transistor/src/main/resources/images/applicationIcon.png")).getImage());
-        this.setLayout(layout);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -49,17 +45,15 @@ public class MainWindow extends JFrame {
 
         jXMapViewer = new MapViewer();
         map = new MMap(jXMapViewer,mainWidth, mainHeight);
-
         searchPanel = new SearchPanel(mainWidth, mainHeight, onRouteRequested::execute); // this is the search panel from before
 
-        this.add(map, BorderLayout.CENTER);
+        getContentPane().add(map);
+        getContentPane().add(searchPanel);
+        this.setJMenuBar(new AplicationMenuBar(this));
 
-        this.add(searchPanel, BorderLayout.EAST);
+    }
 
-        JMenuBar menus = new AplicationMenuBar(this);
-        this.setJMenuBar(menus);
-
-
+    private void setLayout() {
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -77,21 +71,18 @@ public class MainWindow extends JFrame {
                                         .addComponent(searchPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(map, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                )
+                        )
         );
 
         pack();
-
     }
 
     public void setMainHeight(int mainHeight) {
         this.mainHeight = mainHeight;
     }
-
     public void setMainWidth(int mainWidth) {
         this.mainWidth = mainWidth;
     }
-
     public SearchPanel searchPanel() {
         return searchPanel;
     }
@@ -99,7 +90,9 @@ public class MainWindow extends JFrame {
     public MMap getMap() {
         return map;
     }
+    public SearchPanel getSearchPanel() {return this.searchPanel;}
     public void resize(){
         this.setSize(mainWidth, mainHeight);
     }
+
 }

@@ -30,7 +30,7 @@ public class MMap extends JPanel{
         this.mainHeight = mainHeight;
         this.setPreferredSize(new Dimension(2 * mainWidth / 3, mainHeight));
         this.jXMapViewer = jXMapViewer;
-        initComponents();
+        initLayout();
         initMap();
     }
     private void initMap() {
@@ -40,13 +40,44 @@ public class MMap extends JPanel{
         GeoPosition position = new GeoPosition(LAT_CENTER, LON_CENTER);
         jXMapViewer.setAddressLocation(position);
         jXMapViewer.setZoom(5);
-
         MouseInputListener mm = new PanMouseInputListener(jXMapViewer);
         jXMapViewer.addMouseListener(mm);
         jXMapViewer.addMouseMotionListener(mm);
         jXMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer));
     }
 
+    private void initLayout() {
+
+        GroupLayout layout = new GroupLayout(this);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jXMapViewer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jXMapViewer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+
+        GroupLayout jXMapViewerLayout = new GroupLayout(jXMapViewer);
+        jXMapViewer.setLayout(jXMapViewerLayout);
+        jXMapViewerLayout.setHorizontalGroup(
+                jXMapViewerLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(jXMapViewerLayout.createSequentialGroup()
+                                .addContainerGap(mainWidth, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+        jXMapViewerLayout.setVerticalGroup(
+                jXMapViewerLayout.createParallelGroup(Alignment.LEADING)
+                        .addGroup(jXMapViewerLayout.createSequentialGroup()
+                                .addGap(0, mainHeight, Short.MAX_VALUE))
+        );
+    }
     private void initWaypoints(){
         WaypointPainter<Waypoint> wp = new WaypointPainter<>();
         wp.setWaypoints(waypoints);
@@ -67,39 +98,6 @@ public class MMap extends JPanel{
     private void addWaypoint(GeoPosition gp, ImageIcon image){
         waypoints.add(new Waypoint(gp, image));
         initWaypoints();
-    }
-
-    private void initComponents() {
-
-        GroupLayout layout = new GroupLayout(this);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jXMapViewer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jXMapViewer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
-        );
-
-        GroupLayout jXMapViewerLayout = new javax.swing.GroupLayout(jXMapViewer);
-        jXMapViewer.setLayout(jXMapViewerLayout);
-        jXMapViewerLayout.setHorizontalGroup(
-                jXMapViewerLayout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jXMapViewerLayout.createSequentialGroup()
-                                .addContainerGap(mainWidth, Short.MAX_VALUE)
-                                .addContainerGap())
-        );
-        jXMapViewerLayout.setVerticalGroup(
-                jXMapViewerLayout.createParallelGroup(Alignment.LEADING)
-                        .addGroup(jXMapViewerLayout.createSequentialGroup()
-                                .addGap(0, mainHeight, Short.MAX_VALUE))
-        );
     }
     public void updateResults(Coordinate departure, Coordinate arrival, ResponsePath bestPath){
         ((MapViewer)jXMapViewer).bestPath(bestPath);

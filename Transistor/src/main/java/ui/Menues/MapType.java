@@ -13,8 +13,13 @@ public class MapType extends JMenu  {
     private JXMapViewer jXMapViewer;
 
     public MapType(JXMapViewer jXMapViewer){
+        super("Map Type");
         this.jXMapViewer = jXMapViewer;
-        this.setText("Map Type");
+        initItems();
+
+    }
+
+    private void initItems() {
         JMenuItem it1 = new JMenuItem("Default");
         JMenuItem it2 = new JMenuItem("Virtual Earth");
         JMenuItem it3 = new JMenuItem("Hybrid");
@@ -25,7 +30,6 @@ public class MapType extends JMenu  {
         this.add(it2);
         this.add(it3);
         this.add(it4);
-
     }
 
     private void addActions(JMenuItem[] items) {

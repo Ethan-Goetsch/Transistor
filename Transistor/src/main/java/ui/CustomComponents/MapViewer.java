@@ -12,7 +12,6 @@ import java.util.function.Consumer;
 public class MapViewer extends JXMapViewer {
     private ResponsePath bestPath;
     private boolean firstPoint;
-
     private RouteType routeType;
     public MapViewer(){
         routeType = RouteType.ACTUAL;

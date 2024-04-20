@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CalculationButton extends JButton {
-
     public CalculationButton(String text){
         super(text);
         this.setBackground(Color.white);

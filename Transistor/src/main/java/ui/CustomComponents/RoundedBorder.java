@@ -13,7 +13,6 @@ class RoundedBorder extends AbstractBorder {
         this.radius = radius;
         this.color = color;
     }
-
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         super.paintBorder(c, g, x, y, width, height);

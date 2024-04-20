@@ -25,17 +25,17 @@ public class InputTextField extends JTextField {
             public void focusGained(FocusEvent e) {
                 if (getText().equals(defaultText)) {
                     setText("");
-                    setForeground(Color.BLACK); // Change tonormal color immediately
+                    setForeground(Color.BLACK); //
                 }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (getText().isEmpty()) {
-                    setForeground(GRAY_OPAQUE_COLOR); // Graywith opacity
+                    setForeground(GRAY_OPAQUE_COLOR);
                     setText(defaultText);
                 } else {
-                    setForeground(Color.BLACK); // Or yourdesired normal color
+                    setForeground(Color.BLACK);
                 }
             }
         });
