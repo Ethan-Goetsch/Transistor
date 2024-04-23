@@ -2,8 +2,8 @@ package utils;
 
 import com.graphhopper.ResponsePath;
 import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
+import entities.Coordinate;
 import entities.Path;
-import entities.Point;
 import entities.TransportType;
 
 import java.util.ArrayList;
@@ -37,11 +37,11 @@ public class Conversions
 
     public static Path toPath(ResponsePath graphHopperPath)
     {
-        var points = new ArrayList<Point>();
+        var points = new ArrayList<Coordinate>();
         for (var i = 0; i < graphHopperPath.getPoints().size(); i++)
         {
             var ghPoint = graphHopperPath.getPoints().get(i);
-            points.add(new Point(ghPoint.lat, ghPoint.lon));
+            points.add(new Coordinate(ghPoint.lat, ghPoint.lon));
         }
         return new Path(points);
     }

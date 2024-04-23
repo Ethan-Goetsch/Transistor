@@ -25,27 +25,27 @@ public class MapViewer extends JXMapViewer
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (path.points().size() <= 1) return;
+        if (path.coordinates().size() <= 1) return;
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Path2D p = new Path2D.Double();
 
-        for (var i = 0; i < path.points().size(); i++)
+        for (var i = 0; i < path.coordinates().size(); i++)
         {
-            var point = path.points().get(i);
+            var coordinate = path.coordinates().get(i);
             if (i == 0)
             {
-                p.moveTo(point.getX(), point.getY());
-                // TODO: Draw start point
+                p.moveTo(coordinate.getLatitude(), coordinate.getLatitude());
+                // TODO: Draw start coordinate
                 continue;
             }
-            else if (i == path.points().size() - 1)
+            else if (i == path.coordinates().size() - 1)
             {
-                // TODO: Draw end point
+                // TODO: Draw end coordinate
             }
 
-            p.lineTo(point.getX(), point.getY());
+            p.lineTo(coordinate.getLatitude(), coordinate.getLongitude());
         }
 
         g2.setColor(new Color(12, 18, 222));

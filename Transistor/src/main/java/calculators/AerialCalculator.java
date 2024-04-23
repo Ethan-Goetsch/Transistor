@@ -4,6 +4,8 @@ import com.graphhopper.ResponsePath;
 import entities.*;
 import utils.Conversions;
 
+import java.util.ArrayList;
+
 public class AerialCalculator implements IRouteCalculator
 {
     private static final int radiusEarthInKM = 6371;
@@ -19,7 +21,13 @@ public class AerialCalculator implements IRouteCalculator
     {
         double distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
         double time = Conversions.calculateTime(distance, calculationRequest.transportType());
-        return new RouteCalculationResult(null, distance, time);
+
+        var points = new ArrayList<Coordinate>();
+        points.add(calculationRequest.departure());
+        points.add(calculationRequest.arrival());
+        var path = new Path(points);
+
+        return new RouteCalculationResult(path, distance, time);
     }
 
     private double distanceToPoint(Coordinate point1, Coordinate point2)
