@@ -3,8 +3,9 @@ package ui;
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.event.MouseInputListener;
-import com.graphhopper.ResponsePath;
+
 import entities.Coordinate;
+import entities.Path;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
@@ -99,8 +100,8 @@ public class MMap extends JPanel{
         waypoints.add(new Waypoint(gp, image));
         initWaypoints();
     }
-    public void updateResults(Coordinate departure, Coordinate arrival, ResponsePath bestPath){
-        ((MapViewer)jXMapViewer).bestPath(bestPath);
+    public void updateResults(Coordinate departure, Coordinate arrival, Path path){
+        ((MapViewer)jXMapViewer).setPath(path);
         double departureLong = departure.getLongitude();
         double departureLat = departure.getLatitude();
         double arrivalLong = arrival.getLongitude();

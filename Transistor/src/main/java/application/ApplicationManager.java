@@ -24,7 +24,7 @@ public class ApplicationManager
     public Route calculateRouteRequest(RouteRequest request)
     {
         if (!requestValidator.isValidRequest(request))
-            new Route(null, null, null, request.transportType(), "Invalid Input");
+            return new Route(null, null, null, request.transportType(), "Invalid Input");
 
         String message = "";
         Coordinate departureCoordinates = null;

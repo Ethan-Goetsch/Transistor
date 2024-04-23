@@ -1,63 +1,56 @@
 package ui.CustomComponents;
 
-import com.graphhopper.ResponsePath;
-import com.graphhopper.util.shapes.GHPoint3D;
-import entities.RouteType;
+import entities.Path;
 import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.viewer.GeoPosition;
+
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.util.function.Consumer;
-public class MapViewer extends JXMapViewer {
-    private ResponsePath bestPath;
-    private boolean firstPoint;
-    private RouteType routeType;
-    public MapViewer(){
-        routeType = RouteType.ACTUAL;
+import java.util.ArrayList;
+
+public class MapViewer extends JXMapViewer
+{
+    private Path path;
+
+    public MapViewer()
+    {
+        path = new Path(new ArrayList<>());
+    }
+
+    public void setPath(Path path)
+    {
+        this.path = path;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (bestPath != null) {
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            Path2D p = new Path2D.Double();
-            firstPoint = true;
-            if(routeType == RouteType.ACTUAL){
-                bestPath.getPoints().forEach(e -> {
-                    Point2D point = convertGeoPositionToPoint(new GeoPosition(e.getLat(),e.getLon() ));
-                    if(firstPoint){
-                        firstPoint = false;
-                        p.moveTo(point.getX(), point.getY());
-                    }else{
-                        p.lineTo(point.getX(), point.getY());
-                    }
-                });
+        if (path.points().size() <= 1) return;
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Path2D p = new Path2D.Double();
+
+        for (var i = 0; i < path.points().size(); i++)
+        {
+            var point = path.points().get(i);
+            if (i == 0)
+            {
+                p.moveTo(point.getX(), point.getY());
+                // TODO: Draw start point
+                continue;
             }
-            else{
-                bestPath.getWaypoints().forEach(e -> {
-                    Point2D point = convertGeoPositionToPoint(new GeoPosition(e.getLat(),e.getLon() ));
-                    if(firstPoint){
-                        firstPoint = false;
-                        p.moveTo(point.getX(), point.getY());
-                    }else{
-                        p.lineTo(point.getX(), point.getY());
-                    }
-                });
+            else if (i == path.points().size() - 1)
+            {
+                // TODO: Draw end point
             }
-            g2.setColor(new Color(12, 18, 222));
-            g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            g2.draw(p);
-            g2.dispose();
+
+            p.lineTo(point.getX(), point.getY());
         }
-    }
-    public void bestPath(ResponsePath bestPath){
-        this.bestPath = bestPath;
-    }
-    public void changeRouteType(RouteType routeType){
-        this.routeType = routeType;
+
+        g2.setColor(new Color(12, 18, 222));
+        g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2.draw(p);
+        g2.dispose();
     }
 }

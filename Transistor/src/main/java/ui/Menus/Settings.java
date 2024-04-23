@@ -1,4 +1,4 @@
-package ui.Menues;
+package ui.Menus;
 
 import org.jxmapviewer.JXMapViewer;
 import ui.SearchPanel;

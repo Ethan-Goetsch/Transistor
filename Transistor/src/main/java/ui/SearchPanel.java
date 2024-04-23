@@ -8,7 +8,8 @@ import utils.IAction;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-public class SearchPanel extends JPanel {
+public class SearchPanel extends JPanel
+{
     private final IAction<RouteRequest> onCalculateClicked;
     private JTextField departureField;
     private JTextField arrivalField;

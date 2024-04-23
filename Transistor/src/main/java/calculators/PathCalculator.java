@@ -54,11 +54,11 @@ public class PathCalculator implements IRouteCalculator
                 .setProfile(profileName)
                 .setLocale(Locale.UK);
         var response = graphHopper.route(request);
-        var path = response.getBest();
+        var responsePath = response.getBest();
 
-        var distance =  Conversions.metersToKilometers(path.getDistance());
+        var distance =  Conversions.metersToKilometers(responsePath.getDistance());
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
-        return new RouteCalculationResult(path, distance, time);
+        return new RouteCalculationResult(Conversions.toPath(responsePath), distance, time);
     }
 }
