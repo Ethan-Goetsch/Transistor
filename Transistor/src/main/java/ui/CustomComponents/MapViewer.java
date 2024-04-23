@@ -12,18 +12,16 @@ import java.util.ArrayList;
 
 public class MapViewer extends JXMapViewer {
     private Path path;
-    private JButton endLocationButton;
-    private ArrayList<CustomWaypoint> waypoints;
+    private final ArrayList<CustomWaypoint> waypoints;
 
     public MapViewer() {
         path = new Path(new ArrayList<>());
-        endLocationButton = new JButton();
         waypoints = new ArrayList<>();
     }
 
     public void setPath(Path path) {
         this.path = path;
-        repaint(); // trigger repaint when path is updated
+        repaint();
     }
 
     @Override

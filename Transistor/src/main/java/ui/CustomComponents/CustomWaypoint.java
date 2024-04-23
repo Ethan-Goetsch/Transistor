@@ -6,8 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CustomWaypoint{
-    private JButton representation;
-    private GeoPosition geoPosition;
+    private final JButton representation;
+    private final GeoPosition geoPosition;
     public CustomWaypoint(GeoPosition geoPosition, ImageIcon representation){
         this.geoPosition = geoPosition;
         this.representation = new JButton();

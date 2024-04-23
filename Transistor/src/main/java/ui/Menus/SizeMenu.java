@@ -27,6 +27,5 @@ public class SizeMenu extends JMenu {
     private void setSizes(int mainWidth, int mainHeight){
         ((MainWindow)mainWindow).setMainWidth(mainWidth);
         ((MainWindow)mainWindow).setMainHeight(mainHeight);
-        ((MainWindow)mainWindow).resize();
     }
 }
