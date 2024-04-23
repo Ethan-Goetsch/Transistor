@@ -1,4 +1,4 @@
-package ui.Menues;
+package ui.Menus;
 
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
@@ -6,8 +6,6 @@ import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MapType extends JMenu  {
     private final JXMapViewer jXMapViewer;

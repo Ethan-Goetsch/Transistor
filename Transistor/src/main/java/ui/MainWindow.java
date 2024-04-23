@@ -2,7 +2,7 @@ package ui;
 
 import entities.RouteRequest;
 import org.jxmapviewer.JXMapViewer;
-import ui.Menues.AplicationMenuBar;
+import ui.Menus.AplicationMenuBar;
 import ui.CustomComponents.MapViewer;
 import utils.IObservable;
 import utils.Subject;

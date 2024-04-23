@@ -1,18 +1,24 @@
 package ui.CustomComponents;
 
-import com.graphhopper.ResponsePath;
 import entities.Path;
-import entities.RouteType;
 import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.viewer.GeoPosition;
+
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
-public class MapViewer extends JXMapViewer {
+public class MapViewer extends JXMapViewer
+{
     private Path path;
-    public MapViewer(){
-        routeType = RouteType.ACTUAL;
+
+    public MapViewer()
+    {
+        path = new Path(new ArrayList<>());
+    }
+
+    public void setPath(Path path)
+    {
+        this.path = path;
     }
 
     @Override
@@ -46,11 +52,5 @@ public class MapViewer extends JXMapViewer {
         g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.draw(p);
         g2.dispose();
-    }
-    public void setPath(Path path){
-        this.path = path;
-    }
-    public void changeRouteType(RouteType routeType){
-        this.routeType = routeType;
     }
 }

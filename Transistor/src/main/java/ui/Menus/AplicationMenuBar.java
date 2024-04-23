@@ -1,4 +1,4 @@
-package ui.Menues;
+package ui.Menus;
 
 import ui.MainWindow;
 import ui.SearchPanel;
