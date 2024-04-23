@@ -83,6 +83,7 @@ public class MMap extends JPanel{
         double arrivalLong = arrival.getLongitude();
         double arrivalLat = arrival.getLatitude();
         //TODO here add the different icons that are needed
+        ((MapViewer) jXMapViewer).removeWaypoints();
         ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(arrivalLat, arrivalLong), new ImageIcon("Transistor/src/main/resources/locationIcon.png")));
         ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(departureLat, departureLong), new ImageIcon("Transistor/src/main/resources/blueDot.png")));
         jXMapViewer.repaint();

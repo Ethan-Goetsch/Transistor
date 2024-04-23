@@ -4,7 +4,6 @@ import entities.Path;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -69,8 +68,11 @@ public class MapViewer extends JXMapViewer {
 
     }
 
-    public void removeWaypoint(CustomWaypoint waypoint){
-        waypoints.remove(waypoint);
-        this.remove(waypoint.getRepresentation());
+    public void removeWaypoints(){
+        for (CustomWaypoint w:
+             waypoints) {
+            this.remove(w.getRepresentation());
+        }
+        waypoints.clear();
     }
 }
