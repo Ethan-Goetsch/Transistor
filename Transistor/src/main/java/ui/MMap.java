@@ -11,14 +11,15 @@ import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.*;
+//import ui.CustomComponents.CustomWaypointPainter;
 import ui.CustomComponents.MapViewer;
-import ui.CustomComponents.Waypoint;
+import ui.CustomComponents.CustomWaypoint;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MMap extends JPanel{
-    private final Set<Waypoint> waypoints = new HashSet<>();
+//    private final Set<CustomWaypoint> waypoints = new HashSet<>();
     private final double LAT_CENTER = 50.8471966;
     private final double LON_CENTER = 5.7015544;
     private final int mainWidth;
@@ -70,35 +71,14 @@ public class MMap extends JPanel{
         jXMapViewerLayout.setHorizontalGroup(
                 jXMapViewerLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(jXMapViewerLayout.createSequentialGroup()
-                                .addContainerGap(mainWidth, Short.MAX_VALUE)
+                                .addContainerGap(1080, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         jXMapViewerLayout.setVerticalGroup(
                 jXMapViewerLayout.createParallelGroup(Alignment.LEADING)
                         .addGroup(jXMapViewerLayout.createSequentialGroup()
-                                .addGap(0, mainHeight, Short.MAX_VALUE))
+                                .addGap(0, 840, Short.MAX_VALUE))
         );
-    }
-    private void initWaypoints(){
-        WaypointPainter<Waypoint> wp = new WaypointPainter<>();
-        wp.setWaypoints(waypoints);
-        jXMapViewer.setOverlayPainter(wp);
-        for (Waypoint point: waypoints) {
-            jXMapViewer.add(point.getRepresentation());
-        }
-    }
-
-    private void clearWaypoint(){
-        for (Waypoint point: waypoints) {
-            jXMapViewer.remove(point.getRepresentation());
-        }
-        waypoints.clear();
-        initWaypoints();
-    }
-
-    private void addWaypoint(GeoPosition gp, ImageIcon image){
-        waypoints.add(new Waypoint(gp, image));
-        initWaypoints();
     }
     public void updateResults(Coordinate departure, Coordinate arrival, Path path){
         ((MapViewer)jXMapViewer).setPath(path);
@@ -106,10 +86,10 @@ public class MMap extends JPanel{
         double departureLat = departure.getLatitude();
         double arrivalLong = arrival.getLongitude();
         double arrivalLat = arrival.getLatitude();
-        clearWaypoint();
-        addWaypoint(new GeoPosition(arrivalLat, arrivalLong), new ImageIcon("Transistor/src/main/resources/locationIcon.png"));//add Arrival
-        addWaypoint(new GeoPosition(departureLat, departureLong), new ImageIcon("Transistor/src/main/resources/blueDot.png")); //add Departure
+        DefaultWaypoint w = new DefaultWaypoint();
         //TODO here add the different icons that are needed
+        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(arrivalLat, arrivalLong), new ImageIcon("Transistor/src/main/resources/locationIcon.png")));
+        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(departureLat, departureLong), new ImageIcon("Transistor/src/main/resources/blueDot.png")));
         jXMapViewer.repaint();
     }
 }
