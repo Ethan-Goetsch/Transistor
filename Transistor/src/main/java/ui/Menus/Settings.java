@@ -18,7 +18,7 @@ public class Settings extends JMenu {
     private void initItems() {
         JMenuItem mapTypeSelect = new MapType(jXMapViewer);
         this.add(mapTypeSelect);
-        JMenuItem routeTypeSelection = new RouteTypeMenu(searchPanel,jXMapViewer);
+        JMenuItem routeTypeSelection = new RouteTypeMenu(searchPanel);
         this.add(routeTypeSelection);
     }
 }
