@@ -1,7 +1,6 @@
 package ui.CustomComponents;
 
 import org.jxmapviewer.JXMapViewer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;

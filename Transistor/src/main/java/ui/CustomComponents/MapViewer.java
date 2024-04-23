@@ -2,9 +2,11 @@ package ui.CustomComponents;
 
 import entities.Path;
 import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.viewer.GeoPosition;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class MapViewer extends JXMapViewer
@@ -33,19 +35,20 @@ public class MapViewer extends JXMapViewer
 
         for (var i = 0; i < path.coordinates().size(); i++)
         {
-            var coordinate = path.coordinates().get(i);
+            var point = path.coordinates().get(i);
+            Point2D uiPoint = convertGeoPositionToPoint(new GeoPosition(point.getLatitude(),point.getLongitude() ));
+
             if (i == 0)
             {
-                p.moveTo(coordinate.getLatitude(), coordinate.getLatitude());
-                // TODO: Draw start coordinate
+                p.moveTo(uiPoint.getX(), uiPoint.getY());
                 continue;
             }
             else if (i == path.coordinates().size() - 1)
             {
-                // TODO: Draw end coordinate
+                // TODO: Draw end point
             }
 
-            p.lineTo(coordinate.getLatitude(), coordinate.getLongitude());
+            p.lineTo(uiPoint.getX(), uiPoint.getY());
         }
 
         g2.setColor(new Color(12, 18, 222));
@@ -54,3 +57,4 @@ public class MapViewer extends JXMapViewer
         g2.dispose();
     }
 }
+
