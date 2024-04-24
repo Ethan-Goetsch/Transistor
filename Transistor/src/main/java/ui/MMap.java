@@ -14,6 +14,8 @@ import org.jxmapviewer.viewer.*;
 import ui.CustomComponents.MapViewer;
 import ui.CustomComponents.CustomWaypoint;
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MMap extends JPanel{
     private final double LAT_CENTER = 50.8471966;
@@ -21,7 +23,7 @@ public class MMap extends JPanel{
     private final int mainWidth;
     private final int mainHeight;
     private final JXMapViewer jXMapViewer;
-
+//6218ap 6228bp test values
 
     public MMap(JXMapViewer jXMapViewer, int mainWidth, int mainHeight) {
         this.mainWidth = mainWidth;
@@ -78,18 +80,34 @@ public class MMap extends JPanel{
                                 .addGap(0, mainHeight, Short.MAX_VALUE))
         );
     }
-    public void updateResults(Coordinate departure, Coordinate arrival, Path path){
-        ((MapViewer)jXMapViewer).setPath(path);
+    public void updateResults(Coordinate departure, Coordinate arrival, Path path, double distance){
+
         double departureLong = departure.getLongitude();
         double departureLat = departure.getLatitude();
         double arrivalLong = arrival.getLongitude();
         double arrivalLat = arrival.getLatitude();
+
+        updateMap(path, new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
+        setView(new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong), distance);
+        jXMapViewer.repaint();
+    }
+
+    private void setView(GeoPosition departure, GeoPosition arrival, double distance) {
+        GeoPosition centerPosition = new GeoPosition((departure.getLatitude() + arrival.getLatitude()) / 2, (departure.getLongitude() + arrival.getLongitude()) / 2);
+        jXMapViewer.setAddressLocation(centerPosition);
+        Set<GeoPosition> positions = new HashSet<>();
+        positions.add(departure);
+        positions.add(arrival);
+        jXMapViewer.calculateZoomFrom(positions);
+    }
+
+    private void updateMap(Path path, GeoPosition departure, GeoPosition arrival) {
+        ((MapViewer)jXMapViewer).setPath(path);
         //TODO here add the different icons that are needed
         ((MapViewer) jXMapViewer).removeWaypoints();
-        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(arrivalLat, arrivalLong), new ImageIcon("Transistor/src/main/resources/locationIcon.png")));
-        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(departureLat, departureLong), new ImageIcon("Transistor/src/main/resources/blueDot.png")));
-        GeoPosition centerPosition = new GeoPosition((departureLat + arrivalLat) / 2, (departureLong + arrivalLong) / 2);
-        jXMapViewer.setAddressLocation(centerPosition);
-        jXMapViewer.repaint();
+        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(departure, new ImageIcon("Transistor/src/main/resources/locationIcon.png")));
+        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(arrival, new ImageIcon("Transistor/src/main/resources/blueDot.png")));
+
+
     }
 }
