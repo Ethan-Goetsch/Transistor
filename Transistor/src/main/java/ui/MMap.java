@@ -42,7 +42,9 @@ public class MMap extends JPanel{
         jXMapViewer.addMouseListener(mm);
         jXMapViewer.addMouseMotionListener(mm);
         jXMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer));
+
     }
+
 
     private void initLayout() {
 
@@ -86,6 +88,9 @@ public class MMap extends JPanel{
         ((MapViewer) jXMapViewer).removeWaypoints();
         ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(arrivalLat, arrivalLong), new ImageIcon("Transistor/src/main/resources/locationIcon.png")));
         ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(departureLat, departureLong), new ImageIcon("Transistor/src/main/resources/blueDot.png")));
+        GeoPosition centerPosition = new GeoPosition((departureLat + arrivalLat) / 2, (departureLong + arrivalLong) / 2);
+        jXMapViewer.setZoom(1);
+        jXMapViewer.setAddressLocation(centerPosition);
         jXMapViewer.repaint();
     }
 }
