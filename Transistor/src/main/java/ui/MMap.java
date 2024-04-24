@@ -88,11 +88,11 @@ public class MMap extends JPanel{
         double arrivalLat = arrival.getLatitude();
 
         updateMap(path, new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
-        setView(new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong), distance);
+        setView(new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
         jXMapViewer.repaint();
     }
 
-    private void setView(GeoPosition departure, GeoPosition arrival, double distance) {
+    private void setView(GeoPosition departure, GeoPosition arrival) {
         GeoPosition centerPosition = new GeoPosition((departure.getLatitude() + arrival.getLatitude()) / 2, (departure.getLongitude() + arrival.getLongitude()) / 2);
         jXMapViewer.setAddressLocation(centerPosition);
         Set<GeoPosition> positions = new HashSet<>();

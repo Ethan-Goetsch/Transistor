@@ -3,7 +3,6 @@ package ui;
 import javax.swing.*;
 import application.ApplicationManager;
 import entities.RouteRequest;
-import org.jxmapviewer.JXMapViewer;
 import utils.Conversions;
 
 public class UIController
