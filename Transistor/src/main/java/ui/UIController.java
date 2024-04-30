@@ -3,7 +3,6 @@ package ui;
 import javax.swing.*;
 import application.ApplicationManager;
 import entities.RouteRequest;
-import org.jxmapviewer.JXMapViewer;
 import utils.Conversions;
 
 public class UIController
@@ -34,6 +33,6 @@ public class UIController
 
         window.getSearchPanel().updateResults(distance, time);
         MMap map= window.getMap();
-        map.updateResults(route.departure(), route.arrival(), route.result().path());
+        map.updateResults(route.departure(), route.arrival(), route.result().path(), route.result().distanceInKM());
     }
 }

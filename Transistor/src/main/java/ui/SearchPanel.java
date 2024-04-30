@@ -15,6 +15,7 @@ public class SearchPanel extends JPanel
     private JTextField arrivalField;
     private JLabel distanceLabel;
     private JLabel timeLabel;
+    private JLabel routeTypeLabel;
     private RouteType routeTypeSetting;
     private TransportType selectedTransport;
     private AnimatedLine indicator;
@@ -58,6 +59,7 @@ public class SearchPanel extends JPanel
 
         distanceLabel = new JLabel();
         timeLabel = new JLabel();
+        routeTypeLabel = new JLabel();
         JRadioButton switchButton = buttonFactory.createIconButton("Transistor/src/main/resources/images/switch.png");
 
         switchButton.addActionListener(e -> {
@@ -70,12 +72,12 @@ public class SearchPanel extends JPanel
             }
         });
 
-        JPanel contentPane = new JPanel();
-        contentPane.setBackground(Color.white);
-        contentPane.setSize(new Dimension(20,280));
-        contentPane.setLayout(new BorderLayout());
+        JPanel animatedLinePanel = new JPanel();
+        animatedLinePanel.setBackground(Color.white);
+        animatedLinePanel.setSize(new Dimension(20,280));
+        animatedLinePanel.setLayout(new BorderLayout());
         indicator = new AnimatedLine(new Point(transportationType1.getX()+20, transportationType1.getY()), new Point(transportationType1.getX()+40, transportationType1.getY()));
-        contentPane.add(indicator);
+        animatedLinePanel.add(indicator);
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
@@ -83,6 +85,7 @@ public class SearchPanel extends JPanel
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
+                                .addGap(25)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(departureField, GroupLayout.PREFERRED_SIZE,280, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(arrivalField, GroupLayout.PREFERRED_SIZE, 280, GroupLayout.PREFERRED_SIZE)
@@ -97,9 +100,10 @@ public class SearchPanel extends JPanel
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 30, 30)
                                                 .addComponent(transportationType4)
                                                 .addContainerGap())
-                                        .addComponent(contentPane, GroupLayout.PREFERRED_SIZE,280, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(animatedLinePanel, GroupLayout.PREFERRED_SIZE,280, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(distanceLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(timeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(routeTypeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(125, 125, 125)
                                                 .addComponent(switchButton))))
@@ -120,11 +124,12 @@ public class SearchPanel extends JPanel
                                         .addComponent(transportationType4)
 
                                 )
-                                .addComponent(contentPane, GroupLayout.PREFERRED_SIZE,5, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(animatedLinePanel, GroupLayout.PREFERRED_SIZE,5, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(calculateButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(distanceLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(timeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(routeTypeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
 
@@ -133,7 +138,7 @@ public class SearchPanel extends JPanel
     private void addActionListener(JRadioButton button, TransportType type){
         button.addActionListener(e -> {
             selectedTransport = type;
-            indicator.moveTo(new Point(button.getX()-2, 0), new Point(button.getX()+20, 0));
+            indicator.moveTo(new Point(button.getX()-15, 0), new Point(button.getX()+20, 0));
 
         });
     }
@@ -141,6 +146,7 @@ public class SearchPanel extends JPanel
     {
         distanceLabel.setText(distance);
         timeLabel.setText(time);
+        routeTypeLabel.setText(routeTypeSetting.toString());
     }
 
     public void setRouteType(RouteType routeType){

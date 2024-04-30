@@ -12,19 +12,18 @@ import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.*;
 import ui.CustomComponents.MapViewer;
-import ui.CustomComponents.Waypoint;
+import ui.CustomComponents.CustomWaypoint;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MMap extends JPanel{
-    private final Set<Waypoint> waypoints = new HashSet<>();
     private final double LAT_CENTER = 50.8471966;
     private final double LON_CENTER = 5.7015544;
     private final int mainWidth;
     private final int mainHeight;
     private final JXMapViewer jXMapViewer;
-
+//6218ap 6228bp test values
 
     public MMap(JXMapViewer jXMapViewer, int mainWidth, int mainHeight) {
         this.mainWidth = mainWidth;
@@ -45,7 +44,9 @@ public class MMap extends JPanel{
         jXMapViewer.addMouseListener(mm);
         jXMapViewer.addMouseMotionListener(mm);
         jXMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer));
+
     }
+
 
     private void initLayout() {
 
@@ -79,37 +80,34 @@ public class MMap extends JPanel{
                                 .addGap(0, mainHeight, Short.MAX_VALUE))
         );
     }
-    private void initWaypoints(){
-        WaypointPainter<Waypoint> wp = new WaypointPainter<>();
-        wp.setWaypoints(waypoints);
-        jXMapViewer.setOverlayPainter(wp);
-        for (Waypoint point: waypoints) {
-            jXMapViewer.add(point.getRepresentation());
-        }
-    }
+    public void updateResults(Coordinate departure, Coordinate arrival, Path path, double distance){
 
-    private void clearWaypoint(){
-        for (Waypoint point: waypoints) {
-            jXMapViewer.remove(point.getRepresentation());
-        }
-        waypoints.clear();
-        initWaypoints();
-    }
-
-    private void addWaypoint(GeoPosition gp, ImageIcon image){
-        waypoints.add(new Waypoint(gp, image));
-        initWaypoints();
-    }
-    public void updateResults(Coordinate departure, Coordinate arrival, Path path){
-        ((MapViewer)jXMapViewer).setPath(path);
         double departureLong = departure.getLongitude();
         double departureLat = departure.getLatitude();
         double arrivalLong = arrival.getLongitude();
         double arrivalLat = arrival.getLatitude();
-        clearWaypoint();
-        addWaypoint(new GeoPosition(arrivalLat, arrivalLong), new ImageIcon("Transistor/src/main/resources/locationIcon.png"));//add Arrival
-        addWaypoint(new GeoPosition(departureLat, departureLong), new ImageIcon("Transistor/src/main/resources/blueDot.png")); //add Departure
-        //TODO here add the different icons that are needed
+
+        updateMap(path, new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
+        setView(new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
         jXMapViewer.repaint();
+    }
+
+    private void setView(GeoPosition departure, GeoPosition arrival) {
+        GeoPosition centerPosition = new GeoPosition((departure.getLatitude() + arrival.getLatitude()) / 2, (departure.getLongitude() + arrival.getLongitude()) / 2);
+        jXMapViewer.setAddressLocation(centerPosition);
+        Set<GeoPosition> positions = new HashSet<>();
+        positions.add(departure);
+        positions.add(arrival);
+        jXMapViewer.calculateZoomFrom(positions);
+    }
+
+    private void updateMap(Path path, GeoPosition departure, GeoPosition arrival) {
+        ((MapViewer)jXMapViewer).setPath(path);
+        //TODO here add the different icons that are needed
+        ((MapViewer) jXMapViewer).removeWaypoints();
+        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(departure, new ImageIcon("Transistor/src/main/resources/locationIcon.png")));
+        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(arrival, new ImageIcon("Transistor/src/main/resources/blueDot.png")));
+
+
     }
 }

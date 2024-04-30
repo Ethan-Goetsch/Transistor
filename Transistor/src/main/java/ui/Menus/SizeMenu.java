@@ -13,10 +13,13 @@ public class SizeMenu extends JMenu {
     }
 
     private void initItems() {
+        JMenuItem bigSize = new JMenuItem("Big size");
         JMenuItem standardSize = new JMenuItem("Standard size");
         JMenuItem smallSize  =new JMenuItem("Small size");
+        bigSize.addActionListener(e->setSizes(990, 770));
         standardSize.addActionListener(e->setSizes(900, 700));
         smallSize.addActionListener(e->setSizes(720, 560));
+        this.add(bigSize);
         this.add(standardSize);
         this.add(smallSize);
     }
@@ -24,6 +27,5 @@ public class SizeMenu extends JMenu {
     private void setSizes(int mainWidth, int mainHeight){
         ((MainWindow)mainWindow).setMainWidth(mainWidth);
         ((MainWindow)mainWindow).setMainHeight(mainHeight);
-        ((MainWindow)mainWindow).resize();
     }
 }

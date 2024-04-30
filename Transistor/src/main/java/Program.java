@@ -17,6 +17,7 @@ public class Program
     //6211AM
     
     public static void main(String[] args)
+
     {
         LocationResolver locationResolver = new LocationResolver(PathLocations.MASS_LOCATION_FILE);
         RequestValidator requestValidator = new RequestValidator();

@@ -11,15 +11,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
-    private int mainWidth = 900;
-    private int mainHeight = 700;
+    private int mainWidth = 990;
+    private int mainHeight = 770;
     private SearchPanel searchPanel;
     private JXMapViewer jXMapViewer;
     private MMap map;
     private final Subject<RouteRequest> onRouteRequested;
 
     public MainWindow() {
-
         this.onRouteRequested = new Subject<>();
         this.setFocusable(true);
         this.setBackground(Color.white);
@@ -27,6 +26,7 @@ public class MainWindow extends JFrame {
         configureWindow();
         initializeElements();
         setLayout();
+
     }
 
     public IObservable<RouteRequest> getRouteRequested() {
@@ -61,7 +61,6 @@ public class MainWindow extends JFrame {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(searchPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(map, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
@@ -79,9 +78,11 @@ public class MainWindow extends JFrame {
 
     public void setMainHeight(int mainHeight) {
         this.mainHeight = mainHeight;
+        resize();
     }
     public void setMainWidth(int mainWidth) {
         this.mainWidth = mainWidth;
+        resize();
     }
     public SearchPanel searchPanel() {
         return searchPanel;
@@ -91,7 +92,7 @@ public class MainWindow extends JFrame {
         return map;
     }
     public SearchPanel getSearchPanel() {return this.searchPanel;}
-    public void resize(){
+    private void resize(){
         this.setSize(mainWidth, mainHeight);
     }
 
