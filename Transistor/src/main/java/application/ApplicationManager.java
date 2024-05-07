@@ -39,9 +39,9 @@ public class ApplicationManager
             IRouteCalculator calculator = routeCalculators
                     .stream()
                     .filter(routeCalculator -> routeCalculator.getRouteType() == request.routeType())
-                    .findFirst().orElseThrow();
+                    .findFirst()
+                    .orElseThrow();
             result = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
-
         }
         catch (CallNotPossibleException e)
         {

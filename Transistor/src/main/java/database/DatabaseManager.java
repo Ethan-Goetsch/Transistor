@@ -1,6 +1,7 @@
 package database;
 
 import database.queries.QueryObject;
+import database.queries.TestQuery;
 import entities.UserConfig;
 import file_system.FileManager;
 import utils.PathLocations;
@@ -8,6 +9,7 @@ import utils.PathLocations;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DatabaseManager
 {
@@ -55,8 +57,19 @@ public class DatabaseManager
         }
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws SQLException
     {
         var instance = DatabaseManager.getInstance();
+        var result = instance.executeStatement(new TestQuery());
+        while (result.next())
+        {
+            var count = result.getMetaData().getColumnCount();
+            var printData = "";
+            for (int i = 1; i <= count; i++)
+            {
+                printData += result.getString(i) + " ";
+            }
+            System.out.println(printData);
+        }
     }
 }
