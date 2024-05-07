@@ -1,6 +1,7 @@
 package application;
 
 import calculators.IRouteCalculator;
+import database.DatabaseManager;
 import entities.*;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
@@ -35,6 +36,8 @@ public class ApplicationManager
         {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
+
+            // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
 
             IRouteCalculator calculator = routeCalculators
                     .stream()
