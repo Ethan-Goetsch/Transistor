@@ -1,10 +1,12 @@
 package application;
 
 import calculators.IRouteCalculator;
+import database.DatabaseManager;
 import entities.*;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationManager
@@ -35,6 +37,11 @@ public class ApplicationManager
         {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
+
+            // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
+
+            List<Integer> stopIDDeparture = DatabaseManager.getInstance().getStopId(departureCoordinates);
+            List<Integer>  stopIDArrival = DatabaseManager.getInstance().getStopId(arrivalCoordinates);
 
             IRouteCalculator calculator = routeCalculators
                     .stream()

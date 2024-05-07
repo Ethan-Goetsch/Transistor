@@ -14,7 +14,7 @@ public class NearestBussesQuery extends QueryObject{
     @Override
     public String getStatement() {
 
-        String statement = "(SELECT  DISTINCT trip_id " +
+        String statement = "(SELECT  DISTINCT trip_id, stop_id  " +
                 "FROM transitorgtfs.stop_times " +
                 "WHERE stop_id IN (" +
                 "SELECT stop_id FROM transitorgtfs.stops " +
