@@ -1,5 +1,6 @@
 package database;
 
+import database.queries.NearestBusStopsQuery;
 import database.queries.NearestBussesQuery;
 import database.queries.QueryObject;
 import entities.UserConfig;
@@ -60,7 +61,7 @@ public class DatabaseManager
     public static void main(String[] args)
     {
         var instance = DatabaseManager.getInstance();
-        ResultSet rs = instance.executeStatement(new NearestBussesQuery(new double[]{51.9307,51.932576}, new double[]{4.40,4.403}).getStatement());
+        ResultSet rs = instance.executeStatement(new NearestBusStopsQuery(new double[]{51.9307,51.932576}, new double[]{4.40,4.403}).getStatement());
         try{
             while ( rs.next() ) {
                 int arrival = rs.getInt(1);
