@@ -59,7 +59,6 @@ public class DatabaseManager
 
     public static void main(String[] args)
     {
-
         var instance = DatabaseManager.getInstance();
         ResultSet rs = instance.executeStatement(new NearestBussesQuery(new double[]{51.9307,51.932576}, new double[]{4.40,4.403}).getStatement());
         try{
