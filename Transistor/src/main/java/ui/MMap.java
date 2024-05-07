@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.event.MouseInputListener;
 import database.DatabaseManager;
+import database.queries.BusStopTimesQuery;
 import entities.Coordinate;
 import entities.Path;
 import org.jxmapviewer.JXMapViewer;
@@ -129,10 +130,8 @@ public class MMap extends JPanel{
     }
 
     private ArrayList<LocalTime> getArrivingTimesOfBus(int stopID){
-        String statement = "SELECT DISTINCT arrival_time FROM transitorgtfs.stop_times" +
-                " WHERE stop_id = " + stopID;
         DatabaseManager db = DatabaseManager.getInstance();
-        ResultSet res =  db.executeStatement(statement);
+        ResultSet res =  db.executeStatement(new BusStopTimesQuery(stopID).getStatement());
         ArrayList<LocalTime> arrivals = new ArrayList<>();
         try{
             while ( res.next() ) {
