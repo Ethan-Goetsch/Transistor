@@ -6,6 +6,7 @@ import entities.*;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationManager
@@ -38,6 +39,23 @@ public class ApplicationManager
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
             // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
+
+            double radius1 = 100;
+            double radius2 = 100;
+
+            List<Integer> stopIDDeparture  = new ArrayList<>();
+            List<Integer> stopIDArrival = new ArrayList<>();
+
+            while (stopIDDeparture.isEmpty())
+            {
+                stopIDDeparture = DatabaseManager.getInstance().getStopId(departureCoordinates, radius1);
+                radius1 += 100;
+            }
+            while (stopIDArrival.isEmpty())
+            {
+                stopIDArrival = DatabaseManager.getInstance().getStopId(departureCoordinates, radius2);
+                radius1 += 100;
+            }
 
             IRouteCalculator calculator = routeCalculators
                     .stream()
