@@ -58,26 +58,29 @@ public class DatabaseManager
         }
     }
 
-    public ArrayList<Integer> getStopId(Coordinate coordinate, double radius)
+    public ArrayList<Integer> getStopId(Coordinate coordinate)
     {
-        var instance = DatabaseManager.getInstance();
-        RadiusGenerator rg = new RadiusGenerator();
-        double[][] bounds = rg.getRadius(coordinate, radius);
-        ResultSet rs = instance.executeStatement(new NearestBusStopsQuery(bounds[0], bounds[1]));
         ArrayList<Integer> IDs = new ArrayList<>();
-        try
+        double radius = 100;
+        var instance = DatabaseManager.getInstance();
+        while (IDs.isEmpty())
         {
-            while (rs.next())
+            RadiusGenerator rg = new RadiusGenerator();
+            double[][] bounds = rg.getRadius(coordinate, radius);
+            ResultSet rs = instance.executeStatement(new NearestBusStopsQuery(bounds[0], bounds[1]).getStatement());
+            try
             {
-                int id = rs.getInt(1);
-                IDs.add(id);
+                while (rs.next())
+                {
+                    int id = rs.getInt(1);
+                    IDs.add(id);
+                }
+            } catch (Exception e)
+            {
+                e.printStackTrace();
             }
+            radius += 100;
         }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
         return IDs;
     }
 }
