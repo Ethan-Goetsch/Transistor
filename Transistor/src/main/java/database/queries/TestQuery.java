@@ -37,7 +37,7 @@ public class TestQuery extends QueryObject
             while (resultSet.next())
             {
                 var printData = "";
-                for (int i = 1; i <= resultSet.getMetaData().getColumnCount())
+                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++)
                 {
                     printData += resultSet.getString(i) + " ";
                 }
