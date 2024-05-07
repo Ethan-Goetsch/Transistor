@@ -57,19 +57,4 @@ public class DatabaseManager
             return null;
         }
     }
-
-    public static void main(String[] args) throws SQLException
-    {
-        var instance = DatabaseManager.getInstance();
-        ResultSet rs = instance.executeStatement(new NearestBussesQuery(new double[]{51.9307,51.932576}, new double[]{4.40,4.403}).getStatement());
-        try{
-            while ( rs.next() ) {
-                int arrival = rs.getInt(1);
-                System.out.println(arrival);
-
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 }
