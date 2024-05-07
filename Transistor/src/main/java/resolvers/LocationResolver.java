@@ -75,6 +75,7 @@ public class LocationResolver
                 String postLatitudeStr = "";
                 String postLongtitudeStr = "";
 
+
                 while (cellIterator.hasNext())
                 {
                     Cell cell = cellIterator.next();
@@ -84,11 +85,11 @@ public class LocationResolver
                     }
                     if (cell.getColumnIndex() == 1)
                     {
-                        postLatitudeStr = df.formatCellValue(cell);
+                        postLatitudeStr = df.formatCellValue(cell).replace(',', '.');
                     }
                     if (cell.getColumnIndex() == 2)
                     {
-                        postLongtitudeStr = df.formatCellValue(cell);
+                        postLongtitudeStr = df.formatCellValue(cell).replace(',', '.');
                     }
                 }
 
