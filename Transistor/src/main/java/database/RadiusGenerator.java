@@ -2,13 +2,10 @@ package database;
 
 import entities.Coordinate;
 
-public class RadiusGenerator {
-    public static void main(String[] args) {
-        double[][] d = getRadius(new Coordinate(51.93752, 4.384413), 100);
-        System.out.println(d);
-    }
-
-    public static double[][] getRadius(Coordinate coordinate, double distance){
+public class RadiusGenerator
+{
+    public static double[][] getRadius(Coordinate coordinate, double distance)
+    {
         double lat = coordinate.getLatitude();
         double lon = coordinate.getLongitude();
         double earthRadius = 6371 * 1000;

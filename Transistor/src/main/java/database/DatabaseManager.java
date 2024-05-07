@@ -65,8 +65,7 @@ public class DatabaseManager
         var instance = DatabaseManager.getInstance();
         while (IDs.isEmpty())
         {
-            RadiusGenerator rg = new RadiusGenerator();
-            double[][] bounds = rg.getRadius(coordinate, radius);
+            double[][] bounds = RadiusGenerator.getRadius(coordinate, radius);
             ResultSet rs = instance.executeStatement(new NearestBusStopsQuery(bounds[0], bounds[1]).getStatement());
             try
             {
