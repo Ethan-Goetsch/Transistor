@@ -40,22 +40,8 @@ public class ApplicationManager
 
             // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
 
-            double radius1 = 100;
-            double radius2 = 100;
-
-            List<Integer> stopIDDeparture  = new ArrayList<>();
-            List<Integer> stopIDArrival = new ArrayList<>();
-
-            while (stopIDDeparture.isEmpty())
-            {
-                stopIDDeparture = DatabaseManager.getInstance().getStopId(departureCoordinates, radius1);
-                radius1 += 100;
-            }
-            while (stopIDArrival.isEmpty())
-            {
-                stopIDArrival = DatabaseManager.getInstance().getStopId(departureCoordinates, radius2);
-                radius1 += 100;
-            }
+            List<Integer> stopIDDeparture = DatabaseManager.getInstance().getStopId(departureCoordinates);
+            List<Integer>  stopIDArrival = DatabaseManager.getInstance().getStopId(arrivalCoordinates);
 
             IRouteCalculator calculator = routeCalculators
                     .stream()
