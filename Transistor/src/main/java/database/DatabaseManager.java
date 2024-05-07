@@ -1,6 +1,6 @@
 package database;
 
-import database.queries.NearestBussesQuery;
+import database.queries.ClosestStopsQuery;
 import database.queries.QueryObject;
 import database.queries.TestQuery;
 import entities.UserConfig;
@@ -61,15 +61,17 @@ public class DatabaseManager
     public static void main(String[] args) throws SQLException
     {
         var instance = DatabaseManager.getInstance();
-        ResultSet rs = instance.executeStatement(new NearestBussesQuery(new double[]{51.9307,51.932576}, new double[]{4.40,4.403}).getStatement());
-        try{
-            while ( rs.next() ) {
-                int arrival = rs.getInt(1);
-                System.out.println(arrival);
-
+        var result = instance.executeStatement(new ClosestStopsQuery(10, 50.83944169214228, 5.715266844267379));
+        
+        while (result.next())
+        {
+            var count = result.getMetaData().getColumnCount();
+            var printData = "";
+            for (int i = 1; i <= count; i++)
+            {
+                printData += result.getString(i) + " ";
             }
-        }catch(Exception e){
-            e.printStackTrace();
+            System.out.println(printData);
         }
     }
 }
