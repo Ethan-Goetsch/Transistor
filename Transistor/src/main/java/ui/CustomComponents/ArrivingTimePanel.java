@@ -19,7 +19,7 @@ public class ArrivingTimePanel extends JPanel {
         contents.setAlignmentX(Component.LEFT_ALIGNMENT);
         contents.setBackground(Color.white);
         JScrollPane scrollPane = new JScrollPane(contents);
-        scrollPane.setVerticalScrollBar(new CustomScrollBar());
+        scrollPane.setVerticalScrollBar(new ScrollBarCustom());
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(null);
         this.add(scrollPane, BorderLayout.CENTER);
