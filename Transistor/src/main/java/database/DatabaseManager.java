@@ -1,10 +1,8 @@
 package database;
 
-import database.queries.NearestBusStopsQuery;
 import database.queries.NearestBussesQuery;
 import database.queries.QueryObject;
 import database.queries.TestQuery;
-import entities.Coordinate;
 import entities.UserConfig;
 import file_system.FileManager;
 import utils.PathLocations;
@@ -13,7 +11,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class DatabaseManager
 {
@@ -42,6 +39,11 @@ public class DatabaseManager
         return instance;
     }
 
+    public ResultSet executeStatement(QueryObject query)
+    {
+        return executeStatement(query.getStatement());
+    }
+
     public ResultSet executeStatement(String statementContent)
     {
         try
@@ -54,23 +56,6 @@ public class DatabaseManager
             e.printStackTrace();
             return null;
         }
-    }
-
-    public ArrayList<Integer> getStopId(Coordinate coordinate, double radius){
-        var instance = DatabaseManager.getInstance();
-        RadiusGenerator rg = new RadiusGenerator();
-        double[][] bounds = rg.getRadius(coordinate, radius);
-        ResultSet rs = instance.executeStatement(new NearestBusStopsQuery(bounds[0], bounds[1]).getStatement());
-        ArrayList<Integer> IDs = new ArrayList<>();
-        try{
-            while ( rs.next() ) {
-                int id = rs.getInt(1);
-                IDs.add(id);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return IDs;
     }
 
     public static void main(String[] args) throws SQLException
