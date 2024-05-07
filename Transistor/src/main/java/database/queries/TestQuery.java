@@ -27,9 +27,13 @@ public class TestQuery extends QueryObject
 //                "    WHERE origin.stop_id = 2578413\n" +
 //                "        AND origin.stop_sequence < destination.stop_sequence;";
 
+//        return "SELECT DISTINCT shape_id " +
+//                "FROM transitorgtfs.trips " +
+//                "WHERE trip_id = 178421643";
+
         return "SELECT DISTINCT * " +
-                "FROM transitorgtfs.stop_times " +
-                "WHERE trip_id = 178421643";
+                "FROM transitorgtfs.shapes " +
+                "WHERE shape_id = 1129986";
 //
 //        return "SELECT DISTINCT destination.trip_id, destination.stop_sequence, destination.arrival_time " +
 //                "    FROM transitorgtfs.stop_times AS origin " +
