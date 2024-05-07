@@ -4,6 +4,7 @@ import com.graphhopper.ResponsePath;
 import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
 import entities.Coordinate;
 import entities.Path;
+import entities.Point;
 import entities.TransportType;
 
 import java.util.ArrayList;
@@ -37,13 +38,22 @@ public class Conversions
 
     public static Path toPath(ResponsePath graphHopperPath)
     {
-        var points = new ArrayList<Coordinate>();
+        var points = new ArrayList<Point>();
+        var specialPoints = new ArrayList<Point>();
         for (var i = 0; i < graphHopperPath.getPoints().size(); i++)
         {
             var ghPoint = graphHopperPath.getPoints().get(i);
-            points.add(new Coordinate(ghPoint.lat, ghPoint.lon));
+            Point point;
+            if(false){//special
+                int id = -1;//todo change that to the id and find a way to distinguish points
+                point = new Point(new Coordinate(ghPoint.lat, ghPoint.lon), id);
+                specialPoints.add(point);
+            }else{
+                point = new Point(new Coordinate(ghPoint.lat, ghPoint.lon));
+            }
+            points.add(point);
         }
-        return new Path(points);
+        return new Path(points,specialPoints);
     }
 
     public static String toProfile(TransportType transportType)

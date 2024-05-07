@@ -19,16 +19,26 @@ public class SearchPanel extends JPanel
     private RouteType routeTypeSetting;
     private TransportType selectedTransport;
     private AnimatedLine indicator;
+    private int mainWidth;
+    private int mainHeight;
 
     public SearchPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked) {
-        this.setPreferredSize(new Dimension(mainWidth / 3, mainHeight));
+        this.mainWidth = mainWidth;
+        this.mainHeight = mainHeight;
         this.setBackground(Color.white);
         this.setBorder(new EmptyBorder(25, 0, 0, 20)); // top, left, bottom, right padding
         this.onCalculateClicked = onCalculateCLicked;
         routeTypeSetting = RouteType.ACTUAL;
         selectedTransport = TransportType.FOOT;
+        changeSize(mainWidth, mainHeight);
+    }
 
-        initComponents();
+    public void changeSize(int mainWidth, int mainHeight) {
+        this.setPreferredSize(new Dimension(mainWidth / 3, 2* mainHeight /3));
+        this.mainWidth = mainWidth;
+        this.mainHeight = mainHeight;
+        this.removeAll();
+        this.initComponents();
     }
 
     public void initComponents() {
@@ -38,7 +48,7 @@ public class SearchPanel extends JPanel
 
         // Change to enums for later
         ButtonGroup transportButtonGroup = new ButtonGroup();
-        CircularIconButtonFactory buttonFactory = new CircularIconButtonFactory();
+        CircularIconButtonFactory buttonFactory = new CircularIconButtonFactory((int)mainWidth/33);
         JRadioButton transportationType1 = buttonFactory.createIconButton("Transistor/src/main/resources/images/walk.png");
         addActionListener(transportationType1, TransportType.FOOT);
         JRadioButton transportationType2 = buttonFactory.createIconButton("Transistor/src/main/resources/images/bike.png");
@@ -74,9 +84,9 @@ public class SearchPanel extends JPanel
 
         JPanel animatedLinePanel = new JPanel();
         animatedLinePanel.setBackground(Color.white);
-        animatedLinePanel.setSize(new Dimension(20,280));
+        animatedLinePanel.setSize(new Dimension((int)(mainWidth/49.5),(int)(mainWidth/3.5)));
         animatedLinePanel.setLayout(new BorderLayout());
-        indicator = new AnimatedLine(new Point(transportationType1.getX()+20, transportationType1.getY()), new Point(transportationType1.getX()+40, transportationType1.getY()));
+        indicator = new AnimatedLine(new Point(transportationType1.getX()+(int)(mainWidth/49.5), transportationType1.getY()), new Point(transportationType1.getX()+(int)(mainWidth/24.75), transportationType1.getY()));
         animatedLinePanel.add(indicator);
 
         GroupLayout layout = new GroupLayout(this);
@@ -85,37 +95,37 @@ public class SearchPanel extends JPanel
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGap(25)
+                                .addGap((int)(mainWidth/40))
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(departureField, GroupLayout.PREFERRED_SIZE,280, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(arrivalField, GroupLayout.PREFERRED_SIZE, 280, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(calculateButton, GroupLayout.PREFERRED_SIZE, 280, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(departureField, GroupLayout.PREFERRED_SIZE,(int)(mainWidth/3.5), GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(arrivalField, GroupLayout.PREFERRED_SIZE, (int)(mainWidth/3.5), GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(calculateButton, GroupLayout.PREFERRED_SIZE, (int)(mainWidth/3.5), GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addContainerGap(10,10)
+                                                .addContainerGap((int)(mainWidth/100),(int)(mainWidth/100))
                                                 .addComponent(transportationType1)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED , 30, 30)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED , (int)mainWidth/33, 30)
                                                 .addComponent(transportationType2)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 30, 30)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, mainWidth/33, 30)
                                                 .addComponent(transportationType3)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 30, 30)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, mainWidth/33, 30)
                                                 .addComponent(transportationType4)
                                                 .addContainerGap())
-                                        .addComponent(animatedLinePanel, GroupLayout.PREFERRED_SIZE,280, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(animatedLinePanel, GroupLayout.PREFERRED_SIZE,(int)(mainWidth/3.5), GroupLayout.PREFERRED_SIZE)
                                         .addComponent(distanceLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(timeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(routeTypeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addGap(125, 125, 125)
+                                                .addGap((int)(mainWidth/7.92), (int)(mainWidth/7.92), (int)(mainWidth/7.92))
                                                 .addComponent(switchButton))))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(departureField, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(departureField, GroupLayout.PREFERRED_SIZE, mainWidth/33, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(switchButton)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(arrivalField, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(arrivalField, GroupLayout.PREFERRED_SIZE, mainWidth/33, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(transportationType1)
@@ -126,7 +136,7 @@ public class SearchPanel extends JPanel
                                 )
                                 .addComponent(animatedLinePanel, GroupLayout.PREFERRED_SIZE,5, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(calculateButton, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(calculateButton, GroupLayout.PREFERRED_SIZE, mainWidth/33, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(distanceLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(timeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(routeTypeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)

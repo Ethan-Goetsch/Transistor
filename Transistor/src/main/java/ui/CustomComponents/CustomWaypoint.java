@@ -12,16 +12,18 @@ import java.awt.event.MouseListener;
 public class CustomWaypoint{
     private final JButton representation;
     private final GeoPosition geoPosition;
-    private boolean isBusStop;
-    public CustomWaypoint(GeoPosition geoPosition, ImageIcon representation){
+    private ArrivingTimePanel infoPanel;
+    private int ID;
+    private CustomWaypoint(GeoPosition geoPosition, ImageIcon representation){
         this.geoPosition = geoPosition;
         this.representation = new JButton();
         setRepresentation(representation);
-        isBusStop = false;
+        ID = -1;// non bus waypoint representstion
     }
-    public CustomWaypoint(GeoPosition geoPosition, ImageIcon representation, boolean isBusStop){
+    public CustomWaypoint(GeoPosition geoPosition, ImageIcon representation, int ID, ArrivingTimePanel infoPanel){
         this(geoPosition,representation);
-        this.isBusStop = isBusStop;
+        this.ID = ID;
+        this.infoPanel = infoPanel;
     }
 
     private void setRepresentation(ImageIcon representation) {
@@ -35,8 +37,12 @@ public class CustomWaypoint{
         this.representation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(isBusStop){
                     //TODO add bus times displayed when clicked
+                if(ID != -1){
+                    infoPanel.display(ID);
+                }
+                else{
+                    infoPanel.clearInfo();
                 }
 
             }

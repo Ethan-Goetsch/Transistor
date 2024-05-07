@@ -5,9 +5,9 @@ public class Coordinate
     private double latitude;
     private double longitude;
     
-    public Coordinate(double latitude, double longtitude)
+    public Coordinate(double latitude, double longitude)
     {
-        this.longitude = longtitude;
+        this.longitude = longitude;
         this.latitude = latitude;
     }
 

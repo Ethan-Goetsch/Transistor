@@ -10,7 +10,11 @@ import javax.swing.ImageIcon;
  * Factory class for creating circular icon buttons.
  */
 public class CircularIconButtonFactory {
-    public final int ICON_SIZE = 30;
+    public final int ICON_SIZE;
+
+    public CircularIconButtonFactory(int size){
+        ICON_SIZE = size;
+    }
     public CircularIconButton createIconButton(String iconPath) {
         ImageIcon iconOriginal = new ImageIcon(iconPath);
         Image iconScaled = iconOriginal.getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH);

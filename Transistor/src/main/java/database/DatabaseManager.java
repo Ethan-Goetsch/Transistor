@@ -6,11 +6,12 @@ import utils.PathLocations;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 
 public class DatabaseManager
 {
     private static DatabaseManager instance;
-    private Connection connection;
+    private static Connection connection;
 
     private DatabaseManager()
     {
@@ -19,16 +20,6 @@ public class DatabaseManager
             var userConfig = FileManager.readData(PathLocations.CREDENTIALS_FILE, UserConfig.class);
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(userConfig.url(), userConfig.username(), userConfig.password());
-
-            var statement = connection.prepareStatement(
-                    "SELECT * " +
-                        "FROM transitorgtfs.agency ");
-            var result = statement.executeQuery();
-            while (result.next())
-            {
-                var string = result.getString(1);
-                System.out.println(string);
-            }
         }
         catch (Exception e)
         {
@@ -41,6 +32,17 @@ public class DatabaseManager
         if (instance == null)
             instance = new DatabaseManager();
         return instance;
+    }
+
+    public ResultSet executeStatement(String statementContent){
+        try{
+            var statement = connection.prepareStatement(statementContent);
+            return statement.executeQuery();
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     public static void main(String[] args)

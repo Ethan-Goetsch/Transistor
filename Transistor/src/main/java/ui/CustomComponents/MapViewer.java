@@ -13,9 +13,14 @@ public class MapViewer extends JXMapViewer {
     private Path path;
     private final ArrayList<CustomWaypoint> waypoints;
 
-    public MapViewer() {
-        path = new Path(new ArrayList<>());
+    public MapViewer(int mainWidth, int mainHeight) {
+        path = new Path(new ArrayList<>(), new ArrayList<>());
         waypoints = new ArrayList<>();
+        changeSize(mainWidth, mainHeight);
+    }
+
+    public void changeSize(int mainWidth, int mainHeight) {
+        setPreferredSize(new Dimension(mainWidth, mainHeight));
     }
 
     public void setPath(Path path) {
@@ -34,7 +39,7 @@ public class MapViewer extends JXMapViewer {
         Path2D p = new Path2D.Double();
 
         for (int i = 0; i < path.coordinates().size(); i++) {
-            var point = path.coordinates().get(i);
+            var point = path.coordinates().get(i).getCoordinate();
             Point2D uiPoint = convertGeoPositionToPoint(new GeoPosition(point.getLatitude(), point.getLongitude()));
 
             if (i == 0) {

@@ -3,7 +3,7 @@ package ui;
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.event.MouseInputListener;
-
+import database.DatabaseManager;
 import entities.Coordinate;
 import entities.Path;
 import org.jxmapviewer.JXMapViewer;
@@ -11,9 +11,14 @@ import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.*;
+import ui.CustomComponents.ArrivingTimePanel;
 import ui.CustomComponents.MapViewer;
 import ui.CustomComponents.CustomWaypoint;
 import java.awt.*;
+import java.sql.ResultSet;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,16 +28,24 @@ public class MMap extends JPanel{
     private final int mainWidth;
     private final int mainHeight;
     private final JXMapViewer jXMapViewer;
+
+    private final ArrivingTimePanel infopanel;
 //6218ap 6228bp test values
 
-    public MMap(JXMapViewer jXMapViewer, int mainWidth, int mainHeight) {
+    public MMap(JXMapViewer jXMapViewer,ArrivingTimePanel infopanel, int mainWidth, int mainHeight) {
         this.mainWidth = mainWidth;
         this.mainHeight = mainHeight;
-        this.setPreferredSize(new Dimension(2 * mainWidth / 3, mainHeight));
+        changeSize(mainWidth, mainHeight);
         this.jXMapViewer = jXMapViewer;
+        this.infopanel = infopanel;
         initLayout();
         initMap();
     }
+
+    public void changeSize(int mainWidth, int mainHeight) {
+        this.setPreferredSize(new Dimension(2 * mainWidth / 3, mainHeight));
+    }
+
     private void initMap() {
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
@@ -47,22 +60,19 @@ public class MMap extends JPanel{
 
     }
 
-
     private void initLayout() {
 
         GroupLayout layout = new GroupLayout(this);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jXMapViewer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jXMapViewer, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jXMapViewer, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jXMapViewer, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
@@ -105,9 +115,39 @@ public class MMap extends JPanel{
         ((MapViewer)jXMapViewer).setPath(path);
         //TODO here add the different icons that are needed
         ((MapViewer) jXMapViewer).removeWaypoints();
-        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(departure, new ImageIcon("Transistor/src/main/resources/locationIcon.png")));
-        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(arrival, new ImageIcon("Transistor/src/main/resources/blueDot.png")));
+        infopanel.clearBusStopInfo();
+        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(departure, new ImageIcon("Transistor/src/main/resources/locationIcon.png"), -1, infopanel));
+        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(arrival, new ImageIcon("Transistor/src/main/resources/blueDot.png"), -1, infopanel));
+        ArrayList<entities.Point> sp = new ArrayList<>();
+        sp.add(new entities.Point(new Coordinate(51.932576, 4.401493),2521959)); //test
+        sp.add(new entities.Point(new Coordinate(51.93752, 4.384413),2522368)); //test
+        for (entities.Point p : sp) {
+            infopanel.addBusStopInfo(p.getID(),getArrivingTimesOfBus(p.getID()));
+            ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint( new GeoPosition(p.getCoordinate().getLatitude(),p.getCoordinate().getLongitude()), new ImageIcon("Transistor/src/main/resources/blueDot.png"), p.getID(), infopanel));
 
+        }
+    }
 
+    private ArrayList<LocalTime> getArrivingTimesOfBus(int stopID){
+        String statement = "SELECT DISTINCT arrival_time FROM transitorgtfs.stop_times" +
+                " WHERE stop_id = " + stopID;
+        DatabaseManager db = DatabaseManager.getInstance();
+        ResultSet res =  db.executeStatement(statement);
+        ArrayList<LocalTime> arrivals = new ArrayList<>();
+        try{
+            while ( res.next() ) {
+                String arrival = res.getString(1);
+                arrivals.add(LocalTime.parse(arrival));
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        Collections.sort(arrivals);
+        LocalTime now = LocalTime.now();
+
+        // Remove all times that have passed the current time
+        arrivals.removeIf(time -> time.isBefore(now));
+        return arrivals;
     }
 }
