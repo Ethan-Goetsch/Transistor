@@ -1,6 +1,5 @@
 package database;
 
-import com.mysql.cj.jdbc.result.ResultSetImpl;
 import database.queries.NearestBusStopsQuery;
 import database.queries.QueryObject;
 import entities.Coordinate;
@@ -12,7 +11,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseManager
 {
@@ -60,29 +58,24 @@ public class DatabaseManager
         }
     }
 
-    public ArrayList<Integer> getStopId(Coordinate coordinate)
+    public ArrayList<Integer> getStopId(Coordinate coordinate, double radius)
     {
-        ArrayList<Integer> IDs = new ArrayList<>();
-        double radius = 100;
         var instance = DatabaseManager.getInstance();
-        while (IDs.isEmpty())
+        RadiusGenerator rg = new RadiusGenerator();
+        double[][] bounds = rg.getRadius(coordinate, radius);
+        ResultSet rs = instance.executeStatement(new NearestBusStopsQuery(bounds[0], bounds[1]));
+        ArrayList<Integer> IDs = new ArrayList<>();
+        try
         {
-            RadiusGenerator rg = new RadiusGenerator();
-            double[][] bounds = rg.getRadius(coordinate, radius);
-            ResultSet rs  = instance.executeStatement(new NearestBusStopsQuery(bounds[0], bounds[1]).getStatement());
-            try
+            while (rs.next())
             {
-                while (rs.next())
-                {
-                    int id = rs.getInt(1);
-                    IDs.add(id);
-                }
+                int id = rs.getInt(1);
+                IDs.add(id);
             }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-            radius += 100;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
 
         return IDs;
