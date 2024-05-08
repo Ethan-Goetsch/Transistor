@@ -72,9 +72,6 @@ class Tests {
         assertEquals(0.844, result);
     }
 
-
-    }
-
     @Test
     void aerialCalcTest3(){
         //test for aerial calculation from a non-existing postal code to a Maastricht postal code 6211AL
