@@ -40,8 +40,8 @@ public class ApplicationManager
 
             // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
 
-            List<Integer> stopIDDeparture = DatabaseManager.getInstance().getStopId(departureCoordinates);
-            List<Integer>  stopIDArrival = DatabaseManager.getInstance().getStopId(arrivalCoordinates);
+            //List<Integer> stopIDDeparture = DatabaseManager.getInstance().getStopId(departureCoordinates);
+            //List<Integer>  stopIDArrival = DatabaseManager.getInstance().getStopId(arrivalCoordinates);
 
             IRouteCalculator calculator = routeCalculators
                     .stream()
