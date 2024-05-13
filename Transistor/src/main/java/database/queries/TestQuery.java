@@ -1,5 +1,6 @@
 package database.queries;
 
+import database.DatabaseExtensions;
 import database.DatabaseManager;
 
 import java.sql.ResultSet;
@@ -31,9 +32,12 @@ public class TestQuery extends QueryObject
 //                "FROM transitorgtfs.trips " +
 //                "WHERE trip_id = 178421643";
 
-        return "SELECT DISTINCT * " +
-                "FROM transitorgtfs.shapes " +
-                "WHERE shape_id = 1129986";
+        return "SELECT trips.trip_id, shapes.shape_pt_sequence, shapes.shape_pt_lat, shapes.shape_pt_lon " +
+                "FROM transitorgtfs.trips " +
+                "INNER JOIN transitorgtfs.shapes ON trips.shape_id = shapes.shape_id " +
+                "WHERE trip_id = 176974587 " +
+                "ORDER BY trips.trip_id, shapes.shape_pt_sequence " +
+                "LIMIT 10";
 //
 //        return "SELECT DISTINCT destination.trip_id, destination.stop_sequence, destination.arrival_time " +
 //                "    FROM transitorgtfs.stop_times AS origin " +
@@ -50,23 +54,6 @@ public class TestQuery extends QueryObject
 
     public static void main(String[] args) throws SQLException
     {
-        var instance = DatabaseManager.getInstance();
-        ResultSet resultSet = instance.executeQuery(new TestQuery());
-        try
-        {
-            while (resultSet.next())
-            {
-                var printData = "";
-                for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++)
-                {
-                    printData += resultSet.getString(i) + " ";
-                }
-                System.out.println(printData);
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        DatabaseExtensions.printResults(DatabaseManager.getInstance().executeQuery(new TestQuery()));
     }
 }
