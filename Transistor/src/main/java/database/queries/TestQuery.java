@@ -51,7 +51,7 @@ public class TestQuery extends QueryObject
     public static void main(String[] args) throws SQLException
     {
         var instance = DatabaseManager.getInstance();
-        ResultSet resultSet = instance.executeStatement(new TestQuery());
+        ResultSet resultSet = instance.executeQuery(new TestQuery());
         try
         {
             while (resultSet.next())

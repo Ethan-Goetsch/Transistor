@@ -131,7 +131,7 @@ public class MMap extends JPanel{
 
     private ArrayList<LocalTime> getArrivingTimesOfBus(int stopID){
         DatabaseManager db = DatabaseManager.getInstance();
-        ResultSet res =  db.executeStatement(new BusStopTimesQuery(stopID).getStatement());
+        ResultSet res =  db.executeQuery(new BusStopTimesQuery(stopID).getStatement());
         ArrayList<LocalTime> arrivals = new ArrayList<>();
         try{
             while ( res.next() ) {
