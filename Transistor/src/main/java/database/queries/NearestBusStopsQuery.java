@@ -1,8 +1,7 @@
 package database.queries;
 
-import database.DatabaseManager;
-import database.RadiusGenerator;
 import entities.Coordinate;
+import entities.transit.TransitStop;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NearestBusStopsQuery extends ResultQuery<List<Integer>>
+public class NearestBusStopsQuery extends ResultQuery<List<TransitStop>>
 {
     private final double[] latBounds;
     private final double[] lonBounds;
@@ -26,7 +25,7 @@ public class NearestBusStopsQuery extends ResultQuery<List<Integer>>
     @Override
     public String getStatement()
     {
-        return "SELECT  DISTINCT stop_id " +
+        return "SELECT  DISTINCT stop_id, stop_lat, stop_long " +
                 "FROM transitorgtfs.stops " +
                 "WHERE stop_lat >= ? " +
                 "AND stop_lon >= ? " +
@@ -45,23 +44,19 @@ public class NearestBusStopsQuery extends ResultQuery<List<Integer>>
     }
 
     @Override
-    public List<Integer> readResult(ResultSet resultSet)
+    public List<TransitStop> readResult(ResultSet resultSet)
     {
-        List<Integer> ids = new ArrayList<>();
         try
         {
+            List<TransitStop> stops = new ArrayList<>();
             while (resultSet.next())
-            {
-                var id = resultSet.getInt(1);
-                ids.add(id);
-            }
+                stops.add(new TransitStop(resultSet.getInt(1), new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3))));
+            return stops;
         }
         catch (SQLException e)
         {
             throw new RuntimeException(e);
         }
-
-        return ids;
 
 //        getStopId(Coordinate coordinate)
 //        ArrayList<Integer> IDs = new ArrayList<>();

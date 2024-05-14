@@ -7,6 +7,7 @@ import database.DatabaseManager;
 import database.queries.BusStopTimesQuery;
 import entities.Coordinate;
 import entities.Path;
+import entities.PathPoint;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
@@ -112,41 +113,42 @@ public class MMap extends JPanel{
         jXMapViewer.calculateZoomFrom(positions);
     }
 
+    // TODO: CHANGE THIS TO NOT DEPEND ON THE DATABASE ENTIRELY
     private void updateMap(Path Path, GeoPosition departure, GeoPosition arrival) {
-        ((MapViewer)jXMapViewer).setPath(Path);
-        //TODO here add the different icons that are needed
-        ((MapViewer) jXMapViewer).removeWaypoints();
-        infopanel.clearBusStopInfo();
-        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(departure, new ImageIcon("Transistor/src/main/resources/locationIcon.png"), -1, infopanel));
-        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(arrival, new ImageIcon("Transistor/src/main/resources/blueDot.png"), -1, infopanel));
-        ArrayList<entities.Point> sp = new ArrayList<>();
-        sp.add(new entities.Point(new Coordinate(51.932576, 4.401493),2521959)); //test
-        sp.add(new entities.Point(new Coordinate(51.93752, 4.384413),2522368)); //test
-        for (entities.Point p : sp) {
-            infopanel.addBusStopInfo(p.getID(),getArrivingTimesOfBus(p.getID()));
-            ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint( new GeoPosition(p.getCoordinate().getLatitude(),p.getCoordinate().getLongitude()), new ImageIcon("Transistor/src/main/resources/blueDot.png"), p.getID(), infopanel));
+//        ((MapViewer)jXMapViewer).setPath(Path);
+//        //TODO here add the different icons that are needed
+//        ((MapViewer) jXMapViewer).removeWaypoints();
+//        infopanel.clearBusStopInfo();
+//        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(departure, new ImageIcon("Transistor/src/main/resources/locationIcon.png"), -1, infopanel));
+//        ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(arrival, new ImageIcon("Transistor/src/main/resources/blueDot.png"), -1, infopanel));
+//        ArrayList<PathPoint> sp = new ArrayList<>();
+//        sp.add(new PathPoint(new Coordinate(51.932576, 4.401493),2521959)); //test
+//        sp.add(new PathPoint(new Coordinate(51.93752, 4.384413),2522368)); //test
+//        for (PathPoint p : sp) {
+//            infopanel.addBusStopInfo(p.getID(),getArrivingTimesOfBus(p.getID()));
+//            ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint( new GeoPosition(p.getCoordinate().getLatitude(),p.getCoordinate().getLongitude()), new ImageIcon("Transistor/src/main/resources/blueDot.png"), p.getID(), infopanel));
 
         }
-    }
 
+    // TODO: CHANGE THIS TO NOT RELY ON THE DATABASE ENTIRELY
     private ArrayList<LocalTime> getArrivingTimesOfBus(int stopID){
         DatabaseManager db = DatabaseManager.getInstance();
         ResultSet res =  db.executeQuery(new BusStopTimesQuery(stopID).getStatement());
         ArrayList<LocalTime> arrivals = new ArrayList<>();
-        try{
-            while ( res.next() ) {
-                String arrival = res.getString(1);
-                arrivals.add(LocalTime.parse(arrival));
-
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        Collections.sort(arrivals);
-        LocalTime now = LocalTime.now();
-
-        // Remove all times that have passed the current time
-        arrivals.removeIf(time -> time.isBefore(now));
+//        try{
+//            while ( res.next() ) {
+//                String arrival = res.getString(1);
+//                arrivals.add(LocalTime.parse(arrival));
+//
+//            }
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        Collections.sort(arrivals);
+//        LocalTime now = LocalTime.now();
+//
+//        // Remove all times that have passed the current time
+//        arrivals.removeIf(time -> time.isBefore(now));
         return arrivals;
     }
 }

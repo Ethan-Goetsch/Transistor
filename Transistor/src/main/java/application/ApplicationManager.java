@@ -1,12 +1,13 @@
 package application;
 
 import calculators.IRouteCalculator;
+import calculators.TransitCalculator;
 import database.DatabaseManager;
 import entities.*;
+import entities.transit.TransitStop;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationManager
@@ -28,11 +29,10 @@ public class ApplicationManager
         if (!requestValidator.isValidRequest(request))
             return new Route(null, null, null, request.transportType(), "Invalid Input");
 
-        DatabaseManager database = DatabaseManager.getInstance();
         String message = "";
         Coordinate departureCoordinates = null;
         Coordinate arrivalCoordinates = null;
-        RouteCalculationResult locationToOriginResult = null;
+        RouteCalculationResult result = null;
 
         try
         {
@@ -46,30 +46,22 @@ public class ApplicationManager
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
-            var originStop = //;
-            List<Integer> stopIdOrigin = database.getStopId(departureCoordinates);
-            List<Integer>  stopIdDestination = database.getStopId(arrivalCoordinates);
+            var stopIdOrigin = DatabaseManager.getInstance().getStop(departureCoordinates);
+            var stopIdDestination = DatabaseManager.getInstance().getStop(arrivalCoordinates);
 
-            /*
-            Steps:
-                1. Get origin stop id
-                2. Get destination stop id
-                3. Get route from starting location to origin stop id
-                4. Get trip from origin to destination
-                5. Get shapes of trip
-                6. Return path
-             */
+            var originStop = stopIdOrigin.getFirst();
+            var destinationStop = stopIdDestination.getFirst();
 
-            // TODO: GET LATITUDE AND LONGITUDE OF ORIGIN STOP ID
-            locationToOriginResult = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, originStop, request.transportType()));
-            List<Integer> tripsFromOriginToDestination = database.GetTrip(originStopId, destinationStopId);
-            List<Integer> pathsFromOriginToDestination = database.GetPath(tripId);
+            // Calculate route from starting location to origin bus stop
+            var locationToOriginResult = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, originStop.coordinate(), request.transportType()));
+            result = new TransitCalculator().calculateRoute(originStop, destinationStop);
+            result = result.merge(locationToOriginResult);
         }
         catch (CallNotPossibleException e)
         {
             message = e.getMessage();
         }
 
-        return new Route(departureCoordinates, arrivalCoordinates, locationToOriginResult, request.transportType(), message);
+        return new Route(departureCoordinates, arrivalCoordinates, result, request.transportType(), message);
     }
 }

@@ -21,10 +21,10 @@ public class AerialCalculator implements IRouteCalculator
         double distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
         double time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
-        var points = new ArrayList<Point>();
-        points.add(new Point(calculationRequest.departure()));
-        points.add(new Point(calculationRequest.arrival()));
-        var path = new Path(points, null);
+        var points = new ArrayList<PathPoint>();
+        points.add(new PathPoint(calculationRequest.departure(), PointType.Normal));
+        points.add(new PathPoint(calculationRequest.arrival(), PointType.Normal));
+        var path = new Path(points);
 
         return new RouteCalculationResult(path, distance, time);
     }

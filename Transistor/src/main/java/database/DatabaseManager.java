@@ -3,6 +3,8 @@ package database;
 import database.queries.*;
 import entities.Coordinate;
 import entities.UserConfig;
+import entities.transit.TransitShape;
+import entities.transit.TransitStop;
 import file_system.FileManager;
 import utils.PathLocations;
 
@@ -10,7 +12,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseManager
@@ -86,12 +87,12 @@ public class DatabaseManager
         return executeAndReadQuery(new GetTripBetweenTwoStopsQuery(originStopId, destinationStopId));
     }
 
-    public List<Integer> GetPath(int tripId)
+    public List<TransitShape> GetPath(int tripId)
     {
         return executeAndReadQuery(new GetPathForTripQuery(tripId));
     }
 
-    public List<Integer> getStopId(Coordinate coordinate)
+    public List<TransitStop> getStop(Coordinate coordinate)
     {
         return executeAndReadQuery(new NearestBusStopsQuery(coordinate));
     }
