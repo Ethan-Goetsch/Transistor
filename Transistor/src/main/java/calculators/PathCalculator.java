@@ -18,7 +18,7 @@ public class PathCalculator implements IRouteCalculator
 {
     private final GraphHopper graphHopper;
 
-    public PathCalculator()
+    public PathCalculator(String pathFile)
     {
         // DO NOT TOUCH THESE VALUES
         // If these values are changed delete "PathFile.GraphResourceFolder" content in order to reinitialize GraphHopper configuration
@@ -30,7 +30,7 @@ public class PathCalculator implements IRouteCalculator
 
         graphHopper.setOSMFile(PathLocations.GRAPH_FILE);
         graphHopper.setProfiles(profiles);
-        graphHopper.setGraphHopperLocation(PathLocations.GRAPH_RESOURCE_FOLDER);
+        graphHopper.setGraphHopperLocation(pathFile);
         graphHopper.importOrLoad();
     }
 
