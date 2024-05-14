@@ -16,28 +16,51 @@ public class TestQuery extends QueryObject
     @Override
     public String getStatement()
     {
-//        return "SELECT DISTINCT destination.trip_id, origin_stop.stop_name, destination_stop.stop_name\n" +
-//                "    FROM transitorgtfs.stop_times AS origin\n" +
-//                "    INNER JOIN transitorgtfs.stop_times AS destination\n" +
-//                "        ON destination.trip_id = origin.trip_id\n" +
-//                "        AND destination.stop_id = 2578366\n" +
-//                "    INNER JOIN transitorgtfs.stops AS origin_stop\n" +
-//                "        ON origin_stop.stop_id = origin.stop_id\n" +
-//                "    INNER JOIN transitorgtfs.stops AS destination_stop\n" +
-//                "        ON destination_stop.stop_id = destination.stop_id\n" +
-//                "    WHERE origin.stop_id = 2578413\n" +
+//        return "SELECT DISTINCT destination.trip_id, origin_stop.stop_name, destination_stop.stop_name" +
+//                "    FROM transitorgtfs.stop_times AS origin" +
+//                "    INNER JOIN transitorgtfs.stop_times AS destination" +
+//                "        ON destination.trip_id = origin.trip_id" +
+//                "        AND destination.stop_id = 2578366" +
+//                "    INNER JOIN transitorgtfs.stops AS origin_stop" +
+//                "        ON origin_stop.stop_id = origin.stop_id" +
+//                "    INNER JOIN transitorgtfs.stops AS destination_stop" +
+//                "        ON destination_stop.stop_id = destination.stop_id" +
+//                "    WHERE origin.stop_id = 2578413" +
 //                "        AND origin.stop_sequence < destination.stop_sequence;";
 
 //        return "SELECT DISTINCT shape_id " +
 //                "FROM transitorgtfs.trips " +
 //                "WHERE trip_id = 178421643";
 
+//        return "SELECT " +
+//                "    trips.trip_id, " +
+//                "    shapes.shape_pt_sequence, " +
+//                "    shapes.shape_pt_lat, " +
+//                "    shapes.shape_pt_lon " +
+//                "FROM " +
+//                "    transitorgtfs.trips " +
+//                "INNER JOIN " +
+//                "    transitorgtfs.shapes ON trips.shape_id = shapes.shape_id " +
+//                "WHERE " +
+//                "    trips.trip_id IN (" +
+//                "        SELECT DISTINCT destination.trip_id " +
+//                "        FROM transitorgtfs.stop_times AS origin " +
+//                "        INNER JOIN transitorgtfs.stop_times AS destination ON destination.trip_id = origin.trip_id " +
+//                "            AND destination.stop_id = 2578366" +
+//                "        INNER JOIN transitorgtfs.stops AS origin_stop ON origin_stop.stop_id = origin.stop_id " +
+//                "        INNER JOIN transitorgtfs.stops AS destination_stop ON destination_stop.stop_id = destination.stop_id " +
+//                "        WHERE origin.stop_id = 2578413 " +
+//                "            AND origin.stop_sequence < destination.stop_sequence" +
+//                "    )" +
+//                "ORDER BY " +
+//                "    trips.trip_id, " +
+//                "    shapes.shape_pt_sequence;";
+
         return "SELECT trips.trip_id, shapes.shape_pt_sequence, shapes.shape_pt_lat, shapes.shape_pt_lon " +
                 "FROM transitorgtfs.trips " +
                 "INNER JOIN transitorgtfs.shapes ON trips.shape_id = shapes.shape_id " +
                 "WHERE trip_id = 176974587 " +
-                "ORDER BY trips.trip_id, shapes.shape_pt_sequence " +
-                "LIMIT 10";
+                "ORDER BY trips.trip_id, shapes.shape_pt_sequence ";
 //
 //        return "SELECT DISTINCT destination.trip_id, destination.stop_sequence, destination.arrival_time " +
 //                "    FROM transitorgtfs.stop_times AS origin " +
