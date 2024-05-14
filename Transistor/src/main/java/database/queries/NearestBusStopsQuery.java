@@ -22,10 +22,18 @@ public class NearestBusStopsQuery extends ResultQuery<List<TransitStop>>
         this.latBounds = latBounds;
         this.lonBounds = lonBounds;
     }
+
+    public NearestBusStopsQuery(Coordinate coordinate, double radius)
+    {
+        var rim = radius / 2;
+        this.latBounds = new double[] { coordinate.getLatitude() - rim, coordinate.getLatitude() + rim };
+        this.lonBounds = new double[] { coordinate.getLongitude() - rim, coordinate.getLongitude() + rim };
+    }
+
     @Override
     public String getStatement()
     {
-        return "SELECT  DISTINCT stop_id, stop_lat, stop_long " +
+        return "SELECT  DISTINCT stop_id, stop_lat, stop_lon " +
                 "FROM transitorgtfs.stops " +
                 "WHERE stop_lat >= ? " +
                 "AND stop_lon >= ? " +

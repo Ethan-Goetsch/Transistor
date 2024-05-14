@@ -92,8 +92,8 @@ public class DatabaseManager
         return executeAndReadQuery(new GetPathForTripQuery(tripId));
     }
 
-    public List<TransitStop> getStop(Coordinate coordinate)
+    public List<TransitStop> getStop(Coordinate coordinate, double radius)
     {
-        return executeAndReadQuery(new NearestBusStopsQuery(coordinate));
+        return executeAndReadQuery(new NearestBusStopsQuery(coordinate, radius));
     }
 }
