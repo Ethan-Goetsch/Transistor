@@ -1,5 +1,6 @@
 package database.queries;
 
+import database.DatabaseExtensions;
 import database.DatabaseManager;
 
 import java.sql.PreparedStatement;
@@ -53,6 +54,11 @@ public class GetPathForTripQuery extends ResultQuery<List<Integer>>
 
     public static void main(String[] args)
     {
-        System.out.println(DatabaseManager.getInstance().executeAndReadQuery(new GetPathForTripQuery(176974587)));
+        var trips = DatabaseManager.getInstance().executeAndReadQuery(new GetTripBetweenTwoStopsQuery(2578413, 2578366));
+        for (Integer trip : trips)
+        {
+            DatabaseExtensions.printResults(DatabaseManager.getInstance().executeQuery(new GetPathForTripQuery(trip)));
+            System.out.println("----------------------------------------------------------------");
+        }
     }
 }

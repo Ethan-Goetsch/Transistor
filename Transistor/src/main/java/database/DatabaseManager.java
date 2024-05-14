@@ -1,8 +1,6 @@
 package database;
 
-import database.queries.NearestBusStopsQuery;
-import database.queries.QueryObject;
-import database.queries.ResultQuery;
+import database.queries.*;
 import entities.Coordinate;
 import entities.UserConfig;
 import file_system.FileManager;
@@ -13,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseManager
 {
@@ -80,5 +79,20 @@ public class DatabaseManager
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Integer> GetTrip(int originStopId, int destinationStopId)
+    {
+        return executeAndReadQuery(new GetTripBetweenTwoStopsQuery(originStopId, destinationStopId));
+    }
+
+    public List<Integer> GetPath(int tripId)
+    {
+        return executeAndReadQuery(new GetPathForTripQuery(tripId));
+    }
+
+    public List<Integer> getStopId(Coordinate coordinate)
+    {
+        return executeAndReadQuery(new NearestBusStopsQuery(coordinate));
     }
 }

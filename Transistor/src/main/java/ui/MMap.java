@@ -91,14 +91,14 @@ public class MMap extends JPanel{
                                 .addGap(0, mainHeight, Short.MAX_VALUE))
         );
     }
-    public void updateResults(Coordinate departure, Coordinate arrival, Path path, double distance){
+    public void updateResults(Coordinate departure, Coordinate arrival, Path Path, double distance){
 
         double departureLong = departure.getLongitude();
         double departureLat = departure.getLatitude();
         double arrivalLong = arrival.getLongitude();
         double arrivalLat = arrival.getLatitude();
 
-        updateMap(path, new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
+        updateMap(Path, new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
         setView(new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
         jXMapViewer.repaint();
     }
@@ -112,8 +112,8 @@ public class MMap extends JPanel{
         jXMapViewer.calculateZoomFrom(positions);
     }
 
-    private void updateMap(Path path, GeoPosition departure, GeoPosition arrival) {
-        ((MapViewer)jXMapViewer).setPath(path);
+    private void updateMap(Path Path, GeoPosition departure, GeoPosition arrival) {
+        ((MapViewer)jXMapViewer).setPath(Path);
         //TODO here add the different icons that are needed
         ((MapViewer) jXMapViewer).removeWaypoints();
         infopanel.clearBusStopInfo();

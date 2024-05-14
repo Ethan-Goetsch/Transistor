@@ -2,10 +2,7 @@ package utils;
 
 import com.graphhopper.ResponsePath;
 import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
-import entities.Coordinate;
-import entities.Path;
-import entities.Point;
-import entities.TransportType;
+import entities.*;
 
 import java.util.ArrayList;
 
@@ -38,22 +35,14 @@ public class Conversions
 
     public static Path toPath(ResponsePath graphHopperPath)
     {
-        var points = new ArrayList<Point>();
-        var specialPoints = new ArrayList<Point>();
+        var points = new ArrayList<PathPoint>();
         for (var i = 0; i < graphHopperPath.getPoints().size(); i++)
         {
             var ghPoint = graphHopperPath.getPoints().get(i);
-            Point point;
-            if(false){//special
-                int id = -1;//todo change that to the id and find a way to distinguish points
-                point = new Point(new Coordinate(ghPoint.lat, ghPoint.lon), id);
-                specialPoints.add(point);
-            }else{
-                point = new Point(new Coordinate(ghPoint.lat, ghPoint.lon));
-            }
+            var point = new PathPoint(new Coordinate(ghPoint.lat, ghPoint.lon), PointType.Normal);
             points.add(point);
         }
-        return new Path(points,specialPoints);
+        return new Path(points);
     }
 
     public static String toProfile(TransportType transportType)

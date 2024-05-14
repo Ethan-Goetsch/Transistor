@@ -28,33 +28,48 @@ public class ApplicationManager
         if (!requestValidator.isValidRequest(request))
             return new Route(null, null, null, request.transportType(), "Invalid Input");
 
+        DatabaseManager database = DatabaseManager.getInstance();
         String message = "";
         Coordinate departureCoordinates = null;
         Coordinate arrivalCoordinates = null;
-        RouteCalculationResult result = null;
+        RouteCalculationResult locationToOriginResult = null;
 
         try
         {
-            departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
-            arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
-
-            // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
-
-            //List<Integer> stopIDDeparture = DatabaseManager.getInstance().getStopId(departureCoordinates);
-            //List<Integer>  stopIDArrival = DatabaseManager.getInstance().getStopId(arrivalCoordinates);
-
             IRouteCalculator calculator = routeCalculators
                     .stream()
                     .filter(routeCalculator -> routeCalculator.getRouteType() == request.routeType())
                     .findFirst()
-                    .orElseThrow();
-            result = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
+                    .orElse(routeCalculators.getFirst());
+
+            // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
+            departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
+            arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
+
+            var originStop = //;
+            List<Integer> stopIdOrigin = database.getStopId(departureCoordinates);
+            List<Integer>  stopIdDestination = database.getStopId(arrivalCoordinates);
+
+            /*
+            Steps:
+                1. Get origin stop id
+                2. Get destination stop id
+                3. Get route from starting location to origin stop id
+                4. Get trip from origin to destination
+                5. Get shapes of trip
+                6. Return path
+             */
+
+            // TODO: GET LATITUDE AND LONGITUDE OF ORIGIN STOP ID
+            locationToOriginResult = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, originStop, request.transportType()));
+            List<Integer> tripsFromOriginToDestination = database.GetTrip(originStopId, destinationStopId);
+            List<Integer> pathsFromOriginToDestination = database.GetPath(tripId);
         }
         catch (CallNotPossibleException e)
         {
             message = e.getMessage();
         }
 
-        return new Route(departureCoordinates, arrivalCoordinates, result, request.transportType(), message);
+        return new Route(departureCoordinates, arrivalCoordinates, locationToOriginResult, request.transportType(), message);
     }
 }
