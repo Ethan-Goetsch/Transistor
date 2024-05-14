@@ -1,10 +1,10 @@
 package application;
 
+import calculators.AerialCalculator;
 import calculators.IRouteCalculator;
 import calculators.TransitCalculator;
 import database.DatabaseManager;
 import entities.*;
-import entities.transit.TransitStop;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
 
@@ -24,7 +24,7 @@ public class ApplicationManager
         this.routeCalculators = routeCalculators;
     }
 
-    public Route calculateRouteRequest(RouteRequest request)
+    public Route calculateRoute(RouteRequest request)
     {
         if (!requestValidator.isValidRequest(request))
             return new Route(null, null, null, request.transportType(), "Invalid Input");
@@ -36,24 +36,18 @@ public class ApplicationManager
 
         try
         {
-            IRouteCalculator calculator = routeCalculators
-                    .stream()
-                    .filter(routeCalculator -> routeCalculator.getRouteType() == request.routeType())
-                    .findFirst()
-                    .orElse(routeCalculators.getFirst());
-
             // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
-            var stopIdOrigin = DatabaseManager.getInstance().getStop(departureCoordinates);
-            var stopIdDestination = DatabaseManager.getInstance().getStop(arrivalCoordinates);
+            var stopIdOrigin = DatabaseManager.getInstance().getStop(departureCoordinates, 100);
+            var stopIdDestination = DatabaseManager.getInstance().getStop(arrivalCoordinates, 100);
 
             var originStop = stopIdOrigin.getFirst();
             var destinationStop = stopIdDestination.getFirst();
 
             // Calculate route from starting location to origin bus stop
-            var locationToOriginResult = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, originStop.coordinate(), request.transportType()));
+            var locationToOriginResult = new AerialCalculator().calculateRoute(new RouteCalculationRequest(departureCoordinates, originStop.coordinate(), request.transportType()));
             result = new TransitCalculator().calculateRoute(originStop, destinationStop);
             result = result.merge(locationToOriginResult);
         }

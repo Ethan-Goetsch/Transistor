@@ -44,7 +44,7 @@ public class GetPathForTripQuery extends ResultQuery<List<TransitShape>>
             List<TransitShape> shapes = new ArrayList<>();
             while (resultSet.next())
             {
-                shapes.add(new TransitShape(resultSet.getInt(1), new Coordinate(resultSet.getInt(2), resultSet.getInt(3))));
+                shapes.add(new TransitShape(resultSet.getInt(1), new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3))));
             }
             return shapes;
         }
@@ -56,11 +56,7 @@ public class GetPathForTripQuery extends ResultQuery<List<TransitShape>>
 
     public static void main(String[] args)
     {
-        var trips = DatabaseManager.getInstance().executeAndReadQuery(new GetTripBetweenTwoStopsQuery(2578413, 2578366));
-        for (Integer trip : trips)
-        {
-            DatabaseExtensions.printResults(DatabaseManager.getInstance().executeQuery(new GetPathForTripQuery(trip)));
-            System.out.println("----------------------------------------------------------------");
-        }
+        DatabaseExtensions.printResults(DatabaseManager.getInstance().executeQuery(new GetPathForTripQuery(178414978)));
+        System.out.println(DatabaseManager.getInstance().executeAndReadQuery(new GetPathForTripQuery(178414978)));
     }
 }
