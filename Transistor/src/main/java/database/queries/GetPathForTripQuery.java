@@ -1,7 +1,5 @@
 package database.queries;
 
-import database.DatabaseExtensions;
-import database.DatabaseManager;
 import entities.Coordinate;
 import entities.transit.TransitShape;
 
@@ -14,26 +12,47 @@ import java.util.List;
 public class GetPathForTripQuery extends ResultQuery<List<TransitShape>>
 {
     private final int tripId;
+    private final int originSequence;
+    private final int destinationSequence;
 
-    public GetPathForTripQuery(int tripId)
+    public GetPathForTripQuery(int tripId, int originSequence, int destinationSequence)
     {
         this.tripId = tripId;
+        this.originSequence = originSequence;
+        this.destinationSequence = destinationSequence;
     }
 
     @Override
     public String getStatement()
     {
-        return "SELECT shapes.shape_id, shapes.shape_pt_lat, shapes.shape_pt_lon " +
-                "FROM transitorgtfs.trips " +
-                "INNER JOIN transitorgtfs.shapes ON trips.shape_id = shapes.shape_id " +
-                "WHERE trips.trip_id = ? " +
-                "ORDER BY trips.trip_id, shapes.shape_pt_sequence ";
+        return "SELECT " +
+                "    shapes.shape_id, " +
+                "    shapes.shape_pt_lat, " +
+                "    shapes.shape_pt_lon " +
+                "FROM " +
+                "    transitorgtfs.trips " +
+                "INNER JOIN " +
+                "    transitorgtfs.shapes ON trips.shape_id = shapes.shape_id " +
+                "WHERE " +
+                "    trips.trip_id = ? " +
+                "    AND shape_pt_sequence BETWEEN ? and ? " +
+                "ORDER BY " +
+                "    trips.trip_id, " +
+                "    shapes.shape_pt_sequence";
+
+//        return "SELECT shapes.shape_id, shapes.shape_pt_lat, shapes.shape_pt_lon " +
+//                "FROM transitorgtfs.trips " +
+//                "INNER JOIN transitorgtfs.shapes ON trips.shape_id = shapes.shape_id " +
+//                "WHERE trips.trip_id = ? " +
+//                "ORDER BY trips.trip_id, shapes.shape_pt_sequence ";
     }
 
     @Override
     public void applyParameters(PreparedStatement statement) throws SQLException
     {
         statement.setInt(1, tripId);
+        statement.setInt(2, originSequence);
+        statement.setInt(3, destinationSequence);
     }
 
     @Override
@@ -52,11 +71,5 @@ public class GetPathForTripQuery extends ResultQuery<List<TransitShape>>
         {
             throw new RuntimeException(e);
         }
-    }
-
-    public static void main(String[] args)
-    {
-        DatabaseExtensions.printResults(DatabaseManager.getInstance().executeQuery(new GetPathForTripQuery(178414978)));
-        System.out.println(DatabaseManager.getInstance().executeAndReadQuery(new GetPathForTripQuery(178414978)));
     }
 }

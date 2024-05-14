@@ -82,18 +82,28 @@ public class DatabaseManager
         }
     }
 
-    public List<Integer> GetTrip(int originStopId, int destinationStopId)
+    public List<Integer> getTrip(int originStopId, int destinationStopId)
     {
         return executeAndReadQuery(new GetTripBetweenTwoStopsQuery(originStopId, destinationStopId));
     }
 
-    public List<TransitShape> GetPath(int tripId)
+    public List<TransitShape> getPath(int tripId, int originStopId, int destinationStopId)
     {
-        return executeAndReadQuery(new GetPathForTripQuery(tripId));
+        return executeAndReadQuery(new GetPathForTripQuery(tripId, originStopId, destinationStopId));
     }
 
-    public List<TransitStop> getStop(Coordinate coordinate, double radius)
+    public List<TransitStop> getStop(Coordinate coordinate)
     {
-        return executeAndReadQuery(new NearestBusStopsQuery(coordinate, radius));
+        return executeAndReadQuery(new GetClosetStops(coordinate));
+    }
+
+    public List<TransitStop> getStop(Coordinate coordinate, int limit)
+    {
+        return executeAndReadQuery(new GetClosetStops(coordinate, limit));
+    }
+
+    public Integer getSequence(int tripId, int stopId)
+    {
+        return executeAndReadQuery(new GetShapeSequenceForTripAndStop(tripId, stopId));
     }
 }

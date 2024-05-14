@@ -11,13 +11,16 @@ public class TransitCalculator
 {
     public RouteCalculationResult calculateRoute(TransitStop originStop, TransitStop destinationStop)
     {
-        var tripsFromOriginToDestination = DatabaseManager.getInstance().GetTrip(2578413, 2578366);
-        return new RouteCalculationResult(getPathForTrip(tripsFromOriginToDestination.get(0)), 0, 0);
+        var tripsFromOriginToDestination = DatabaseManager.getInstance().getTrip(originStop.id(), destinationStop.id());
+        if (tripsFromOriginToDestination.isEmpty()) return null;
+        return new RouteCalculationResult(getPathForTrip(tripsFromOriginToDestination.getFirst(), originStop.id(), destinationStop.id()), 0, 0);
     }
 
-    private Path getPathForTrip(int tripId)
+    private Path getPathForTrip(int tripId, int originStopId, int destinationStopId)
     {
-        var transitShapes = DatabaseManager.getInstance().GetPath(tripId);
+        var originSequence = DatabaseManager.getInstance().getSequence(tripId, originStopId);
+        var destinationSequence = DatabaseManager.getInstance().getSequence(tripId, destinationStopId);
+        var transitShapes = DatabaseManager.getInstance().getPath(tripId, originSequence, destinationSequence);
         var pathPoints = transitShapes.stream()
                 .map(shape -> new PathPoint(shape.coordinate(), PointType.Normal))
                 .toList();

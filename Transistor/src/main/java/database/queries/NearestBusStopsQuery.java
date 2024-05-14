@@ -25,9 +25,9 @@ public class NearestBusStopsQuery extends ResultQuery<List<TransitStop>>
 
     public NearestBusStopsQuery(Coordinate coordinate, double radius)
     {
-        var rim = radius / 2;
-        this.latBounds = new double[] { coordinate.getLatitude() - rim, coordinate.getLatitude() + rim };
-        this.lonBounds = new double[] { coordinate.getLongitude() - rim, coordinate.getLongitude() + rim };
+        var directionRadius = radius / 2;
+        this.latBounds = new double[] { coordinate.getLatitude() - directionRadius, coordinate.getLatitude() + directionRadius };
+        this.lonBounds = new double[] { coordinate.getLongitude() - directionRadius, coordinate.getLongitude() + directionRadius };
     }
 
     @Override

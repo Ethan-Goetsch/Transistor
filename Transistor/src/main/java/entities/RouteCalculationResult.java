@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public record RouteCalculationResult(Path path, double distanceInKM, double timeInHours)
 {
-    public RouteCalculationResult merge(RouteCalculationResult result)
+    public RouteCalculationResult merge(RouteCalculationResult result, boolean append)
     {
         var newPoints = new ArrayList<PathPoint>();
-        newPoints.addAll(0, result.path.points());
         newPoints.addAll(path.points());
+        newPoints.addAll(append ? newPoints.size() - 1 : 0, result.path.points());
 
         var newPath = new Path(newPoints);
         var newDistance = distanceInKM + result.distanceInKM();
