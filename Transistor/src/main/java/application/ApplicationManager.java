@@ -5,7 +5,7 @@ import calculators.IRouteCalculator;
 import calculators.TransitCalculator;
 import database.DatabaseManager;
 import entities.*;
-import entities.transit.TransitStop;
+import entities.transit.TransitNode;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
 
@@ -54,11 +54,11 @@ public class ApplicationManager
         return new Route(departureCoordinates, arrivalCoordinates, result, request.transportType(), message);
     }
 
-    private RouteCalculationResult getRouteCalculationResult(RouteRequest request, Coordinate departureCoordinates, Coordinate arrivalCoordinates, RouteCalculationResult result, List<TransitStop> originStops, List<TransitStop> destinationStops)
+    private RouteCalculationResult getRouteCalculationResult(RouteRequest request, Coordinate departureCoordinates, Coordinate arrivalCoordinates, RouteCalculationResult result, List<TransitNode> originStops, List<TransitNode> destinationStops)
     {
-        for (TransitStop originStop : originStops)
+        for (TransitNode originStop : originStops)
         {
-            for (TransitStop destinationStop : destinationStops)
+            for (TransitNode destinationStop : destinationStops)
             {
                 var calculation = new TransitCalculator().calculateRoute(originStop, destinationStop);
                 if (calculation == null) continue;

@@ -1,4 +1,4 @@
-package database;
+package application;
 
 import entities.Coordinate;
 

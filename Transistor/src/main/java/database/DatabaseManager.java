@@ -1,11 +1,7 @@
 package database;
 
 import database.queries.*;
-import entities.Coordinate;
 import entities.UserConfig;
-import entities.transit.TransitShape;
-import entities.transit.TransitStop;
-import entities.transit.TransitTrip;
 import file_system.FileManager;
 import utils.PathLocations;
 
@@ -13,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class DatabaseManager
 {
