@@ -77,6 +77,6 @@ public class TestQuery extends QueryObject
 
     public static void main(String[] args) throws SQLException
     {
-        DatabaseExtensions.printResults(DatabaseManager.getInstance().executeQuery(new TestQuery()));
+        DatabaseExtensions.printResults(DatabaseManager.executeQuery(new TestQuery()));
     }
 }

@@ -5,6 +5,7 @@ import entities.Coordinate;
 import entities.UserConfig;
 import entities.transit.TransitShape;
 import entities.transit.TransitStop;
+import entities.transit.TransitTrip;
 import file_system.FileManager;
 import utils.PathLocations;
 
@@ -20,33 +21,31 @@ public class DatabaseManager
     private static Connection connection;
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
-    private DatabaseManager()
+    private static Connection getConnection()
     {
-        try
+        if (connection == null)
         {
-            var userConfig = FileManager.readData(PathLocations.CREDENTIALS_FILE, UserConfig.class);
-            Class.forName(DRIVER);
-            connection = DriverManager.getConnection(userConfig.url(), userConfig.username(), userConfig.password());
+            try
+            {
+                var userConfig = FileManager.readData(PathLocations.CREDENTIALS_FILE, UserConfig.class);
+                Class.forName(DRIVER);
+                connection = DriverManager.getConnection(userConfig.url(), userConfig.username(), userConfig.password());
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+
+        return connection;
     }
 
-    public static DatabaseManager getInstance()
-    {
-        if (instance == null)
-            instance = new DatabaseManager();
-        return instance;
-    }
-
-    public boolean execute(QueryObject query)
+    public static boolean execute(QueryObject query)
     {
         return query.execute(connection);
     }
 
-    public boolean execute(String query)
+    public static boolean execute(String query)
     {
         try
         {
@@ -59,51 +58,26 @@ public class DatabaseManager
         }
     }
 
-    public<T> T executeAndReadQuery(ResultQuery<T> query)
+    public static<T> T executeAndReadQuery(ResultQuery<T> query)
     {
-        return query.readResult(query.executeQuery(connection));
+        return query.readResult(query.executeQuery(getConnection()));
     }
 
-    public ResultSet executeQuery(QueryObject query)
+    public static ResultSet executeQuery(QueryObject query)
     {
-        return query.executeQuery(connection);
+        return query.executeQuery(getConnection());
     }
 
-    public ResultSet executeQuery(String query)
+    public static ResultSet executeQuery(String query)
     {
         try
         {
-            var statement = connection.prepareStatement(query);
+            var statement = getConnection().prepareStatement(query);
             return statement.executeQuery();
         }
         catch (SQLException e)
         {
             throw new RuntimeException(e);
         }
-    }
-
-    public List<Integer> getTrip(int originStopId, int destinationStopId)
-    {
-        return executeAndReadQuery(new GetTripBetweenTwoStopsQuery(originStopId, destinationStopId));
-    }
-
-    public List<TransitShape> getPath(int tripId, int originStopId, int destinationStopId)
-    {
-        return executeAndReadQuery(new GetPathForTripQuery(tripId, originStopId, destinationStopId));
-    }
-
-    public List<TransitStop> getStop(Coordinate coordinate)
-    {
-        return executeAndReadQuery(new GetClosetStops(coordinate));
-    }
-
-    public List<TransitStop> getStop(Coordinate coordinate, int limit)
-    {
-        return executeAndReadQuery(new GetClosetStops(coordinate, limit));
-    }
-
-    public Integer getSequence(int tripId, int stopId)
-    {
-        return executeAndReadQuery(new GetShapeSequenceForTripAndStop(tripId, stopId));
     }
 }

@@ -1,14 +1,13 @@
 package database.queries;
 
 import database.DatabaseManager;
+import entities.transit.TransitTrip;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class GetTripBetweenTwoStopsQuery extends ResultQuery<List<Integer>>
+public class GetTripBetweenTwoStopsQuery extends ResultQuery<TransitTrip>
 {
     private final int originStopId;
     private final int destinationStopId;
@@ -43,14 +42,12 @@ public class GetTripBetweenTwoStopsQuery extends ResultQuery<List<Integer>>
     }
 
     @Override
-    public List<Integer> readResult(ResultSet resultSet)
+    public TransitTrip readResult(ResultSet resultSet)
     {
         try
         {
-            List<Integer> trips = new ArrayList<>();
-            while (resultSet.next())
-                trips.add(resultSet.getInt(1));
-            return trips;
+            resultSet.next();
+            return new TransitTrip(resultSet.getInt(1));
         }
         catch (SQLException e)
         {
@@ -60,6 +57,6 @@ public class GetTripBetweenTwoStopsQuery extends ResultQuery<List<Integer>>
 
     public static void main(String[] args)
     {
-        System.out.println(DatabaseManager.getInstance().executeAndReadQuery(new GetTripBetweenTwoStopsQuery(2578413, 2578366)));
+        System.out.println(DatabaseManager.executeAndReadQuery(new GetTripBetweenTwoStopsQuery(2578413, 2578366)));
     }
 }
