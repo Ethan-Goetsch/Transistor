@@ -8,15 +8,16 @@ import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapViewer extends JXMapViewer
 {
-    private Path Path;
+    private List<Path> paths;
     private final ArrayList<CustomWaypoint> waypoints;
 
     public MapViewer(int mainWidth, int mainHeight)
     {
-        Path = new Path(new ArrayList<>());
+        paths = new ArrayList<>();
         waypoints = new ArrayList<>();
         changeSize(mainWidth, mainHeight);
     }
@@ -25,9 +26,9 @@ public class MapViewer extends JXMapViewer
         setPreferredSize(new Dimension(mainWidth, mainHeight));
     }
 
-    public void setPath(Path Path)
+    public void setPaths(List<Path> Path)
     {
-        this.Path = Path;
+        this.paths = Path;
         repaint();
     }
 
@@ -36,27 +37,34 @@ public class MapViewer extends JXMapViewer
     {
         super.paintComponent(g);
 
-        if (Path.points().size() <= 1) return;
+        if (paths.size() <= 1) return;
+        if (paths.stream().anyMatch(path -> path.points().size() <= 1)) return;
 
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Path2D p = new Path2D.Double();
+        Graphics2D graphics2D = (Graphics2D) g;
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Path2D path2d = new Path2D.Double();
 
-        for (int i = 0; i < Path.points().size(); i++)
+        paths.forEach(path -> paintPath(path, path2d));
+
+        graphics2D.setColor(new Color(12, 18, 222));
+        graphics2D.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics2D.draw(path2d);
+    }
+
+    private void paintPath(Path path, Path2D path2D)
+    {
+        for (int i = 0; i < path.points().size(); i++)
         {
-            var point = Path.points().get(i).coordinate();
+            var point = path.points().get(i).coordinate();
             Point2D uiPoint = convertGeoPositionToPoint(new GeoPosition(point.getLatitude(), point.getLongitude()));
 
             if (i == 0)
-                p.moveTo(uiPoint.getX(), uiPoint.getY());
+                path2D.moveTo(uiPoint.getX(), uiPoint.getY());
             else
-                p.lineTo(uiPoint.getX(), uiPoint.getY());
+                path2D.lineTo(uiPoint.getX(), uiPoint.getY());
         }
 
         paintWayPoints();
-        g2.setColor(new Color(12, 18, 222));
-        g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2.draw(p);
     }
 
     private void paintWayPoints()

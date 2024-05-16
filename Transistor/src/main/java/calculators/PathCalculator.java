@@ -7,6 +7,8 @@ import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
 import entities.RouteCalculationRequest;
 import entities.Trip;
 import entities.RouteType;
+import entities.transit.TransitNode;
+import entities.transit.shapes.PathShape;
 import utils.Conversions;
 import utils.PathLocations;
 
@@ -59,6 +61,11 @@ public class PathCalculator implements IRouteCalculator
         var distance =  Conversions.metersToKilometers(responsePath.getDistance());
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
-        return new Trip(Conversions.toPath(responsePath), String.valueOf(distance), String.valueOf(time));
+        List<TransitNode> nodes = new ArrayList<>();
+
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), "00:00", "00:00", new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), String.valueOf(time), String.valueOf(time), new PathShape(-1, calculationRequest.arrival())));
+
+        return new Trip(Conversions.toPath(responsePath), nodes);
     }
 }

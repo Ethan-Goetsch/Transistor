@@ -11,6 +11,11 @@ public class StopShape extends TransitShape
         super(-1, coordinate);
     }
 
+    public StopShape(int id, Coordinate coordinate)
+    {
+        super(id, coordinate);
+    }
+
     @Override
     public PathPoint toPoint()
     {

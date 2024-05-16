@@ -28,8 +28,8 @@ public class UIController
             return;
         }
 
-        window.getSearchPanel().updateResults(request.arrival(), request.departure());
+        window.getSearchPanel().updateResults(route.departureDescription(), route.arrivalDescription());
         MMap map= window.getMap();
-        map.updateResults(route.departure(), route.arrival(), route.trips().get(1).path(), -1);
+        map.updateResults(route.departure(), route.arrival(), route.trips(), -1);
     }
 }

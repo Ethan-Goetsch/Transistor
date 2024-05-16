@@ -26,7 +26,7 @@ public class TransitCalculator
         var nodes = DatabaseManager.executeAndReadQuery(new GetAllStopsForTrip(trip.id(), trip.originStopSequence(), trip.destinationStopSequence()));
         var path = getPathForTrip(trip, nodes);
 
-        return new Trip(path, nodes.getFirst().departureTime(), nodes.getLast().departureTime());
+        return new Trip(path, nodes);
     }
 
     private Path getPathForTrip(TransitTrip trip, List<TransitNode> nodes)
@@ -34,7 +34,7 @@ public class TransitCalculator
         var points = new ArrayList<PathPoint>();
         var path = new Path(points);
 
-        for (var i = 0; i < nodes.size() - 1; i += 2)
+        for (var i = 0; i < nodes.size() - 1; i++)
         {
             var startNode = nodes.get(i);
             var stopNode = nodes.get(i + 1);
@@ -46,11 +46,9 @@ public class TransitCalculator
                     startShapeSequence,
                     stopShapeSequence));
 
-            points.add(new PathPoint(startNode.coordinate(), PointType.Stop));
             points.addAll(shapesBetweenStops.stream()
                     .map(TransitShape::toPoint)
                     .toList());
-            points.add(new PathPoint(stopNode.coordinate(), PointType.Stop));
         }
 
         return path;

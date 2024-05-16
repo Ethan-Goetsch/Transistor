@@ -1,7 +1,9 @@
 package database.queries;
 
 import entities.Coordinate;
+import entities.transit.TransitNode;
 import entities.transit.shapes.PathShape;
+import entities.transit.shapes.StopShape;
 import entities.transit.shapes.TransitShape;
 
 import java.sql.PreparedStatement;
@@ -32,7 +34,7 @@ public class GetAllShapesBetweenStops extends ResultQuery<List<TransitShape>>
                 "INNER JOIN transitorgtfs.trips on trips.shape_id = shapes.shape_id " +
                 "WHERE " +
                 "   trips.trip_id = ? " +
-                "   and shape_pt_sequence > ? and shape_pt_sequence < ?";
+                "   and shape_pt_sequence BETWEEN ? AND ?";
     }
 
     @Override
@@ -52,7 +54,11 @@ public class GetAllShapesBetweenStops extends ResultQuery<List<TransitShape>>
             while (resultSet.next())
             {
                 var coordinate = new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3));
-                var node = new PathShape(resultSet.getInt(1), coordinate);
+                var id = resultSet.getInt(1);
+
+                TransitShape node = (id == startSequence || id == stopSequence)
+                        ? new StopShape(id, coordinate)
+                        : new PathShape(id, coordinate);
                 shapes.add(node);
             }
             return shapes;

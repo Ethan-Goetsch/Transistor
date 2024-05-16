@@ -1,9 +1,12 @@
 package calculators;
 
 import entities.*;
+import entities.transit.TransitNode;
+import entities.transit.shapes.PathShape;
 import utils.Conversions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AerialCalculator implements IRouteCalculator
 {
@@ -26,7 +29,12 @@ public class AerialCalculator implements IRouteCalculator
         points.add(new PathPoint(calculationRequest.arrival(), PointType.Normal));
         var path = new Path(points);
 
-        return new Trip(path, String.valueOf(distance), String.valueOf(time));
+        List<TransitNode> nodes = new ArrayList<>();
+
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), "00:00", "00:00", new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), String.valueOf(time), String.valueOf(time), new PathShape(-1, calculationRequest.arrival())));
+
+        return new Trip(path, nodes);
     }
 
     private double distanceToPoint(Coordinate point1, Coordinate point2)
