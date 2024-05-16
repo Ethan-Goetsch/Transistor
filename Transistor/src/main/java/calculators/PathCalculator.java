@@ -5,7 +5,7 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.config.Profile;
 import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
 import entities.RouteCalculationRequest;
-import entities.RouteCalculationResult;
+import entities.Trip;
 import entities.RouteType;
 import utils.Conversions;
 import utils.PathLocations;
@@ -41,7 +41,7 @@ public class PathCalculator implements IRouteCalculator
     }
 
     @Override
-    public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest)
+    public Trip calculateRoute(RouteCalculationRequest calculationRequest)
     {
         var fromLatitude = calculationRequest.departure().getLatitude();
         var fromLongitude = calculationRequest.departure().getLongitude();
@@ -59,6 +59,6 @@ public class PathCalculator implements IRouteCalculator
         var distance =  Conversions.metersToKilometers(responsePath.getDistance());
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
-        return new RouteCalculationResult(Conversions.toPath(responsePath), distance, time);
+        return new Trip(Conversions.toPath(responsePath), String.valueOf(distance), String.valueOf(time));
     }
 }

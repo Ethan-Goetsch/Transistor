@@ -2,6 +2,7 @@ package database.queries;
 
 import entities.Coordinate;
 import entities.transit.TransitNode;
+import entities.transit.TransitStop;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetClosetStops extends ResultQuery<List<TransitNode>>
+public class GetClosetStops extends ResultQuery<List<TransitStop>>
 {
     private final Coordinate coordinate;
     private final int limit;
@@ -50,14 +51,14 @@ public class GetClosetStops extends ResultQuery<List<TransitNode>>
     }
 
     @Override
-    public List<TransitNode> readResult(ResultSet resultSet)
+    public List<TransitStop> readResult(ResultSet resultSet)
     {
         try
         {
-            var stops = new ArrayList<TransitNode>();
+            var stops = new ArrayList<TransitStop>();
             while (resultSet.next())
             {
-                stops.add(new TransitNode(resultSet.getInt(1),
+                stops.add(new TransitStop(resultSet.getInt(1),
                         new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3))));
             }
             return stops;

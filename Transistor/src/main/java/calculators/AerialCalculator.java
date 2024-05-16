@@ -16,7 +16,7 @@ public class AerialCalculator implements IRouteCalculator
     }
 
     @Override
-    public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest)
+    public Trip calculateRoute(RouteCalculationRequest calculationRequest)
     {
         double distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
         double time = Conversions.calculateTime(distance, calculationRequest.transportType());
@@ -26,7 +26,7 @@ public class AerialCalculator implements IRouteCalculator
         points.add(new PathPoint(calculationRequest.arrival(), PointType.Normal));
         var path = new Path(points);
 
-        return new RouteCalculationResult(path, distance, time);
+        return new Trip(path, String.valueOf(distance), String.valueOf(time));
     }
 
     private double distanceToPoint(Coordinate point1, Coordinate point2)

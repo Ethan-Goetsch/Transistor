@@ -1,5 +1,7 @@
 package entities;
 
-public record Route(Coordinate departure, Coordinate arrival, RouteCalculationResult result, TransportType transportType, String responseMessage)
+import java.util.List;
+
+public record Route(Coordinate departure, Coordinate arrival, List<Trip> trips, String responseMessage)
 {
 }

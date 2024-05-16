@@ -1,7 +1,8 @@
 package database.queries;
 
 import entities.Coordinate;
-import entities.transit.TransitShape;
+import entities.transit.shapes.PathShape;
+import entities.transit.shapes.TransitShape;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,7 +64,7 @@ public class GetPathForTripQuery extends ResultQuery<List<TransitShape>>
             List<TransitShape> shapes = new ArrayList<>();
             while (resultSet.next())
             {
-                shapes.add(new TransitShape(resultSet.getInt(1), new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3))));
+                shapes.add(new PathShape(resultSet.getInt(1), new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3))));
             }
             return shapes;
         }

@@ -58,7 +58,9 @@ public class NearestBusStopsQuery extends ResultQuery<List<TransitNode>>
         {
             List<TransitNode> stops = new ArrayList<>();
             while (resultSet.next())
-                stops.add(new TransitNode(resultSet.getInt(1), new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3))));
+            {
+                //stops.add(new TransitNode(resultSet.getInt(1), new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3))));
+            }
             return stops;
         }
         catch (SQLException e)

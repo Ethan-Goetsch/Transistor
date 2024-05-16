@@ -28,11 +28,8 @@ public class UIController
             return;
         }
 
-        String distance = "Distance: " + Conversions.formatDistance(route.result().distanceInKM());
-        String time = "Time: " + Conversions.formatTime(route.result().timeInHours());
-
-        window.getSearchPanel().updateResults(distance, time);
+        window.getSearchPanel().updateResults(request.arrival(), request.departure());
         MMap map= window.getMap();
-        map.updateResults(route.departure(), route.arrival(), route.result().path(), route.result().distanceInKM());
+        map.updateResults(route.departure(), route.arrival(), route.trips().get(1).path(), -1);
     }
 }
