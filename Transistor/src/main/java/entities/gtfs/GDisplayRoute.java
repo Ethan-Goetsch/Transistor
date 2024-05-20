@@ -2,7 +2,6 @@ package entities.gtfs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 public class GDisplayRoute
 {
@@ -10,6 +9,7 @@ public class GDisplayRoute
     private int tripid;
     private String routeName;
     private List<GShapePoint> shapePoints;
+    private List<GShapePoint> stopPoints;
 
     public GDisplayRoute(int routeid, int tripid, String routeName)
     {
@@ -17,11 +17,17 @@ public class GDisplayRoute
         this.tripid = tripid;
         this.routeName = routeName;
         this.shapePoints = new ArrayList<>();
+        this.stopPoints = new ArrayList<>();
     }
 
     public void addShapePoint(GShapePoint shapePoint)
     {
         shapePoints.add(shapePoint);
+    }
+
+    public void addStopPoint(GShapePoint stopPoint)
+    {
+        stopPoints.add(stopPoint);
     }
 
     public int getRouteid()
@@ -64,9 +70,19 @@ public class GDisplayRoute
         this.shapePoints = shapePoints;
     }
 
+    public List<GShapePoint> getStopPoints()
+    {
+        return stopPoints;
+    }
+
+    public void setStopPoints(List<GShapePoint> stopPoints)
+    {
+        this.stopPoints = stopPoints;
+    }
+
     @Override
     public String toString()
     {
-        return routeid + " | " + tripid + " | " + routeName + " | " + shapePoints.size();
+        return routeid + " | " + tripid + " | " + routeName + " | " + shapePoints.size() + " | " + stopPoints.size();
     }
 }
