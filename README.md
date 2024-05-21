@@ -30,7 +30,7 @@ This project uses Maven for dependency management. The required dependencies are
 ## Usage
 1. Run the application: `java Transitor`
 2. Enter the starting and destination postal codes in the GUI to find the best route.
-3. The application will calculate and display the distance and travel time, including bus routes and walking/cycling options.
+3. The application will calculate and display the journey and travel time, including bus routes and walking/cycling options.
 4. To switch to view Maastricht's transit map, click the "Show Map" button.
 
 ## Contributing
