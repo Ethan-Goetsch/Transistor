@@ -9,6 +9,7 @@ import entities.*;
 import entities.transit.TransitStop;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
+//import sun.nio.fs.UnixException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +46,14 @@ public class ApplicationManager
 
             var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 10));
             var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
+            var routeResult = getRouteCalculationResult(request,departureCoordinates, arrivalCoordinates, originStops, destinationStops);
 
-            trips = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+            if(routeResult == null || routeResult.isEmpty())
+            {
+                throw new RouteNotFoundException("No route found");
+            }
         }
-        catch (CallNotPossibleException e)
+        catch (RouteNotFoundException | CallNotPossibleException e)
         {
             message = e.getMessage();
         }
