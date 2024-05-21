@@ -55,7 +55,7 @@ public class TransitMap extends JMenu
             List<GShapePoint> displayRoutePoints = displayRoute.getShapePoints();
             if (displayRoutePoints.isEmpty())
             {
-                displayRoutePoints = displayRoute.getShapePoints();
+                displayRoutePoints = displayRoute.getStopPoints();
             }
 
             List<PathPoint> pathPoints = new ArrayList<>();

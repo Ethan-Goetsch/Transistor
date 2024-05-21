@@ -149,6 +149,8 @@ public class TransitMapDataQuery extends ResultQuery<List<GDisplayRoute>>
             }
         }
 
+        routesWithShapeAndStops.removeIf(e -> e.getStopPoints().size() <= 5);
+
         return routesWithShapeAndStops;
     }
     public static void main(String[] args)
