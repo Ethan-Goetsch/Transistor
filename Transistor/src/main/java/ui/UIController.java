@@ -21,7 +21,7 @@ public class UIController
 
     private void handleRouteRequested(RouteRequest request)
     {
-        var route = manager.calculateRoute(request);
+        var route = manager.calculateRouteRequest(request);
         if (!route.responseMessage().isEmpty())
         {
             JOptionPane.showMessageDialog(new JFrame(), route.responseMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);

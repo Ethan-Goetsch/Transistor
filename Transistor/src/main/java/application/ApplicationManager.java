@@ -35,7 +35,7 @@ public class ApplicationManager {
     {
         if (!requestValidator.isValidRequest(request))
         {
-            return new Route(null, null, null, request.transportType(), "Invalid Input");
+            return new Route(null, null, null, "Invalid Input");
         }
 
         String message = "";
@@ -53,7 +53,7 @@ public class ApplicationManager {
             var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
             var routeResult = getRouteCalculationResult(request,departureCoordinates, arrivalCoordinates, originStops, destinationStops);
 
-            if(routeResult == null || routeResult.isEmpty())
+            if(routeResult == null || routeResult.getTrips().isEmpty())
             {
                 throw new RouteNotFoundException("No route found");
             }
@@ -117,13 +117,13 @@ public class ApplicationManager {
 
                 LocalTime journeyArrivalT = journey.getArrivalTime();
 
-                if(journeyArrivalT.isBefore(earlieastArrival)){
+                if(journeyArrivalT.isBefore(earlieastArrival))
+                {
                     earliestJourney = journey;
                     earlieastArrival = journeyArrivalT;
                 }
             }
         }
-
         return earliestJourney;
     }
 }
