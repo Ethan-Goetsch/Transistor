@@ -1,7 +1,6 @@
 package database.queries;
 
 import entities.Coordinate;
-import entities.transit.TransitNode;
 import entities.transit.TransitStop;
 
 import java.sql.PreparedStatement;

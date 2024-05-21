@@ -1,14 +1,10 @@
 package resolvers;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import resolvers.Exceptions.*;
-import utils.PathLocations;
 import entities.Coordinate;
+import entities.exceptions.*;
+import utils.PathLocations;
 
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -17,7 +13,8 @@ import java.util.regex.Pattern;
 
 public class APICaller {
 
-    public static Coordinate getCoordinates(String postcode) throws CallNotPossibleException, PostcodeNotFoundException, InvalidCoordinateException, NetworkErrorException, RateLimitExceededException {
+    public static Coordinate getCoordinates(String postcode) throws CallNotPossibleException, PostcodeNotFoundException, InvalidCoordinateException, NetworkErrorException, RateLimitExceededException
+    {
         if (!CallRateAdmin.canRequest()) {
             throw new CallNotPossibleException("Call is not possible for postcode: " + postcode + ". Too many requests!");
         }

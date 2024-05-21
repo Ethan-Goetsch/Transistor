@@ -1,12 +1,8 @@
-package entities;
+package entities.exceptions;
 
-public class RouteNotFoundException extends Exception{
-
+public class RouteNotFoundException extends Exception
+{
     public RouteNotFoundException(String errorMessage){
         super(errorMessage);
     }
-
-
 }
-
-

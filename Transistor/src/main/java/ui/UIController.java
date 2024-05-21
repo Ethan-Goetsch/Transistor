@@ -29,6 +29,7 @@ public class UIController
         }
 
         window.getSearchPanel().updateResults(route.departureDescription(), route.arrivalDescription());
+        window.getTripInformationPanel().updateResults(route);
         MMap map= window.getMap();
         map.updateResults(route.departure(), route.arrival(), route.journey().getTrips(), -1);
     }

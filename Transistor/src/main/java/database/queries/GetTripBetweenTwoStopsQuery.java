@@ -6,6 +6,7 @@ import entities.transit.TransitTrip;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 
 public class GetTripBetweenTwoStopsQuery extends ResultQuery<TransitTrip>
 {
@@ -52,15 +53,16 @@ public class GetTripBetweenTwoStopsQuery extends ResultQuery<TransitTrip>
     {
         try
         {
-            return !resultSet.next()
-                    ?   null
-                    :   new TransitTrip(resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getInt(3),
-                            resultSet.getInt(4),
-                            resultSet.getString(5),
-                            resultSet.getString(6))
-            ;
+            if (!resultSet.next()) return null;
+            var arrivalTime = LocalTime.parse(resultSet.getString(5));
+            var departureTime = LocalTime.parse(resultSet.getString(6));
+
+            return new TransitTrip(resultSet.getInt(1),
+                    resultSet.getString(2),
+                    resultSet.getInt(3),
+                    resultSet.getInt(4),
+                    arrivalTime,
+                    departureTime);
         }
         catch (SQLException e)
         {
