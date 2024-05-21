@@ -73,4 +73,10 @@ public class GetPathForTripQuery extends ResultQuery<List<TransitShape>>
             throw new RuntimeException(e);
         }
     }
+
+    public static void main(String args[])
+    {
+        var test = new GetPathForTripQuery(0, 0, 0);
+        System.out.println(test.getStatement());
+    }
 }

@@ -8,5 +8,11 @@ public class MaasStops extends QueryObject{
                     " WHERE (stop_lon BETWEEN 5.642129667 AND 5.7533842) AND stop_lat BETWEEN 50.81581557 AND 50.9007405;";
         }
 
+        public static void main()
+        {
+            var test = new MaasStops();
+            
+        }
+
 }
 // note: the lot and lan values are max and mins from the excel sheet
