@@ -1,29 +1,31 @@
 package ui;
 
-import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.event.MouseInputListener;
-import database.DatabaseManager;
-import database.queries.BusStopTimesQuery;
 import entities.Coordinate;
 import entities.Path;
+import entities.PathPoint;
+import entities.Trip;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
-import org.jxmapviewer.viewer.*;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactoryInfo;
 import ui.CustomComponents.ArrivingTimePanel;
-import ui.CustomComponents.MapViewer;
 import ui.CustomComponents.CustomWaypoint;
+import ui.CustomComponents.MapViewer;
+
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.sql.ResultSet;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class MMap extends JPanel{
+public class MMap extends JPanel
+{
     private final double LAT_CENTER = 50.8471966;
     private final double LON_CENTER = 5.7015544;
     private final int mainWidth;
@@ -33,7 +35,8 @@ public class MMap extends JPanel{
     private final ArrivingTimePanel infopanel;
 //6218ap 6228bp test values
 
-    public MMap(JXMapViewer jXMapViewer,ArrivingTimePanel infopanel, int mainWidth, int mainHeight) {
+    public MMap(JXMapViewer jXMapViewer, ArrivingTimePanel infopanel, int mainWidth, int mainHeight)
+    {
         this.mainWidth = mainWidth;
         this.mainHeight = mainHeight;
         changeSize(mainWidth, mainHeight);
@@ -43,11 +46,13 @@ public class MMap extends JPanel{
         initMap();
     }
 
-    public void changeSize(int mainWidth, int mainHeight) {
+    public void changeSize(int mainWidth, int mainHeight)
+    {
         this.setPreferredSize(new Dimension(2 * mainWidth / 3, mainHeight));
     }
 
-    private void initMap() {
+    private void initMap()
+    {
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         jXMapViewer.setTileFactory(tileFactory);
@@ -61,7 +66,8 @@ public class MMap extends JPanel{
 
     }
 
-    private void initLayout() {
+    private void initLayout()
+    {
 
         GroupLayout layout = new GroupLayout(this);
         layout.setHorizontalGroup(
@@ -91,19 +97,22 @@ public class MMap extends JPanel{
                                 .addGap(0, mainHeight, Short.MAX_VALUE))
         );
     }
-    public void updateResults(Coordinate departure, Coordinate arrival, Path path, double distance){
 
-        double departureLong = departure.getLongitude();
-        double departureLat = departure.getLatitude();
-        double arrivalLong = arrival.getLongitude();
-        double arrivalLat = arrival.getLatitude();
+    public void updateResults(Coordinate departure, Coordinate arrival, List<Trip> trips, double distance)
+    {
+        var paths = trips.stream().map(Trip::path).toList();
+        var departureLong = departure.getLongitude();
+        var departureLat = departure.getLatitude();
+        var arrivalLong = arrival.getLongitude();
+        var arrivalLat = arrival.getLatitude();
 
-        updateMap(path, new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
-        setView(new GeoPosition(departureLat,departureLong), new GeoPosition(arrivalLat,arrivalLong));
+        updateMap(paths, new GeoPosition(departureLat, departureLong), new GeoPosition(arrivalLat, arrivalLong));
+        setView(new GeoPosition(departureLat, departureLong), new GeoPosition(arrivalLat, arrivalLong));
         jXMapViewer.repaint();
     }
 
-    private void setView(GeoPosition departure, GeoPosition arrival) {
+    private void setView(GeoPosition departure, GeoPosition arrival)
+    {
         GeoPosition centerPosition = new GeoPosition((departure.getLatitude() + arrival.getLatitude()) / 2, (departure.getLongitude() + arrival.getLongitude()) / 2);
         jXMapViewer.setAddressLocation(centerPosition);
         Set<GeoPosition> positions = new HashSet<>();
@@ -112,41 +121,57 @@ public class MMap extends JPanel{
         jXMapViewer.calculateZoomFrom(positions);
     }
 
-    private void updateMap(Path path, GeoPosition departure, GeoPosition arrival) {
-        ((MapViewer)jXMapViewer).setPath(path);
+    // TODO: CHANGE THIS TO NOT DEPEND ON THE DATABASE ENTIRELY
+    private void updateMap(List<Path> paths, GeoPosition departure, GeoPosition arrival)
+    {
+        ((MapViewer) jXMapViewer).setPaths(paths);
         //TODO here add the different icons that are needed
         ((MapViewer) jXMapViewer).removeWaypoints();
         infopanel.clearBusStopInfo();
         ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(departure, new ImageIcon("Transistor/src/main/resources/locationIcon.png"), -1, infopanel));
         ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(arrival, new ImageIcon("Transistor/src/main/resources/blueDot.png"), -1, infopanel));
-        ArrayList<entities.Point> sp = new ArrayList<>();
-        sp.add(new entities.Point(new Coordinate(51.932576, 4.401493),2521959)); //test
-        sp.add(new entities.Point(new Coordinate(51.93752, 4.384413),2522368)); //test
-        for (entities.Point p : sp) {
-            infopanel.addBusStopInfo(p.getID(),getArrivingTimesOfBus(p.getID()));
-            ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint( new GeoPosition(p.getCoordinate().getLatitude(),p.getCoordinate().getLongitude()), new ImageIcon("Transistor/src/main/resources/blueDot.png"), p.getID(), infopanel));
+        ArrayList<PathPoint> sp = new ArrayList<>();
 
-        }
-    }
+//        sp.add(new PathPoint(new Coordinate(51.932576, 4.401493),2521959)); //test
+//        sp.add(new PathPoint(new Coordinate(51.93752, 4.384413),2522368)); //test
 
-    private ArrayList<LocalTime> getArrivingTimesOfBus(int stopID){
-        DatabaseManager db = DatabaseManager.getInstance();
-        ResultSet res =  db.executeStatement(new BusStopTimesQuery(stopID).getStatement());
-        ArrayList<LocalTime> arrivals = new ArrayList<>();
-        try{
-            while ( res.next() ) {
-                String arrival = res.getString(1);
-                arrivals.add(LocalTime.parse(arrival));
-
+        for (Path path : paths)
+        {
+            for (var point : path.points())
+            {
+                var icon = new ImageIcon("Transistor/src/main/resources/blueDot.png");
+                var waypoint = new CustomWaypoint(new GeoPosition(point.coordinate().getLatitude(), point.coordinate().getLongitude()), icon, -1, infopanel);
+                ((MapViewer) jXMapViewer).addWaypoint(waypoint);
             }
-        }catch(Exception e){
-            e.printStackTrace();
         }
-        Collections.sort(arrivals);
-        LocalTime now = LocalTime.now();
 
-        // Remove all times that have passed the current time
-        arrivals.removeIf(time -> time.isBefore(now));
-        return arrivals;
+//        for (PathPoint p : sp)
+//        {
+//            infopanel.addBusStopInfo(p.getID(),getArrivingTimesOfBus(p.getID()));
+//            ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(p.coordinate().getLatitude(), p.coordinate().getLongitude()), new ImageIcon("Transistor/src/main/resources/blueDot.png"), -1, infopanel));
+//        }
+
+        // TODO: CHANGE THIS TO NOT RELY ON THE DATABASE ENTIRELY
+//    private ArrayList<LocalTime> getArrivingTimesOfBus(int stopID)
+//    {
+//        DatabaseManager db = DatabaseManager.getInstance();
+//        ResultSet res =  db.executeQuery(new BusStopTimesQuery(stopID).getStatement());
+//        ArrayList<LocalTime> arrivals = new ArrayList<>();
+//        try{
+//            while ( res.next() ) {
+//                String arrival = res.getString(1);
+//                arrivals.add(LocalTime.parse(arrival));
+//
+//            }
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        Collections.sort(arrivals);
+//        LocalTime now = LocalTime.now();
+//
+//        // Remove all times that have passed the current time
+//        arrivals.removeIf(time -> time.isBefore(now));
+//        return arrivals;
+//    }
     }
 }

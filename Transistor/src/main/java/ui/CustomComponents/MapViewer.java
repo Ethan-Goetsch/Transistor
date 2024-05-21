@@ -8,13 +8,16 @@ import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MapViewer extends JXMapViewer {
-    private Path path;
+public class MapViewer extends JXMapViewer
+{
+    private List<Path> paths;
     private final ArrayList<CustomWaypoint> waypoints;
 
-    public MapViewer(int mainWidth, int mainHeight) {
-        path = new Path(new ArrayList<>(), new ArrayList<>());
+    public MapViewer(int mainWidth, int mainHeight)
+    {
+        paths = new ArrayList<>();
         waypoints = new ArrayList<>();
         changeSize(mainWidth, mainHeight);
     }
@@ -23,49 +26,59 @@ public class MapViewer extends JXMapViewer {
         setPreferredSize(new Dimension(mainWidth, mainHeight));
     }
 
-    public void setPath(Path path) {
-        this.path = path;
+    public void setPaths(List<Path> Path)
+    {
+        this.paths = Path;
         repaint();
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g)
+    {
         super.paintComponent(g);
 
-        if (path.coordinates().size() <= 1) return;
+        if (paths.size() <= 1) return;
+        if (paths.stream().anyMatch(path -> path.points().size() <= 1)) return;
 
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Path2D p = new Path2D.Double();
+        Graphics2D graphics2D = (Graphics2D) g;
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Path2D path2d = new Path2D.Double();
 
-        for (int i = 0; i < path.coordinates().size(); i++) {
-            var point = path.coordinates().get(i).getCoordinate();
-            Point2D uiPoint = convertGeoPositionToPoint(new GeoPosition(point.getLatitude(), point.getLongitude()));
+        paths.forEach(path -> paintPath(path, path2d));
 
-            if (i == 0) {
-                p.moveTo(uiPoint.getX(), uiPoint.getY());
-            } else {
-                p.lineTo(uiPoint.getX(), uiPoint.getY());
-            }
-
-        }
-        paintWayPoints();
-
-        g2.setColor(new Color(12, 18, 222));
-        g2.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2.draw(p);
+        graphics2D.setColor(new Color(12, 18, 222));
+        graphics2D.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics2D.draw(path2d);
     }
 
-    private void paintWayPoints() {
-        for (CustomWaypoint waypoint:
-                waypoints ) {
+    private void paintPath(Path path, Path2D path2D)
+    {
+        for (int i = 0; i < path.points().size(); i++)
+        {
+            var point = path.points().get(i).coordinate();
+            Point2D uiPoint = convertGeoPositionToPoint(new GeoPosition(point.getLatitude(), point.getLongitude()));
+
+            if (i == 0)
+                path2D.moveTo(uiPoint.getX(), uiPoint.getY());
+            else
+                path2D.lineTo(uiPoint.getX(), uiPoint.getY());
+        }
+
+        paintWayPoints();
+    }
+
+    private void paintWayPoints()
+    {
+        for (CustomWaypoint waypoint: waypoints)
+        {
             Point2D uiPoint = convertGeoPositionToPoint(waypoint.getGeoPosition());
             waypoint.setLocationRepresentation((int) uiPoint.getX() - 15, (int) uiPoint.getY() - 15);
             this.add(waypoint.getRepresentation());
         }
     }
 
-    public void addWaypoint(CustomWaypoint waypoint){
+    public void addWaypoint(CustomWaypoint waypoint)
+    {
         Point2D uiPoint = convertGeoPositionToPoint(waypoint.getGeoPosition());
         waypoint.setLocationRepresentation((int) uiPoint.getX() - 15, (int) uiPoint.getY() - 15);
         waypoints.add(waypoint);
@@ -73,11 +86,13 @@ public class MapViewer extends JXMapViewer {
 
     }
 
-    public void removeWaypoints(){
-        for (CustomWaypoint w:
-             waypoints) {
+    public void removeWaypoints()
+    {
+        for (CustomWaypoint w: waypoints)
+        {
             this.remove(w.getRepresentation());
         }
+
         waypoints.clear();
     }
 }

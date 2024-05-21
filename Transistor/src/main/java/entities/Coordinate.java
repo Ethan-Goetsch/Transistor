@@ -31,5 +31,9 @@ public class Coordinate
         this.latitude = latitude;
     }
 
-    
+    @Override
+    public String toString()
+    {
+        return latitude + " " + longitude;
+    }
 }

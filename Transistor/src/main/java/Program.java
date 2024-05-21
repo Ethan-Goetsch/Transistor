@@ -24,9 +24,10 @@ public class Program
 
         List<IRouteCalculator> routeCalculators = new ArrayList<>();
         routeCalculators.add(new AerialCalculator());
-        routeCalculators.add(new PathCalculator());
+        routeCalculators.add(new PathCalculator(PathLocations.GRAPH_RESOURCE_FOLDER));
 
         ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, routeCalculators);
         UIController controller = new UIController(manager);
     }
+
 }

@@ -21,18 +21,15 @@ public class UIController
 
     private void handleRouteRequested(RouteRequest request)
     {
-        var route = manager.calculateRouteRequest(request);
+        var route = manager.calculateRoute(request);
         if (!route.responseMessage().isEmpty())
         {
             JOptionPane.showMessageDialog(new JFrame(), route.responseMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        String distance = "Distance: " + Conversions.formatDistance(route.result().distanceInKM());
-        String time = "Time: " + Conversions.formatTime(route.result().timeInHours());
-
-        window.getSearchPanel().updateResults(distance, time);
+        window.getSearchPanel().updateResults(route.departureDescription(), route.arrivalDescription());
         MMap map= window.getMap();
-        map.updateResults(route.departure(), route.arrival(), route.result().path(), route.result().distanceInKM());
+        map.updateResults(route.departure(), route.arrival(), route.trips(), -1);
     }
 }

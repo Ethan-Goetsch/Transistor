@@ -5,11 +5,14 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.config.Profile;
 import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
 import entities.RouteCalculationRequest;
-import entities.RouteCalculationResult;
+import entities.Trip;
 import entities.RouteType;
+import entities.transit.TransitNode;
+import entities.transit.shapes.PathShape;
 import utils.Conversions;
 import utils.PathLocations;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +21,7 @@ public class PathCalculator implements IRouteCalculator
 {
     private final GraphHopper graphHopper;
 
-    public PathCalculator()
+    public PathCalculator(String pathFile)
     {
         // DO NOT TOUCH THESE VALUES
         // If these values are changed delete "PathFile.GraphResourceFolder" content in order to reinitialize GraphHopper configuration
@@ -30,7 +33,7 @@ public class PathCalculator implements IRouteCalculator
 
         graphHopper.setOSMFile(PathLocations.GRAPH_FILE);
         graphHopper.setProfiles(profiles);
-        graphHopper.setGraphHopperLocation(PathLocations.GRAPH_RESOURCE_FOLDER);
+        graphHopper.setGraphHopperLocation(pathFile);
         graphHopper.importOrLoad();
     }
 
@@ -41,7 +44,7 @@ public class PathCalculator implements IRouteCalculator
     }
 
     @Override
-    public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest)
+    public Trip calculateRoute(RouteCalculationRequest calculationRequest)
     {
         var fromLatitude = calculationRequest.departure().getLatitude();
         var fromLongitude = calculationRequest.departure().getLongitude();
@@ -59,6 +62,11 @@ public class PathCalculator implements IRouteCalculator
         var distance =  Conversions.metersToKilometers(responsePath.getDistance());
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
-        return new RouteCalculationResult(Conversions.toPath(responsePath), distance, time);
+        List<TransitNode> nodes = new ArrayList<>();
+
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), "00:00", "00:00", new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), String.valueOf(time), String.valueOf(time), new PathShape(-1, calculationRequest.arrival())));
+
+        return new Trip(Conversions.toPath(responsePath), nodes, Color.white);
     }
 }

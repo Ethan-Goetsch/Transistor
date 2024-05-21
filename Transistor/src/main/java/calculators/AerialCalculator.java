@@ -1,9 +1,13 @@
 package calculators;
 
 import entities.*;
+import entities.transit.TransitNode;
+import entities.transit.shapes.PathShape;
 import utils.Conversions;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AerialCalculator implements IRouteCalculator
 {
@@ -16,17 +20,22 @@ public class AerialCalculator implements IRouteCalculator
     }
 
     @Override
-    public RouteCalculationResult calculateRoute(RouteCalculationRequest calculationRequest)
+    public Trip calculateRoute(RouteCalculationRequest calculationRequest)
     {
         double distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
         double time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
-        var points = new ArrayList<Point>();
-        points.add(new Point(calculationRequest.departure()));
-        points.add(new Point(calculationRequest.arrival()));
-        var path = new Path(points, null);
+        var points = new ArrayList<PathPoint>();
+        points.add(new PathPoint(calculationRequest.departure(), PointType.Normal));
+        points.add(new PathPoint(calculationRequest.arrival(), PointType.Normal));
+        var path = new Path(points);
 
-        return new RouteCalculationResult(path, distance, time);
+        List<TransitNode> nodes = new ArrayList<>();
+
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), "00:00", "00:00", new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), String.valueOf(time), String.valueOf(time), new PathShape(-1, calculationRequest.arrival())));
+
+        return new Trip(path, nodes, Color.white);
     }
 
     private double distanceToPoint(Coordinate point1, Coordinate point2)
