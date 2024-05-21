@@ -23,8 +23,6 @@ import javax.swing.*;
 public class TransitMap extends JMenu
 {
     private final JFrame mainWindow;
-    private boolean displayed;
-
     private List<Color> pathColors;
     private List<Path> displayPaths;
 
@@ -33,17 +31,22 @@ public class TransitMap extends JMenu
         super("Transit Map");
 
         this.mainWindow = mainWindow;
-        displayed = false;
-        JMenuItem mi = new JMenuItem("Display");
-        mi.addActionListener(e -> {
+        JMenuItem display = new JMenuItem("Display");
+        JMenuItem hide = new JMenuItem("Hide");
+        display.addActionListener(e -> {
             displayAllRoutes();
         });
-        this.add(mi);
+        hide.addActionListener(e -> {
+            hideAllRoutes();
+        });
+        this.add(display);
+        this.add(hide);
         pathColors = new ArrayList<>();
         displayPaths = new ArrayList<>();
         populatePathColors();
         populateDisplayPaths();
     }
+
 
     private void populateDisplayPaths()
     {
@@ -73,20 +76,14 @@ public class TransitMap extends JMenu
 
     private void displayAllRoutes()
     {
-        System.out.println("clicked");
         JXMapViewer map = ((MainWindow) mainWindow).getjXMapViewer();
-        if (!displayed)
-        {
-            ((MapViewer) map).setPaths(displayPaths);//List<Path>
-            displayed = true;
-        }
-        else
-        {
-            ((MapViewer) map).setPaths(null);//List<Path>
-            displayed = false;
-        }
-
+        ((MapViewer) map).setPaths(displayPaths);//List<Path>
     }
+    private void hideAllRoutes() {
+        JXMapViewer map = ((MainWindow) mainWindow).getjXMapViewer();
+        ((MapViewer) map).setPaths(new ArrayList<>());//List<Path>
+    }
+
 
     public void populatePathColors()
     {

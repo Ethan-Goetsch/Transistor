@@ -31,7 +31,7 @@ public class InputTextField extends JTextField {
             @Override
             public void focusLost(FocusEvent e) {
                 if (getText().isEmpty()) {
-                    setForeground(new Color(35, 98, 223, 256));
+                    setForeground(new Color(35, 98, 223, 250));
                     setText(defaultText);
                 } else {
                     setForeground(Color.BLACK);
