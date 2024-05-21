@@ -1,4 +1,9 @@
 package application;
+import calculators.IRouteCalculator;
+import entities.*;
+import resolvers.Exceptions.*;
+import resolvers.LocationResolver;
+import resolvers.Exceptions.NetworkErrorException;
 
 import calculators.AerialCalculator;
 import calculators.IRouteCalculator;
@@ -9,29 +14,29 @@ import entities.*;
 import entities.transit.TransitStop;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
+//import sun.nio.fs.UnixException;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApplicationManager
-{
+public class ApplicationManager {
     private final LocationResolver locationResolver;
     private final RequestValidator requestValidator;
     private final List<IRouteCalculator> routeCalculators;
 
-
-    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, List<IRouteCalculator> routeCalculators)
-    {
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, List<IRouteCalculator> routeCalculators) {
         this.locationResolver = locationResolver;
         this.requestValidator = requestValidator;
         this.routeCalculators = routeCalculators;
     }
 
-    public Route calculateRoute(RouteRequest request)
+    public Route calculateRouteRequest(RouteRequest request)
     {
         if (!requestValidator.isValidRequest(request))
-            return new Route(null, null, null, "Invalid Input");
+        {
+            return new Route(null, null, null, request.transportType(), "Invalid Input");
+        }
 
         String message = "";
         Coordinate departureCoordinates = null;
@@ -46,12 +51,41 @@ public class ApplicationManager
 
             var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 10));
             var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
+            var routeResult = getRouteCalculationResult(request,departureCoordinates, arrivalCoordinates, originStops, destinationStops);
 
+            if(routeResult == null || routeResult.isEmpty())
+            {
+                throw new RouteNotFoundException("No route found");
+            }
             journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+        }
+        catch (RouteNotFoundException e)
+        {
+            message = "Route cannot be found: " + e.getMessage();
         }
         catch (CallNotPossibleException e)
         {
-            message = e.getMessage();
+            message = "Call is not possible: " + e.getMessage();
+        }
+        catch (PostcodeNotFoundException e)
+        {
+            message = "Postcode does not exist: " + e.getMessage();
+        }
+        catch (InvalidCoordinateException e)
+        {
+            message = "Invalid coordinates found: " + e.getMessage();
+        }
+        catch (NetworkErrorException e)
+        {
+            message = "Network error occurred: " + e.getMessage();
+        }
+        catch (RateLimitExceededException e)
+        {
+            message = "Rate limit exceeded: " + e.getMessage();
+        }
+        catch (Exception e)
+        {
+            message = "An unexpected error occurred: " + e.getMessage();
         }
 
         return new Route(departureCoordinates, arrivalCoordinates, journey, message);
