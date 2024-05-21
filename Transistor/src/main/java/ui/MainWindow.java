@@ -2,7 +2,8 @@ package ui;
 
 import entities.RouteRequest;
 import org.jxmapviewer.JXMapViewer;
-import ui.CustomComponents.ArrivingTimePanel;
+import ui.CustomComponents.BusStopInfoPanel;
+import ui.CustomComponents.TripInformationPanel;
 import ui.Menus.AplicationMenuBar;
 import ui.CustomComponents.MapViewer;
 import utils.IObservable;
@@ -16,9 +17,9 @@ public class MainWindow extends JFrame {
     private int mainHeight = 770;
     private SearchPanel searchPanel;
     private JXMapViewer jXMapViewer;
-    private MMap map;
 
-    private ArrivingTimePanel infoPanel;
+    private TripInformationPanel tripInformationPanel;
+    private MMap map;
     private final Subject<RouteRequest> onRouteRequested;
 
     public MainWindow() {
@@ -47,9 +48,9 @@ public class MainWindow extends JFrame {
     public void initializeElements() {
 
         jXMapViewer = new MapViewer(mainWidth, mainHeight);
-        infoPanel = new ArrivingTimePanel(mainWidth, mainHeight);
-        map = new MMap(jXMapViewer, infoPanel,mainWidth, mainHeight);
+        map = new MMap(jXMapViewer,mainWidth, mainHeight);
         searchPanel = new SearchPanel(mainWidth, mainHeight, onRouteRequested::execute); // this is the search panel from before
+        tripInformationPanel = new TripInformationPanel(mainWidth, mainHeight);
         getContentPane().add(map);
         getContentPane().add(searchPanel);
         this.setJMenuBar(new AplicationMenuBar(this));
@@ -64,14 +65,14 @@ public class MainWindow extends JFrame {
                         .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup()
                                         .addComponent(searchPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(infoPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(tripInformationPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addComponent(map, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(infoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(tripInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(map, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
@@ -95,11 +96,15 @@ public class MainWindow extends JFrame {
         return map;
     }
     public SearchPanel getSearchPanel() {return this.searchPanel;}
+
+    public TripInformationPanel getTripInformationPanel(){
+        return this.tripInformationPanel;
+    }
     private void changeSize(){
         this.setSize(mainWidth+14, mainHeight+60);
         this.map.changeSize(mainWidth, mainHeight);
         this.searchPanel.changeSize(mainWidth, mainHeight);
-        this.infoPanel.changeSize(mainWidth, mainHeight);
+        this.tripInformationPanel.changeSize(mainWidth, mainHeight);
         ((MapViewer)this.jXMapViewer).changeSize(mainWidth, mainHeight);
     }
 

@@ -13,7 +13,8 @@ public class InputTextField extends JTextField {
         this.defaultText = text;
         this.setBackground(Color.white);
         this.setSize(new Dimension(20,30));
-        this.setBorder(new RoundedBorder(25, GRAY_OPAQUE_COLOR));
+        this.setBorder(new RoundedBorder(25, new Color(35, 98, 223, 100)));
+        this.setHorizontalAlignment(JTextField.CENTER);
         setUpFocusListener();
     }
 
@@ -30,7 +31,7 @@ public class InputTextField extends JTextField {
             @Override
             public void focusLost(FocusEvent e) {
                 if (getText().isEmpty()) {
-                    setForeground(GRAY_OPAQUE_COLOR);
+                    setForeground(new Color(35, 98, 223, 256));
                     setText(defaultText);
                 } else {
                     setForeground(Color.BLACK);

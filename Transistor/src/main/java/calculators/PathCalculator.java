@@ -66,6 +66,6 @@ public class PathCalculator implements IRouteCalculator
         nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), "00:00", "00:00", new PathShape(-1, calculationRequest.departure())));
         nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), String.valueOf(time), String.valueOf(time), new PathShape(-1, calculationRequest.arrival())));
 
-        return new Trip(Conversions.toPath(responsePath), nodes);
+        return new Trip(Conversions.toPath(responsePath), nodes, "", calculationRequest.transportType());
     }
 }

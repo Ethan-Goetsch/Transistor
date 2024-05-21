@@ -6,13 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class CustomWaypoint{
     private final JButton representation;
     private final GeoPosition geoPosition;
-    private ArrivingTimePanel infoPanel;
+    private BusStopInfoPanel infoPanel;
     private int ID;
     private CustomWaypoint(GeoPosition geoPosition, ImageIcon representation){
         this.geoPosition = geoPosition;
@@ -20,7 +18,7 @@ public class CustomWaypoint{
         setRepresentation(representation);
         ID = -1;// non bus waypoint representstion
     }
-    public CustomWaypoint(GeoPosition geoPosition, ImageIcon representation, int ID, ArrivingTimePanel infoPanel){
+    public CustomWaypoint(GeoPosition geoPosition, ImageIcon representation, int ID){
         this(geoPosition,representation);
         this.ID = ID;
         this.infoPanel = infoPanel;
@@ -34,19 +32,23 @@ public class CustomWaypoint{
         this.representation.setFocusPainted(false);
         this.representation.setContentAreaFilled(false);
 
-        this.representation.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                    //TODO add bus times displayed when clicked
-                if(ID != -1){
-                    infoPanel.display(ID);
-                }
-                else{
-                    infoPanel.clearInfo();
-                }
-
-            }
-        });
+//        this.representation.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                    //TODO add bus times displayed when clicked
+//                if(ID != -1){
+////                    JOptionPane.showMessageDialog(null, "NOT YET IMPLEMENTED", "Popup Window", JOptionPane.INFORMATION_MESSAGE);
+//                    BusStopInfoPanel info = new BusStopInfoPanel(200,300);
+//                    info.displayBusStopInfo();
+//                    JOptionPane.showConfirmDialog(null, new BusStopInfoPanel(200,300), "Custom Panel Popup",
+//                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//                }
+//                else{
+//                    infoPanel.clearInfo();
+//                }
+//
+//            }
+//        });
     }
 
     public JButton getRepresentation(){
