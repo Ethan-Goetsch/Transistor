@@ -22,6 +22,7 @@ public class TransitCalculator
     {
         var trip = DatabaseManager.executeAndReadQuery(new GetTripBetweenTwoStopsQuery(originId, destinationId));
         if (trip == null) return null;
+        var route = DatabaseManager.executeAndReadQuery(new GetRouteForTripQuery(trip.id()));
 
         var nodes = DatabaseManager.executeAndReadQuery(new GetAllStopsForTrip(trip.id(), trip.originStopSequence(), trip.destinationStopSequence()));
         var path = getPathForTrip(trip, nodes);
