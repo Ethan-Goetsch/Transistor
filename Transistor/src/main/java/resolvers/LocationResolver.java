@@ -11,7 +11,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import resolvers.Exceptions.CallNotPossibleException;
+import resolvers.Exceptions.*;
 import entities.Coordinate;
 import entities.PostCode;
 
@@ -29,22 +29,18 @@ public class LocationResolver
         loadData();
     }
 
-    public Coordinate getCordsFromPostCode(String postName) throws CallNotPossibleException
-    {
+    public Coordinate getCordsFromPostCode(String postName) throws CallNotPossibleException, PostcodeNotFoundException, NetworkErrorException, InvalidCoordinateException, RateLimitExceededException {
         Coordinate cords = getCordsFromFile(postName);
         return cords == null ? cords = APICaller.getCoordinates(postName) : cords;
     }
 
-    private Coordinate getCordsFromFile(String postName)
-    {
-        for (PostCode postCode : postCodes)
-        {
-            if (postCode.getName().equalsIgnoreCase(postName))
-            {
+    private Coordinate getCordsFromFile(String postName) throws PostcodeNotFoundException {
+        for (PostCode postCode : postCodes) {
+            if (postCode.getName().equalsIgnoreCase(postName)) {
                 return postCode.getCords();
             }
         }
-        return null;
+        throw new PostcodeNotFoundException("Postcode does not exist " + postName);
     }
 
     // https://stackoverflow.com/questions/37811334/how-to-read-excel-xlsx-file-in-java
