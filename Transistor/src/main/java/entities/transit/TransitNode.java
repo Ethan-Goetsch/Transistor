@@ -5,6 +5,8 @@ import entities.transit.shapes.TransitShape;
 import javax.swing.plaf.basic.BasicDesktopIconUI;
 import java.time.LocalTime;
 
+import java.time.LocalTime;
+
 public record TransitNode(int id, String name, Coordinate coordinate, String arrivalTime, String departureTime, TransitShape shape)
 {
     //LocalTime startTime = Localtime.parse(departureTime);

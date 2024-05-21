@@ -21,7 +21,7 @@ public class UIController
 
     private void handleRouteRequested(RouteRequest request)
     {
-        var route = manager.calculateRoute(request);
+        var route = manager.calculateRouteRequest(request);
         if (!route.responseMessage().isEmpty())
         {
             JOptionPane.showMessageDialog(new JFrame(), route.responseMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
@@ -30,6 +30,6 @@ public class UIController
 
         window.getSearchPanel().updateResults(route.departureDescription(), route.arrivalDescription());
         MMap map= window.getMap();
-        map.updateResults(route.departure(), route.arrival(), route.trips(), -1);
+        map.updateResults(route.departure(), route.arrival(), route.journey().getTrips(), -1);
     }
 }

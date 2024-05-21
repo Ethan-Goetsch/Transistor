@@ -20,15 +20,6 @@ public class AerialCalculator implements IRouteCalculator
         return RouteType.AERIAL;
     }
 
-    public static void main(String[] args) {
-        LocalTime time = LocalTime.of(3, 45, 0, 1);
-        System.out.println(time);
-        LocalTime time2 = LocalTime.ofSecondOfDay(234);
-        System.out.println(time2);
-        time = time.plusSeconds(234);
-        System.out.println(time);
-    }
-
     @Override
     public Trip calculateRoute(RouteCalculationRequest calculationRequest)
     {
