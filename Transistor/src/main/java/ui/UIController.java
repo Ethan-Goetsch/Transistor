@@ -30,6 +30,6 @@ public class UIController
 
         window.getSearchPanel().updateResults(route.departureDescription(), route.arrivalDescription());
         MMap map= window.getMap();
-        map.updateResults(route.departure(), route.arrival(), route.trips(), -1);
+        map.updateResults(route.departure(), route.arrival(), route.journey().getTrips(), -1);
     }
 }

@@ -10,6 +10,7 @@ import entities.transit.TransitStop;
 import resolvers.Exceptions.CallNotPossibleException;
 import resolvers.LocationResolver;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ApplicationManager
         String message = "";
         Coordinate departureCoordinates = null;
         Coordinate arrivalCoordinates = null;
-        List<Trip> trips = null;
+        Journey journey = null;
 
         try
         {
@@ -46,40 +47,49 @@ public class ApplicationManager
             var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 10));
             var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
 
-            trips = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+            journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
         }
         catch (CallNotPossibleException e)
         {
             message = e.getMessage();
         }
 
-        return new Route(departureCoordinates, arrivalCoordinates, trips, message);
+        return new Route(departureCoordinates, arrivalCoordinates, journey, message);
     }
 
-    private List<Trip> getRouteCalculationResult(RouteRequest request, Coordinate departureCoordinates, Coordinate arrivalCoordinates, List<TransitStop> originStops, List<TransitStop> destinationStops)
+    private Journey getRouteCalculationResult(RouteRequest request, Coordinate departureCoordinates, Coordinate arrivalCoordinates, List<TransitStop> originStops, List<TransitStop> destinationStops)
     {
-        List<Trip> trips = new ArrayList<>();
+        Journey earliestJourney = null;
+        LocalTime earlieastArrival = LocalTime.MAX;
+
         for (var originStop : originStops)
         {
             for (var destinationStop : destinationStops)
             {
+                Journey journey = new Journey();
+                // Calculate the actual bus trip from starting bus stop to the final bus stop
                 var transitTrip = new TransitCalculator().calculateRoute(originStop.id(), destinationStop.id());
                 if (transitTrip == null) continue;
 
                 // Calculate route from starting location to origin bus stop
                 var locationToOriginTrip = new AerialCalculator().calculateRoute(new RouteCalculationRequest(departureCoordinates, originStop.coordinate(), request.transportType()));
-                trips.add(locationToOriginTrip);
+                journey.addTrip(locationToOriginTrip);
 
-                trips.add(transitTrip);
+                journey.addTrip(transitTrip);
 
                 // Calculate route from destination bus stop to final destination
                 var destinationToFinal = new AerialCalculator().calculateRoute(new RouteCalculationRequest(destinationStop.coordinate(), arrivalCoordinates, request.transportType()));
-                trips.add(destinationToFinal);
+                journey.addTrip(destinationToFinal);
 
-                return trips;
+                LocalTime journeyArrivalT = journey.getArrivalTime();
+
+                if(journeyArrivalT.isBefore(earlieastArrival)){
+                    earliestJourney = journey;
+                    earlieastArrival = journeyArrivalT;
+                }
             }
         }
 
-        return null;
+        return earliestJourney;
     }
 }
