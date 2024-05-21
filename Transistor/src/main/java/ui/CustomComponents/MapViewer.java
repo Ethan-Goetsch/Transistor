@@ -44,15 +44,16 @@ public class MapViewer extends JXMapViewer
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Path2D path2d = new Path2D.Double();
 
-        paths.forEach(path -> paintPath(path, path2d));
+        paths.forEach(path -> paintPath(path, graphics2D, path2d));
 
-        graphics2D.setColor(new Color(12, 18, 222));
+        //graphics2D.setColor(new Color(12, 18, 222));
         graphics2D.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         graphics2D.draw(path2d);
     }
 
-    private void paintPath(Path path, Path2D path2D)
+    private void paintPath(Path path, Graphics2D graphics2D, Path2D path2D)
     {
+        graphics2D.setColor(path.colour());
         for (int i = 0; i < path.points().size(); i++)
         {
             var point = path.points().get(i).coordinate();

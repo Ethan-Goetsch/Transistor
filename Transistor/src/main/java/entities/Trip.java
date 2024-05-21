@@ -6,7 +6,7 @@ import java.awt.*;
 import java.time.LocalTime;
 import java.util.List;
 
-public record Trip(Path path, List<TransitNode> nodes, Color colour)
+public record Trip(Path path, List<TransitNode> nodes, Color colour, TransportType type)
 {
     public LocalTime getDepartureTime() { return nodes.getFirst().departureTime(); }
     public LocalTime getArrivalTime() { return nodes.getLast().arrivalTime(); }
