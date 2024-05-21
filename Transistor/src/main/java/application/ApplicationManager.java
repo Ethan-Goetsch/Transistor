@@ -29,31 +29,18 @@ public class ApplicationManager {
         this.routeCalculators = routeCalculators;
     }
 
-    public Route calculateRouteRequest(RouteRequest request) {
-        if (!requestValidator.isValidRequest(request)) {
-            return new Route(null, null, null, request.transportType(), "Invalid Input");
-        }
-    public Route calculateRoute(RouteRequest request)
+    public Route calculateRouteRequest(RouteRequest request)
     {
         if (!requestValidator.isValidRequest(request))
-            return new Route(null, null, null, "Invalid Input");
+        {
+            return new Route(null, null, null, request.transportType(), "Invalid Input");
+        }
 
         String message = "";
         Coordinate departureCoordinates = null;
         Coordinate arrivalCoordinates = null;
         List<Trip> trips = null;
 
-        try {
-            departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
-            arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
-
-            IRouteCalculator calculator = routeCalculators
-                    .stream()
-                    .filter(routeCalculator -> routeCalculator.getRouteType() == request.routeType())
-                    .findFirst()
-                    .orElseThrow();
-            result = calculator.calculateRoute(new RouteCalculationRequest(departureCoordinates, arrivalCoordinates, request.transportType()));
-        } catch (CallNotPossibleException e) {
         try
         {
             // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
@@ -69,18 +56,32 @@ public class ApplicationManager {
                 throw new RouteNotFoundException("No route found");
             }
         }
-        catch (RouteNotFoundException | CallNotPossibleException e)
+        catch (RouteNotFoundException e)
         {
-            message = e.getMessage();
-        } catch (PostcodeNotFoundException e) {
+            message = "Route cannot be found: " + e.getMessage();
+        } 
+        catch (CallNotPossibleException e)
+        {
+            message = "Call is not possible: " + e.getMessage();
+        }
+        catch (PostcodeNotFoundException e)
+        {
             message = "Postcode does not exist: " + e.getMessage();
-        } catch (InvalidCoordinateException e) {
+        } 
+        catch (InvalidCoordinateException e) 
+        {
             message = "Invalid coordinates found: " + e.getMessage();
-        } catch (NetworkErrorException e) {
+        } 
+        catch (NetworkErrorException e) 
+        {
             message = "Network error occurred: " + e.getMessage();
-        } catch (RateLimitExceededException e) {
+        } 
+        catch (RateLimitExceededException e) 
+        {
             message = "Rate limit exceeded: " + e.getMessage();
-        } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
             message = "An unexpected error occurred: " + e.getMessage();
         }
 
