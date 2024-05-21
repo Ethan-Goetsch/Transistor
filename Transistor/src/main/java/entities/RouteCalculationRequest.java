@@ -1,5 +1,7 @@
 package entities;
 
-public record RouteCalculationRequest(Coordinate departure, Coordinate arrival, TransportType transportType)
+import java.time.LocalTime;
+
+public record RouteCalculationRequest(Coordinate departure, Coordinate arrival, LocalTime departureTime, TransportType transportType)
 {
 }
