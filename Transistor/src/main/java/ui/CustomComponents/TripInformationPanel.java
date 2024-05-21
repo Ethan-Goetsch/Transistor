@@ -42,7 +42,7 @@ public class TripInformationPanel extends JPanel implements Resizible {
     }
 
     public void changeSize(int mainWidth, int mainHeight) {
-        setPreferredSize(new Dimension(mainWidth / 3, mainHeight / 3));
+        setPreferredSize(new Dimension(mainWidth / 3, 2*mainHeight / 3));
         components.forEach(c -> c.changeSize((int) this.getPreferredSize().getWidth(), (int) this.getPreferredSize().getHeight()));
     }
 

@@ -14,6 +14,6 @@ public class WalkingInfoPanel extends JPanel implements Resizible {
     }
 
     public void changeSize(int mainWidth, int mainHeight) {
-        setPreferredSize(new Dimension(mainWidth / 3, mainHeight / 5));
+        setPreferredSize(new Dimension(mainWidth / 3, mainHeight / 10));
     }
 }

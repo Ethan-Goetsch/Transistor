@@ -16,6 +16,7 @@ public class AplicationMenuBar extends JMenuBar {
         Settings settingsMenu = new Settings(((MainWindow)mainWindow).getjXMapViewer(), searchPanel);
         this.add(settingsMenu);
         this.add( new SizeMenu(mainWindow));
+        this.add(new TransitMap(mainWindow));
     }
 
 
