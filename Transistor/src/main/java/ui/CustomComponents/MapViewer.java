@@ -40,20 +40,15 @@ public class MapViewer extends JXMapViewer
         if (paths.size() <= 1) return;
         if (paths.stream().anyMatch(path -> path.points().size() <= 1)) return;
 
-        Graphics2D graphics2D = (Graphics2D) g;
+        var graphics2D = (Graphics2D) g;
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Path2D path2d = new Path2D.Double();
-
-        paths.forEach(path -> paintPath(path, graphics2D, path2d));
-
-        //graphics2D.setColor(new Color(12, 18, 222));
-        graphics2D.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        graphics2D.draw(path2d);
+        paths.forEach(path -> paintPath(path, graphics2D));
     }
 
-    private void paintPath(Path path, Graphics2D graphics2D, Path2D path2D)
+    private void paintPath(Path path, Graphics2D graphics2D)
     {
-        graphics2D.setColor(path.colour());
+        var path2D = new Path2D.Double();
+
         for (int i = 0; i < path.points().size(); i++)
         {
             var point = path.points().get(i).coordinate();
@@ -66,6 +61,11 @@ public class MapViewer extends JXMapViewer
         }
 
         paintWayPoints();
+
+        //graphics2D.setColor(new Color(12, 18, 222));
+        graphics2D.setColor(path.colour());
+        graphics2D.setStroke(new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics2D.draw(path2D);
     }
 
     private void paintWayPoints()
