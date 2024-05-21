@@ -38,7 +38,7 @@ public class AerialCalculator implements IRouteCalculator
         List<TransitNode> nodes = new ArrayList<>();
 
         nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
-        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, arrivalTime, new PathShape(-1, calculationRequest.arrival())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), calculationRequest.arrivalTime(), calculationRequest.arrivalTime(), new PathShape(-1, calculationRequest.arrival())));
 
         return new Trip(path, nodes, color, calculationRequest.transportType());
     }
