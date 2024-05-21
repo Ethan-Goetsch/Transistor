@@ -13,7 +13,7 @@ import java.math.RoundingMode;
 import java.sql.SQLOutput;
 import java.text.DecimalFormat;
 
-//TODO fix the API calling
+//? 1. Different coordinates. 2. Null coordinates. 3. Non-existent coordinates. 4 same coordinates
 
 public class Tests {
 
@@ -21,38 +21,25 @@ public class Tests {
 
     @Test
     void aerialCalcTest1() {
-        // test for aerial calculation from 6221AB to 6221AV
+        // test for aerial calculation from different coords 50.85523285, 5.692237193 to 50.84027704, 5.68972678
         var calc = new AerialCalculator();
-        var location = new LocationResolver("src/main/resources/MassZipLatLon.xlsx");
-        Coordinate startingLoc = null;
-        Coordinate endLoc = null;
-        try {
-            startingLoc = location.getCordsFromPostCode("6221AB");
-            endLoc = location.getCordsFromPostCode("6221AV");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Coordinate departure = new Coordinate(50.85523285, 5.692237193);
+        Coordinate arrival = new Coordinate(50.84027704, 5.68972678);
+        var route = new RouteCalculationRequest(departure, arrival, TransportType.FOOT);
+        var resultTrip = calc.calculateRoute(route);
+        resultTrip.
 
-        var route = new RouteCalculationRequest(startingLoc, endLoc, TransportType.FOOT);
-        var calculatedRoute = calc.calculateRoute(route);
-        String formattedResult = df.format(calculatedRoute.distanceInKM());
 
         assertEquals("0,84", formattedResult);
     }
 
+
     @Test
     void aerialCalcTest2() {
-        // test for aerial calculation between zip code from the API (6229EN) to a zipcode from excel sheet (6219NA)
+        // test for aerial calculation for null coords
         var calc = new AerialCalculator();
-        var location = new LocationResolver("src/main/resources/MassZipLatLon.xlsx");
         Coordinate startingLoc = null;
         Coordinate endLoc = null;
-        try {
-            startingLoc = location.getCordsFromPostCode("6229EN");
-            endLoc = location.getCordsFromPostCode("6219NA");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         var route = new RouteCalculationRequest(startingLoc, endLoc, TransportType.FOOT);
         var calculatedRoute = calc.calculateRoute(route);
@@ -60,6 +47,18 @@ public class Tests {
         df.format(result);
 
         assertEquals(0, result);
+    }
+
+    @Test
+    void aerialCalcTest3(){
+        // test for aerial calculation for non-existent coordinates
+
+
+    }
+
+    @Test
+    void aerialCalcTest4(){
+        // test for aerial calculation for same coordinates
     }
 
 }
