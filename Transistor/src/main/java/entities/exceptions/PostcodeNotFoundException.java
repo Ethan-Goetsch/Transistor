@@ -1,4 +1,4 @@
-package resolvers.Exceptions;
+package entities.exceptions;
 
 public class PostcodeNotFoundException extends Exception {
     public PostcodeNotFoundException(String message) {

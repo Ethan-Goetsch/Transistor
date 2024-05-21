@@ -23,11 +23,11 @@ public class AerialCalculator implements IRouteCalculator
     @Override
     public Trip calculateRoute(RouteCalculationRequest calculationRequest)
     {
-        double distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
-        double time = Conversions.calculateTime(distance, calculationRequest.transportType());
+        var distance = distanceToPoint(calculationRequest.departure(), calculationRequest.arrival());
+        var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
-        LocalTime timeOfTripInSeconds = LocalTime.ofSecondOfDay((long) time);
-        LocalTime arrivalTime = calculationRequest.departureTime().plusSeconds(timeOfTripInSeconds.toSecondOfDay());
+        var timeOfTripInSeconds = LocalTime.ofSecondOfDay((long) time);
+        var arrivalTime = calculationRequest.departureTime().plusSeconds(timeOfTripInSeconds.toSecondOfDay());
 
         var points = new ArrayList<PathPoint>();
         points.add(new PathPoint(calculationRequest.departure(), PointType.Normal));
@@ -36,8 +36,8 @@ public class AerialCalculator implements IRouteCalculator
 
         List<TransitNode> nodes = new ArrayList<>();
 
-        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), "00:00", calculationRequest.departureTime().toString(), new PathShape(-1, calculationRequest.departure())));
-        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime.toString(), String.valueOf(time), new PathShape(-1, calculationRequest.arrival())));
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, arrivalTime, new PathShape(-1, calculationRequest.arrival())));
 
         return new Trip(path, nodes, Color.white);
     }

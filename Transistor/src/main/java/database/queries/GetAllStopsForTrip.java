@@ -8,6 +8,7 @@ import entities.transit.shapes.StopShape;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +57,13 @@ public class GetAllStopsForTrip extends ResultQuery<List<TransitNode>>
             while (resultSet.next())
             {
                 var coordinate = new Coordinate(resultSet.getDouble(3), resultSet.getDouble(4));
+                var arrivalTime = LocalTime.parse(resultSet.getString(5));
+                var departureTime = LocalTime.parse(resultSet.getString(6));
                 var node = new TransitNode(resultSet.getInt(1),
                         resultSet.getString(2),
                         coordinate,
-                        resultSet.getString(5),
-                        resultSet.getString(6),
+                        arrivalTime,
+                        departureTime,
                         new StopShape(coordinate));
                 nodes.add(node);
             }

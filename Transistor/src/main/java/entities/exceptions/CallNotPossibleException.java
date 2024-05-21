@@ -1,4 +1,4 @@
-package resolvers.Exceptions;
+package entities.exceptions;
 
 public class CallNotPossibleException extends Exception{
     public CallNotPossibleException() {

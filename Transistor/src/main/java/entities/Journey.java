@@ -4,7 +4,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Journey {
+public class Journey
+{
     private List<Trip> trips;
 
     public Journey() {
@@ -23,7 +24,8 @@ public class Journey {
         this.trips.add(trip);
     }
 
-    public LocalTime getArrivalTime(){
-        return LocalTime.parse(trips.getLast().getArrivalDescription());
+    public LocalTime getArrivalTime()
+    {
+        return trips.getLast().getArrivalTime();
     }
 }

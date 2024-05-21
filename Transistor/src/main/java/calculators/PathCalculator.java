@@ -13,6 +13,7 @@ import utils.Conversions;
 import utils.PathLocations;
 
 import java.awt.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,10 +63,13 @@ public class PathCalculator implements IRouteCalculator
         var distance =  Conversions.metersToKilometers(responsePath.getDistance());
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
+        var timeOfTripInSeconds = LocalTime.ofSecondOfDay((long) time);
+        var arrivalTime = calculationRequest.departureTime().plusSeconds(timeOfTripInSeconds.toSecondOfDay());
+
         List<TransitNode> nodes = new ArrayList<>();
 
-        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), "00:00", "00:00", new PathShape(-1, calculationRequest.departure())));
-        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), String.valueOf(time), String.valueOf(time), new PathShape(-1, calculationRequest.arrival())));
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(),calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, arrivalTime, new PathShape(-1, calculationRequest.arrival())));
 
         return new Trip(Conversions.toPath(responsePath), nodes, Color.white);
     }
