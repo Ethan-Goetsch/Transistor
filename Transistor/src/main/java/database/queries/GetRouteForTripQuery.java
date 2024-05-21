@@ -36,8 +36,7 @@ public class GetRouteForTripQuery extends ResultQuery<TransitRoute> {
                 int routeID = resultSet.getInt("route_id");
                 String routeColor = resultSet.getString("route_text_color");
                 String routeShortName = resultSet.getString("route_short_name");
-                TransitRoute route = new TransitRoute(routeID, routeShortName, Color.BLUE);
-                return route;
+                return new TransitRoute(routeID, routeShortName, Color.BLUE);
             }
         } catch (SQLException e) {
             e.printStackTrace();
