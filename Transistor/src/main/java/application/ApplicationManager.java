@@ -101,22 +101,29 @@ public class ApplicationManager {
 
                 // Calculate route from starting location to origin bus stop
                 var locationToOriginTrip = new AerialCalculator().calculateRoute(
-                        new RouteCalculationRequest(departureCoordinates, originStop.coordinate(), LocalTime.of(0, 0),request.transportType()));
-                journey.addTrip(locationToOriginTrip);
-
-                journey.addTrip(transitTrip);
+                        new RouteCalculationRequest(departureCoordinates,
+                                originStop.coordinate(),
+                                transitTrip.getDepartureTime(),
+                                transitTrip.getDepartureTime(),
+                                request.transportType()));
 
                 // Calculate route from destination bus stop to final destination
                 var destinationToFinal = new AerialCalculator().calculateRoute(
-                        new RouteCalculationRequest(destinationStop.coordinate(), arrivalCoordinates, transitTrip.getArrivalTime(),request.transportType()));
+                        new RouteCalculationRequest(destinationStop.coordinate(),
+                                arrivalCoordinates,
+                                transitTrip.getArrivalTime(),
+                                transitTrip.getArrivalTime(),
+                                request.transportType()));
+
+                journey.addTrip(locationToOriginTrip);
+                journey.addTrip(transitTrip);
                 journey.addTrip(destinationToFinal);
 
-                LocalTime journeyArrivalT = journey.getArrivalTime();
-
-                if(journeyArrivalT.isBefore(earlieastArrival))
+                var journeyArrivalTime = journey.getArrivalTime();
+                if (journeyArrivalTime.isBefore(earlieastArrival))
                 {
                     earliestJourney = journey;
-                    earlieastArrival = journeyArrivalT;
+                    earlieastArrival = journeyArrivalTime;
                 }
             }
         }

@@ -55,7 +55,7 @@ public class TripInformationPanel extends JPanel implements Resizible {
 
     public void updateResults(Route route) {
         clearInfo();
-        addInfoPanel("Departure at: " + route.arrivalDescription(), true);
+        addInfoPanel("Departure at: " + route.departureDescription(), true);
 
         for (Trip trip : route.journey().getTrips()) {
             if (trip.type() == TransportType.BUS) {
