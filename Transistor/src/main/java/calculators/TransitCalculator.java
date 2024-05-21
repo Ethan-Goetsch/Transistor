@@ -7,11 +7,13 @@ import database.queries.GetShapeSequenceForTripAndStop;
 import database.queries.GetTripBetweenTwoStopsQuery;
 import entities.Path;
 import entities.PathPoint;
-import entities.PointType;
+import entities.TransportType;
 import entities.Trip;
 import entities.transit.TransitNode;
+import entities.transit.TransitRoute;
 import entities.transit.TransitTrip;
 import entities.transit.shapes.TransitShape;
+import database.queries.GetRouteForTripQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +24,18 @@ public class TransitCalculator
     {
         var trip = DatabaseManager.executeAndReadQuery(new GetTripBetweenTwoStopsQuery(originId, destinationId));
         if (trip == null) return null;
+        var route = DatabaseManager.executeAndReadQuery(new GetRouteForTripQuery(trip.id()));
 
         var nodes = DatabaseManager.executeAndReadQuery(new GetAllStopsForTrip(trip.id(), trip.originStopSequence(), trip.destinationStopSequence()));
-        var path = getPathForTrip(trip, nodes);
+        var path = getPathForTrip(route, trip, nodes);
 
-        return new Trip(path, nodes);
+        return new Trip(path, nodes, route.colour(), TransportType.BUS);
     }
 
-    private Path getPathForTrip(TransitTrip trip, List<TransitNode> nodes)
+    private Path getPathForTrip(TransitRoute route, TransitTrip trip, List<TransitNode> nodes)
     {
         var points = new ArrayList<PathPoint>();
-        var path = new Path(points);
+        var path = new Path(points, route.colour());
 
         for (var i = 0; i < nodes.size() - 1; i++)
         {

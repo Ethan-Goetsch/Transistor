@@ -4,6 +4,7 @@ import com.graphhopper.ResponsePath;
 import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
 import entities.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Conversions
@@ -33,7 +34,7 @@ public class Conversions
         return distanceInKilometers/speed;
     }
 
-    public static Path toPath(ResponsePath graphHopperPath)
+    public static Path toPath(ResponsePath graphHopperPath, Color color)
     {
         var points = new ArrayList<PathPoint>();
         for (var i = 0; i < graphHopperPath.getPoints().size(); i++)
@@ -42,7 +43,7 @@ public class Conversions
             var point = new PathPoint(new Coordinate(ghPoint.lat, ghPoint.lon), PointType.Normal);
             points.add(point);
         }
-        return new Path(points);
+        return new Path(points, color);
     }
 
     public static String toProfile(TransportType transportType)

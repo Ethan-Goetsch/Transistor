@@ -8,6 +8,8 @@ import utils.IAction;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.time.LocalTime;
+
 public class SearchPanel extends JPanel
 {
     private final IAction<RouteRequest> onCalculateClicked;
@@ -34,7 +36,7 @@ public class SearchPanel extends JPanel
     }
 
     public void changeSize(int mainWidth, int mainHeight) {
-        this.setPreferredSize(new Dimension(mainWidth / 3, 2* mainHeight /3));
+        this.setPreferredSize(new Dimension(mainWidth / 3,  mainHeight /3));
         this.mainWidth = mainWidth;
         this.mainHeight = mainHeight;
         this.removeAll();
@@ -111,9 +113,6 @@ public class SearchPanel extends JPanel
                                                 .addComponent(transportationType4)
                                                 .addContainerGap())
                                         .addComponent(animatedLinePanel, GroupLayout.PREFERRED_SIZE,(int)(mainWidth/3.5), GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(distanceLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(timeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(routeTypeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap((int)(mainWidth/7.92), (int)(mainWidth/7.92), (int)(mainWidth/7.92))
                                                 .addComponent(switchButton))))
@@ -137,9 +136,6 @@ public class SearchPanel extends JPanel
                                 .addComponent(animatedLinePanel, GroupLayout.PREFERRED_SIZE,5, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(calculateButton, GroupLayout.PREFERRED_SIZE, mainWidth/33, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(distanceLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(timeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(routeTypeLabel, GroupLayout.PREFERRED_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
 
