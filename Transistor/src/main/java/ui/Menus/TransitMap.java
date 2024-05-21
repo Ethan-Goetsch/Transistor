@@ -31,12 +31,14 @@ public class TransitMap extends JMenu
     public TransitMap(JFrame mainWindow)
     {
         super("Transit Map");
+
         this.mainWindow = mainWindow;
         displayed = false;
-        this.addActionListener(e -> {
+        JMenuItem mi = new JMenuItem("Display");
+        mi.addActionListener(e -> {
             displayAllRoutes();
         });
-
+        this.add(mi);
         pathColors = new ArrayList<>();
         displayPaths = new ArrayList<>();
         populatePathColors();
@@ -60,7 +62,7 @@ public class TransitMap extends JMenu
 
             for (GShapePoint displayRoutePoint : displayRoutePoints)
             {
-                pathPoints.add(new PathPoint(new Coordinate(displayRoutePoint.getLatitude(), displayRoutePoint.getLongitude()), PointType.Normal));    
+                pathPoints.add(new PathPoint(new Coordinate(displayRoutePoint.getLatitude(), displayRoutePoint.getLongitude()), PointType.Normal));
             }
 
             displayPaths.add(new Path(pathPoints, pathColors.get(iter % pathColors.size())));
@@ -75,12 +77,13 @@ public class TransitMap extends JMenu
         JXMapViewer map = ((MainWindow) mainWindow).getjXMapViewer();
         if (!displayed)
         {
-
             ((MapViewer) map).setPaths(displayPaths);//List<Path>
+            displayed = true;
         }
         else
         {
             ((MapViewer) map).setPaths(null);//List<Path>
+            displayed = false;
         }
 
     }
@@ -94,7 +97,7 @@ public class TransitMap extends JMenu
         pathColors.add(convertToColor(0xFFC10020)); //Vivid Red
         pathColors.add(convertToColor(0xFFCEA262)); //Grayish Yellow
         pathColors.add(convertToColor(0xFF817066)); //Medium Gray
-    
+
         //The following will not be good for people with defective color vision
         pathColors.add(convertToColor(0xFF007D34)); //Vivid Green
         pathColors.add(convertToColor(0xFFF6768E)); //Strong Purplish Pink
