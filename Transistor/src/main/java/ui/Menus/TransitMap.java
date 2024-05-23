@@ -78,6 +78,7 @@ public class TransitMap extends JMenu
     {
         JXMapViewer map = ((MainWindow) mainWindow).getjXMapViewer();
         ((MapViewer) map).setPaths(displayPaths);//List<Path>
+        ((MapViewer) map).removeWaypoints();//List<Path>
     }
     private void hideAllRoutes() {
         JXMapViewer map = ((MainWindow) mainWindow).getjXMapViewer();
