@@ -31,6 +31,7 @@ public class GetClosetStops extends ResultQuery<List<TransitStop>>
     {
         return "SELECT " +
                 "    stop_id, " +
+                "    stop_name, " +
                 "    stop_lat, " +
                 "    stop_lon, " +
                 "    SQRT(POWER(stop_lat - ?, 2) + POWER(stop_lon - ?, 2)) AS distance " +
@@ -58,7 +59,8 @@ public class GetClosetStops extends ResultQuery<List<TransitStop>>
             while (resultSet.next())
             {
                 stops.add(new TransitStop(resultSet.getInt(1),
-                        new Coordinate(resultSet.getDouble(2), resultSet.getDouble(3))));
+                        resultSet.getString(2),
+                        new Coordinate(resultSet.getDouble(3), resultSet.getDouble(4))));
             }
             return stops;
         }

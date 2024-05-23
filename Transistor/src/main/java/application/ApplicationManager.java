@@ -80,6 +80,7 @@ public class ApplicationManager {
         catch (Exception e)
         {
             message = "An unexpected error occurred: " + e.getMessage();
+            e.printStackTrace();
         }
 
         return new Route(departureCoordinates, arrivalCoordinates, journey, message);
@@ -127,6 +128,7 @@ public class ApplicationManager {
                 }
             }
         }
+
         return earliestJourney;
     }
 }

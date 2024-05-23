@@ -51,8 +51,7 @@ public class GetShapeSequenceForTripAndStop extends ResultQuery<Integer>
     {
         try
         {
-            resultSet.next();
-            return resultSet.getInt(1);
+            return resultSet.next() ? resultSet.getInt(1) : -1;
         }
         catch (SQLException e)
         {
