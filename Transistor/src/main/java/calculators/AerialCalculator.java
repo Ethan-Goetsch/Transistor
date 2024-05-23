@@ -27,8 +27,8 @@ public class AerialCalculator implements IRouteCalculator
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
         var color = Color.GREEN;
-        var timeOfTripInSeconds = LocalTime.ofSecondOfDay((long) time);
-        var arrivalTime = calculationRequest.departureTime().plusSeconds(timeOfTripInSeconds.toSecondOfDay());
+        var timeOfTripInSeconds = (long) (time * 3600);
+        var arrivalTime = calculationRequest.departureTime().plusSeconds(timeOfTripInSeconds);
 
         var points = new ArrayList<PathPoint>();
         points.add(new PathPoint(calculationRequest.departure(), PointType.Normal));
@@ -38,7 +38,7 @@ public class AerialCalculator implements IRouteCalculator
         List<TransitNode> nodes = new ArrayList<>();
 
         nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
-        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), calculationRequest.arrivalTime(), calculationRequest.arrivalTime(), new PathShape(-1, calculationRequest.arrival())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, arrivalTime, new PathShape(-1, calculationRequest.arrival())));
 
         return new Trip(path, nodes, color, calculationRequest.transportType());
     }
@@ -49,6 +49,6 @@ public class AerialCalculator implements IRouteCalculator
         double lon1 = Math.toRadians(point1.getLongitude());
         double lat2 = Math.toRadians(point2.getLatitude());
         double lon2 = Math.toRadians(point2.getLongitude());
-        return Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1))* radiusEarthInKM;
+        return Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1)) * radiusEarthInKM;
     }
 }
