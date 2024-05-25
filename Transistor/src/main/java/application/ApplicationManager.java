@@ -89,7 +89,7 @@ public class ApplicationManager {
     private Journey getRouteCalculationResult(RouteRequest request, Coordinate departureCoordinates, Coordinate arrivalCoordinates, List<TransitStop> originStops, List<TransitStop> destinationStops)
     {
         Journey earliestJourney = null;
-        LocalTime earlieastArrival = LocalTime.MAX;
+        double shortestTravelTime = Double.MAX_VALUE;
 
         for (var originStop : originStops)
         {
@@ -120,11 +120,12 @@ public class ApplicationManager {
                 journey.addTrip(transitTrip);
                 journey.addTrip(destinationToFinal);
 
-                var journeyArrivalTime = journey.getArrivalTime();
-                if (journeyArrivalTime.isBefore(earlieastArrival))
+                double journeyTravelTime = journey.getTotalTravelTime();
+
+                if (journeyTravelTime < shortestTravelTime)
                 {
                     earliestJourney = journey;
-                    earlieastArrival = journeyArrivalTime;
+                    shortestTravelTime = journeyTravelTime;
                 }
             }
         }
