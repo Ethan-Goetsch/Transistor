@@ -31,7 +31,7 @@ public class LocationResolver
     public Coordinate getCordsFromPostCode(String postName) throws CallNotPossibleException, PostcodeNotFoundException, NetworkErrorException, InvalidCoordinateException, RateLimitExceededException
     {
         Coordinate cords = getCordsFromFile(postName);
-        return cords == null ? APICaller.getCoordinates(postName) : cords;
+        return cords == null ? APICaller.getCoordinates(postName, 0) : cords;
     }
 
     private Coordinate getCordsFromFile(String postName)

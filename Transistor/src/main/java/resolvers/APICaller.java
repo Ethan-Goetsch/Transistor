@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class APICaller {
 
-    public static Coordinate getCoordinates(String postcode) throws CallNotPossibleException, PostcodeNotFoundException, InvalidCoordinateException, NetworkErrorException, RateLimitExceededException
+    public static Coordinate getCoordinates(String postcode, int attempt) throws CallNotPossibleException, PostcodeNotFoundException, InvalidCoordinateException, NetworkErrorException, RateLimitExceededException
     {
         if (!CallRateAdmin.canRequest())
         {
@@ -42,16 +42,23 @@ public class APICaller {
                 outputStream.flush();
             }
 
-            if (connection.getResponseCode() == 429)
+            if (connection.getResponseCode() == 500)
             {
-                throw new RateLimitExceededException("Rate limit exceeded for postcode: " + postcode);
+                throw new NetworkErrorException("Post Code Not Found: " + postcode);
             }
-
-            if (connection.getResponseCode() > 299)
+            else if (connection.getResponseCode() == 429)
             {
-                response = getResponseContent(connection.getErrorStream());
-                connection.disconnect();
-                throw new NetworkErrorException(response);
+                // throw new RateLimitExceededException("Rate limit exceeded for postcode: " + postcode);
+                Thread.sleep(10000L * Math.min(attempt, 1));
+                return getCoordinates(postcode, attempt + 1);
+            }
+            else if (connection.getResponseCode() == 404)
+            {
+                throw new NetworkErrorException(connection.getResponseMessage());
+            }
+            else if (connection.getResponseCode() > 299)
+            {
+                throw new NetworkErrorException(connection.getResponseMessage());
             }
             else
             {
@@ -67,6 +74,10 @@ public class APICaller {
         catch (IOException e)
         {
             throw new NetworkErrorException("Network error occurred for postcode: " + postcode + ". " + e.getMessage());
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeException(e);
         }
 
         // Check if the response contains coordinates
