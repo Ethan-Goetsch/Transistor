@@ -31,16 +31,20 @@ public class LocationResolver
     public Coordinate getCordsFromPostCode(String postName) throws CallNotPossibleException, PostcodeNotFoundException, NetworkErrorException, InvalidCoordinateException, RateLimitExceededException
     {
         Coordinate cords = getCordsFromFile(postName);
-        return cords == null ? cords = APICaller.getCoordinates(postName) : cords;
+        return cords == null ? APICaller.getCoordinates(postName) : cords;
     }
 
-    private Coordinate getCordsFromFile(String postName) throws PostcodeNotFoundException {
-        for (PostCode postCode : postCodes) {
-            if (postCode.getName().equalsIgnoreCase(postName)) {
+    private Coordinate getCordsFromFile(String postName)
+    {
+        for (PostCode postCode : postCodes)
+        {
+            if (postCode.getName().equalsIgnoreCase(postName))
+            {
                 return postCode.getCords();
             }
         }
-        throw new PostcodeNotFoundException("Postcode does not exist " + postName);
+
+        return null;
     }
 
     // https://stackoverflow.com/questions/37811334/how-to-read-excel-xlsx-file-in-java

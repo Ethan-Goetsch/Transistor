@@ -15,47 +15,67 @@ public class APICaller {
 
     public static Coordinate getCoordinates(String postcode) throws CallNotPossibleException, PostcodeNotFoundException, InvalidCoordinateException, NetworkErrorException, RateLimitExceededException
     {
-        if (!CallRateAdmin.canRequest()) {
+        if (!CallRateAdmin.canRequest())
+        {
             throw new CallNotPossibleException("Call is not possible for postcode: " + postcode + ". Too many requests!");
         }
 
         String response = "";
-        try {
+        try
+        {
             // Create URL object
             URL url = new URL(PathLocations.API_URL);
 
             // Create HttpURLConnection
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-            connection.setRequestMethod("GET");
+            connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
             String jsonData = getJsonData(postcode);
 
-            try (OutputStream outputStream = new BufferedOutputStream(connection.getOutputStream())) {
+            try (OutputStream outputStream = new BufferedOutputStream(connection.getOutputStream()))
+            {
                 byte[] dataBytes = jsonData.getBytes();
                 outputStream.write(dataBytes);
                 outputStream.flush();
             }
 
-            if (connection.getResponseCode() == 429) {
+            if (connection.getResponseCode() == 429)
+            {
                 throw new RateLimitExceededException("Rate limit exceeded for postcode: " + postcode);
             }
 
-            response = getResponseContent(connection);
-            // Disconnect the HttpURLConnection
-            connection.disconnect();
-        } catch (SocketTimeoutException e) {
+            if (connection.getResponseCode() > 299)
+            {
+                response = getResponseContent(connection.getErrorStream());
+                connection.disconnect();
+                throw new NetworkErrorException(response);
+            }
+            else
+            {
+                response = getResponseContent(connection.getInputStream());
+                // Disconnect the HttpURLConnection
+                connection.disconnect();
+            }
+        }
+        catch (SocketTimeoutException e)
+        {
             throw new NetworkErrorException("Network timeout occurred for postcode: " + postcode);
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             throw new NetworkErrorException("Network error occurred for postcode: " + postcode + ". " + e.getMessage());
         }
 
         // Check if the response contains coordinates
-        if (response.contains("\"latitude\"") && response.contains("\"longitude\"")) {
+        if (response.contains("\"latitude\"") && response.contains("\"longitude\""))
+        {
             return generateCoordinates(response);
-        } else {
+        }
+        else
+        {
             throw new PostcodeNotFoundException("Coordinates not found for postcode: " + postcode);
         }
     }
@@ -68,19 +88,27 @@ public class APICaller {
         Pattern longitudePattern = Pattern.compile("\"longitude\":\\s*\"([^\"]+)\"");
 
         Matcher latitudeMatcher = latitudePattern.matcher(response);
-        if (latitudeMatcher.find()) {
-            try {
+        if (latitudeMatcher.find())
+        {
+            try
+            {
                 latitude = Double.parseDouble(latitudeMatcher.group(1));
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e)
+            {
                 throw new InvalidCoordinateException("Invalid latitude format in response: " + response);
             }
         }
 
         Matcher longitudeMatcher = longitudePattern.matcher(response);
-        if (longitudeMatcher.find()) {
-            try {
+        if (longitudeMatcher.find())
+        {
+            try
+            {
                 longitude = Double.parseDouble(longitudeMatcher.group(1));
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e)
+            {
                 throw new InvalidCoordinateException("Invalid longitude format in response: " + response);
             }
         }
@@ -88,16 +116,19 @@ public class APICaller {
         return new Coordinate(latitude, longitude);
     }
 
-    private static String getJsonData(String postcode) {
+    private static String getJsonData(String postcode)
+    {
         return "{ \"postcode\": \"" + postcode + "\" }";
     }
 
-    private static String getResponseContent(HttpURLConnection connection) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    private static String getResponseContent(InputStream stream) throws IOException
+    {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String line;
         StringBuilder response = new StringBuilder();
 
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null)
+        {
             response.append(line);
         }
         reader.close();

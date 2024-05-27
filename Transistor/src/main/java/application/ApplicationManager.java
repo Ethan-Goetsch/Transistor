@@ -50,33 +50,9 @@ public class ApplicationManager {
                 throw new RouteNotFoundException("No route found");
             }
         }
-        catch (RouteNotFoundException e)
-        {
-            message = "Route cannot be found: " + e.getMessage();
-        }
-        catch (CallNotPossibleException e)
-        {
-            message = "Call is not possible: " + e.getMessage();
-        }
-        catch (PostcodeNotFoundException e)
-        {
-            message = "Postcode does not exist: " + e.getMessage();
-        }
-        catch (InvalidCoordinateException e)
-        {
-            message = "Invalid coordinates found: " + e.getMessage();
-        }
-        catch (NetworkErrorException e)
-        {
-            message = "Network error occurred: " + e.getMessage();
-        }
-        catch (RateLimitExceededException e)
-        {
-            message = "Rate limit exceeded: " + e.getMessage();
-        }
         catch (Exception e)
         {
-            message = "An unexpected error occurred: " + e.getMessage();
+            message = e.getMessage();
             e.printStackTrace();
         }
 
