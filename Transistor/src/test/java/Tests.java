@@ -1,4 +1,5 @@
  import calculators.*;
+ import database.DatabaseManager;
  import entities.*;
  import org.apache.poi.hpsf.Decimal;
  import org.checkerframework.checker.units.qual.C;
@@ -23,6 +24,13 @@
 
      private final DecimalFormat df = new DecimalFormat("0.00");
  //TODO check the final result of the time
+
+     @BeforeAll
+     private void setupTests()
+     {
+         DatabaseManager.getConnection("src/test/resources/Credentials.txt");
+     }
+
      @Test
      void aerialCalcTest1() {
          // test for aerial calculation from different coords 50.85523285, 5.692237193 to 50.84027704, 5.68972678
@@ -126,5 +134,3 @@
 
 
  }
-
-
