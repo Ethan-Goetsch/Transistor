@@ -38,20 +38,17 @@ public class ApplicationManager {
 
         try
         {
-            // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
             var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 10));
             var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
-            var routeResult = getRouteCalculationResult(request,departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+            journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
 
-            if(routeResult == null || routeResult.getTrips().isEmpty())
+            if (journey == null || journey.getTrips().isEmpty())
             {
                 throw new RouteNotFoundException("No route found");
             }
-
-            journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
         }
         catch (RouteNotFoundException e)
         {
