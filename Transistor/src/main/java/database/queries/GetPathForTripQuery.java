@@ -74,9 +74,9 @@ public class GetPathForTripQuery extends ResultQuery<List<TransitShape>>
         }
     }
 
-    public static void main(String args[])
-    {
-        var test = new GetPathForTripQuery(0, 0, 0);
-        System.out.println(test.getStatement());
-    }
+//    public static void main(String args[])
+//    {
+//        var test = new GetPathForTripQuery(0, 0, 0);
+//        System.out.println(test.getStatement());
+//    }
 }

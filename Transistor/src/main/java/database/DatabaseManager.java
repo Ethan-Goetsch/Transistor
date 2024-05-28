@@ -16,13 +16,32 @@ public class DatabaseManager
     private static Connection connection;
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
-    private static Connection getConnection()
+    public static Connection getConnection()
     {
         if (connection == null)
         {
             try
             {
                 var userConfig = FileManager.readData(PathLocations.CREDENTIALS_FILE, UserConfig.class);
+                Class.forName(DRIVER);
+                connection = DriverManager.getConnection(userConfig.url(), userConfig.username(), userConfig.password());
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        return connection;
+    }
+
+    public static Connection getConnection(String pathFile)
+    {
+        if (connection == null)
+        {
+            try
+            {
+                var userConfig = FileManager.readData(pathFile, UserConfig.class);
                 Class.forName(DRIVER);
                 connection = DriverManager.getConnection(userConfig.url(), userConfig.username(), userConfig.password());
             }

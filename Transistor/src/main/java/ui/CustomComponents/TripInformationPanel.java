@@ -36,7 +36,8 @@ public class TripInformationPanel extends JPanel implements Resizible {
     private JScrollPane createScrollPane(JPanel contents) {
         JScrollPane scrollPane = new JScrollPane(contents);
         scrollPane.setVerticalScrollBar(new ScrollBarCustom());
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setHorizontalScrollBar(new ScrollBarCustom());
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         return scrollPane;
     }
@@ -84,12 +85,21 @@ public class TripInformationPanel extends JPanel implements Resizible {
             CircularIconButton b = new CircularIconButton(new ImageIcon("Transistor/src/main/resources/infoPanelBlueDot.png"));
             panel.add(b);
         }
-        panel.add(new JLabel(text));
+        JLabel textInPanel = new JLabel(text);
+//        Font currentFont = textInPanel.getFont();
+//
+//        // Create a new font with a smaller size
+//        Font newFont = currentFont.deriveFont(currentFont.getSize() * 0.8f); // 50% smaller
+//
+//        // Set the new font to the label
+//        textInPanel.setFont(newFont);
+        panel.add(textInPanel);
         return panel;
     }
 
     private void addTripInfoPanels(Trip trip) {
-        addInfoPanel("Take bus from " + trip.nodes().getFirst().name(), true);
+        String newString = trip.nodes().getFirst().name() .replaceAll("\\b" + "Maastricht, " + "\\b", "");
+        addInfoPanel("Take bus from " + newString, true);
         addInfoPanel("Next bus arriving at " + trip.nodes().getFirst().arrivalTime(), false);
         BusStopInfoPanel busStopInfo = new BusStopInfoPanel((int) this.getPreferredSize().getWidth(), (int) this.getPreferredSize().getHeight());
         busStopInfo.display(trip);

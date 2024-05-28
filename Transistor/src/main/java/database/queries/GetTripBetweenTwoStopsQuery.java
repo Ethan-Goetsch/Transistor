@@ -70,8 +70,8 @@ public class GetTripBetweenTwoStopsQuery extends ResultQuery<TransitTrip>
         }
     }
 
-    public static void main(String[] args)
-    {
-        System.out.println(DatabaseManager.executeAndReadQuery(new GetTripBetweenTwoStopsQuery(2578413, 2578366)));
-    }
+//    public static void main(String[] args)
+//    {
+//        System.out.println(DatabaseManager.executeAndReadQuery(new GetTripBetweenTwoStopsQuery(2578413, 2578366)));
+//    }
 }

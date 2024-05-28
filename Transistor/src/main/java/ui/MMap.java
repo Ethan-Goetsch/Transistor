@@ -113,7 +113,6 @@ public class MMap extends JPanel
         jXMapViewer.calculateZoomFrom(positions);
     }
 
-    // TODO: CHANGE THIS TO NOT DEPEND ON THE DATABASE ENTIRELY
     private void updateMap(List<Path> paths, GeoPosition departure, GeoPosition arrival, List<Trip> trips)
     {
         ((MapViewer) jXMapViewer).setPaths(paths);
@@ -121,14 +120,11 @@ public class MMap extends JPanel
         ((MapViewer) jXMapViewer).removeWaypoints();
         ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(departure, new ImageIcon("Transistor/src/main/resources/locationIcon.png"), -1));
         ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(arrival, new ImageIcon("Transistor/src/main/resources/blueDot.png"), -1));
-        ArrayList<PathPoint> sp = new ArrayList<>();
-
-//        sp.add(new PathPoint(new Coordinate(51.932576, 4.401493),2521959)); //test
-//        sp.add(new PathPoint(new Coordinate(51.93752, 4.384413),2522368)); //test
 
         for (Trip trip : trips)
         {
-            if(trip.type() == TransportType.FOOT){
+            if (trip.type() == TransportType.FOOT)
+            {
                 continue;
             }
             for (var busStop : trip.nodes())
@@ -138,12 +134,6 @@ public class MMap extends JPanel
                 ((MapViewer) jXMapViewer).addWaypoint(waypoint);
             }
         }
-
-//        for (PathPoint p : sp)
-//        {
-//            infopanel.addBusStopInfo(p.getID(),getArrivingTimesOfBus(p.getID()));
-//            ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(p.coordinate().getLatitude(), p.coordinate().getLongitude()), new ImageIcon("Transistor/src/main/resources/blueDot.png"), -1, infopanel));
-//        }
 
         // TODO: CHANGE THIS TO NOT RELY ON THE DATABASE ENTIRELY
 //    private ArrayList<LocalTime> getArrivingTimesOfBus(int stopID)

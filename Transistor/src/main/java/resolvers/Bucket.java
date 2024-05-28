@@ -1,7 +1,5 @@
 package resolvers;
 
-import utils.PathLocations;
-
 import java.util.ArrayList;
 import java.util.List;
 

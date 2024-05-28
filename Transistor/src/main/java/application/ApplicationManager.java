@@ -38,48 +38,21 @@ public class ApplicationManager {
 
         try
         {
-            // TODO: FIX AND RETURN ERROR IF NO COORDINATES FOUND
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
             var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 10));
             var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
-            var routeResult = getRouteCalculationResult(request,departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+            journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
 
-            if(routeResult == null || routeResult.getTrips().isEmpty())
+            if (journey == null || journey.getTrips().isEmpty())
             {
                 throw new RouteNotFoundException("No route found");
             }
-
-            journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
-        }
-        catch (RouteNotFoundException e)
-        {
-            message = "Route cannot be found: " + e.getMessage();
-        }
-        catch (CallNotPossibleException e)
-        {
-            message = "Call is not possible: " + e.getMessage();
-        }
-        catch (PostcodeNotFoundException e)
-        {
-            message = "Postcode does not exist: " + e.getMessage();
-        }
-        catch (InvalidCoordinateException e)
-        {
-            message = "Invalid coordinates found: " + e.getMessage();
-        }
-        catch (NetworkErrorException e)
-        {
-            message = "Network error occurred: " + e.getMessage();
-        }
-        catch (RateLimitExceededException e)
-        {
-            message = "Rate limit exceeded: " + e.getMessage();
         }
         catch (Exception e)
         {
-            message = "An unexpected error occurred: " + e.getMessage();
+            message = e.getMessage();
             e.printStackTrace();
         }
 

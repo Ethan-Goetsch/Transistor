@@ -5,10 +5,7 @@ import database.queries.GetAllShapesBetweenStops;
 import database.queries.GetAllStopsForTrip;
 import database.queries.GetShapeSequenceForTripAndStop;
 import database.queries.GetTripBetweenTwoStopsQuery;
-import entities.Path;
-import entities.PathPoint;
-import entities.TransportType;
-import entities.Trip;
+import entities.*;
 import entities.transit.TransitNode;
 import entities.transit.TransitRoute;
 import entities.transit.TransitTrip;
@@ -48,6 +45,12 @@ public class TransitCalculator
             var shapesBetweenStops = DatabaseManager.executeAndReadQuery(new GetAllShapesBetweenStops(trip.id(),
                     startShapeSequence,
                     stopShapeSequence));
+
+            if (shapesBetweenStops.isEmpty())
+            {
+                points.add(new PathPoint(startNode.coordinate(), PointType.Normal));
+                points.add(new PathPoint(stopNode.coordinate(), PointType.Normal));
+            }
 
             points.addAll(shapesBetweenStops.stream()
                     .map(TransitShape::toPoint)

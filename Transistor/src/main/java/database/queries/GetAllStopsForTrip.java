@@ -75,10 +75,10 @@ public class GetAllStopsForTrip extends ResultQuery<List<TransitNode>>
         }
     }
 
-    public static void main(String[] args)
-    {
-        var test = new GetAllStopsForTrip(178414978, 0, 999);
-        System.out.println(test.getStatement());
-        //System.out.println(DatabaseManager.executeAndReadQuery(new GetAllStopsForTrip(178414978, 16, 18)));
-    }
+//    public static void main(String[] args)
+//    {
+//        var test = new GetAllStopsForTrip(178414978, 0, 999);
+//        System.out.println(test.getStatement());
+//        //System.out.println(DatabaseManager.executeAndReadQuery(new GetAllStopsForTrip(178414978, 16, 18)));
+//    }
 }
