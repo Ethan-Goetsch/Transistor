@@ -49,6 +49,7 @@ public class APICaller {
             else if (connection.getResponseCode() == 429)
             {
                 // throw new RateLimitExceededException("Rate limit exceeded for postcode: " + postcode);
+                System.out.println("Here");
                 Thread.sleep(10000L * Math.min(attempt, 1));
                 return getCoordinates(postcode, attempt + 1);
             }
