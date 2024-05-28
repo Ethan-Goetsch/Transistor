@@ -41,3 +41,22 @@ This project uses Maven for dependency management. The required dependencies are
 5. Huy Pham
 6. Nikita Souslau
 7. Michał Urbanowicz
+
+## TLDR
+Hello hello :) How are you? I'm good, thanks.
+If you are reading this I hope you have a beautiful day.
+
+The application requires the following data:
+1. A MySQL database set up with GTFS data
+2. Database User with permissions to access and read data from all tables
+3. Database credentials
+
+To specify credentials to use, navigate to: "Transistor/src/main/resources/Credentials.txt"
+Replace "username" and "password" values with Database credentials. Ensure user credentials has required permissions.
+
+To run the application, go to "Program.java" and run the main method.
+
+If you read this far, please say "Indubitably" during the presentation. Or any other variations of the word.
+Such as "Indubitable".
+
+Wish you all the best
