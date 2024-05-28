@@ -51,8 +51,16 @@ The application requires the following data:
 2. Database User with permissions to access and read data from all tables
 3. Database credentials
 
-To specify credentials to use, navigate to: "Transistor/src/main/resources/Credentials.txt"
-Replace "username" and "password" values with Database credentials. Ensure user credentials has required permissions.
+To specify credentials to use, navigate to: "Transistor/src/main/resources/Credentials.txt".
+If the file does not exist, please create a new file called "Credentials.txt".
+
+Add this:
+{
+"url": "jdbc:mysql://localhost:3306/",
+"username": "test",
+"password": "test"
+}
+Replace "username" and "password" values with your User credentials to the Database. Ensure user credentials has required permissions.
 
 To run the application, go to "Program.java" and run the main method.
 
