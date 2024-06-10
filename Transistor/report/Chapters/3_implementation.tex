@@ -1,0 +1,44 @@
+\section{Implementation} \label{section: Implementation}
+
+The following section describes the general outline of how the algorithms are implemented.
+
+\subsection{Routing algorithm}
+The algorithm is implemented as follows:
+
+\begin{algorithm}
+    \caption{Placeholder for Algorithm}\label{alg:gen}
+    \begin{algorithmic}
+        % \Require Some data input
+        \State Initialise population list $p$ of size $n_p$ with randomly generated solutions
+        \State Initialise empty list $c$ of size $n_c$
+        \State Initialise best solution $a = 0$
+        \State Initialise iterator $i = 0$
+        \State Initialise maximum number of repetitions $r$
+        \State Initialise minimum subset size $t$
+        \For{parent in list $p$}
+        \State Create subset $q$ of population of random size $s\in [t, n_p]$
+        \For{element in subset $q$}
+        \State Evaluate value of element
+        \EndFor
+        \State Select two best elements ${e_1, e_2}$ with most weight
+        \State Create child $k$ using \textbf{cross-over} of ${e_1}$ and ${e_2}$
+        \State \textbf{Mutate} child $k$ \Comment{The mutation adds or removes a pentomino}
+        \State Add child $k$ to list $c$
+        \If{$n_c$ equals $n_p$}
+        \State List $p$ is set to list $c$
+        \State List $c$ is emptied
+        \State Increase value of iterator $i$ by $1$
+        \If{evaluation of $k > a$}
+        \State Solution $a$ is set to evaluation of $k$;
+        \EndIf
+        \If{$i = r$} \Comment{The number $m$ is arbitrarily selected}
+        \State break for loop;
+        \EndIf
+        \EndIf
+        \EndFor
+        \Ensure $k$
+    \end{algorithmic}
+\end{algorithm}
+
+
+Algorithm description goes here.
