@@ -2,19 +2,27 @@ package entities.TransitGraphEntities;
 
 import java.time.LocalTime;
 
-public class TStopTimePoint
+public class TStopTimePoint implements Comparable<TStopTimePoint>
 {
     private int sequence;
     private TStop stop;
     private LocalTime arrivalTime;
-    private LocalTime departurTime;
+    private LocalTime departureTime;
+    private int shapeDistTraveled;
 
-    public TStopTimePoint(int sequence, TStop stop, LocalTime arrivalTime, LocalTime departurTime)
+    public TStopTimePoint(int sequence, TStop stop, LocalTime arrivalTime, LocalTime departureTime, int shapeDistTraveled)
     {
         this.sequence = sequence;
         this.stop = stop;
         this.arrivalTime = arrivalTime;
-        this.departurTime = departurTime;
+        this.departureTime = departureTime;
+        this.shapeDistTraveled = shapeDistTraveled;
+    }
+
+    @Override
+    public int compareTo(TStopTimePoint o)
+    {
+        return Integer.compare(sequence, o.getSequence());
     }
 
     public int getSequence()
@@ -47,13 +55,23 @@ public class TStopTimePoint
         this.arrivalTime = arrivalTime;
     }
 
-    public LocalTime getDeparturTime()
+    public LocalTime getDepartureTime()
     {
-        return departurTime;
+        return departureTime;
     }
 
-    public void setDeparturTime(LocalTime departurTime)
+    public void setDepartureTime(LocalTime departureTime)
     {
-        this.departurTime = departurTime;
+        this.departureTime = departureTime;
+    }
+
+    public int getShapeDistTraveled()
+    {
+        return shapeDistTraveled;
+    }
+
+    public void setShapeDistTraveled(int shapeDistTraveled)
+    {
+        this.shapeDistTraveled = shapeDistTraveled;
     }
 }

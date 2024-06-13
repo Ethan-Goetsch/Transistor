@@ -6,22 +6,28 @@ public class TTrip
 {
     private int id;
     private int routeid;
-    private int routeShortName; // bus number
-    private int routeLongName;
+    private String routeShortName; // bus number
+    private String routeLongName;
 
     private List<TStopTimePoint> stopTimePoints;
-    private List<TShapePoint> shapePoints;
-    
-    public TTrip(int id, int routeid, int routeShortName, int routeLongName, List<TStopTimePoint> stopTimePoints, List<TShapePoint> shapePoints)
+    private TShape shape;
+
+    public TTrip(int id, int routeid, String routeShortName, String routeLongName, List<TStopTimePoint> stopTimePoints, TShape shape)
     {
         this.id = id;
         this.routeid = routeid;
         this.routeShortName = routeShortName;
         this.routeLongName = routeLongName;
         this.stopTimePoints = stopTimePoints;
-        this.shapePoints = shapePoints;
+        this.shape = shape;
     }
 
+    @Override
+    public String toString()
+    {
+        return id + " | " + routeid + " | " + routeShortName + " | " + routeLongName + " | " + stopTimePoints.size() + " | " + shape.getId() + " | " + shape.getShapePoints().size();
+    }
+    
     public int getId()
     {
         return id;
@@ -42,22 +48,22 @@ public class TTrip
         this.routeid = routeid;
     }
 
-    public int getRouteShortName()
+    public String getRouteShortName()
     {
         return routeShortName;
     }
 
-    public void setRouteShortName(int routeShortName)
+    public void setRouteShortName(String routeShortName)
     {
         this.routeShortName = routeShortName;
     }
 
-    public int getRouteLongName()
+    public String getRouteLongName()
     {
         return routeLongName;
     }
 
-    public void setRouteLongName(int routeLongName)
+    public void setRouteLongName(String routeLongName)
     {
         this.routeLongName = routeLongName;
     }
@@ -72,13 +78,13 @@ public class TTrip
         this.stopTimePoints = stopTimePoints;
     }
 
-    public List<TShapePoint> getShapePoints()
+    public TShape getShape()
     {
-        return shapePoints;
+        return shape;
     }
 
-    public void setShapePoints(List<TShapePoint> shapePoints)
+    public void setShape(TShape shape)
     {
-        this.shapePoints = shapePoints;
+        this.shape = shape;
     }
 }
