@@ -3,7 +3,6 @@ package ui.Menus;
 import ui.InformationPanel;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class Accessibility extends JMenu {
     public Accessibility(JPanel informationPanel)

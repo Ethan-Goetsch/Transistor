@@ -5,11 +5,7 @@ import application.ApplicationManager;
 import entities.AccessibilityRequest;
 import entities.Request;
 import entities.RouteRequest;
-import entities.Trip;
-import org.locationtech.jts.triangulate.tri.Tri;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class UIController
 {

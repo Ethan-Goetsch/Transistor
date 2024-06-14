@@ -10,7 +10,6 @@ import ui.Panels.OutputAccessibilityPanel;
 import ui.Panels.TripPanel;
 import utils.IObservable;
 import utils.Subject;
-
 import javax.swing.*;
 import java.awt.*;
 

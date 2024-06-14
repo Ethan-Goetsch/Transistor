@@ -3,12 +3,74 @@ package Accessibility;
 import entities.AmenityCategory;
 import entities.Coordinate;
 import entities.geoJson.GeoData;
-
 import java.util.*;
 
 public class IndexCalculator {
-    private final static int MAX_TIME = 2 * 60 * 60;
 
+    private static final Map<String, Double> amenityWeights = new HashMap<>();
+    static {
+        amenityWeights.put("hospital", 1.0);
+        amenityWeights.put("clinic", 0.8);
+        amenityWeights.put("nursing_home", 0.7);
+        amenityWeights.put("doctors", 0.6);
+        amenityWeights.put("dentist", 0.5);
+        amenityWeights.put("veterinary", 0.4);
+        amenityWeights.put("pharmacy", 0.9);
+        amenityWeights.put("theatre", 0.8);
+        amenityWeights.put("arts_centre", 0.7);
+        amenityWeights.put("cinema", 0.9);
+        amenityWeights.put("nightclub", 0.6);
+        amenityWeights.put("casino", 0.5);
+        amenityWeights.put("restaurant", 0.9);
+        amenityWeights.put("cafe", 0.8);
+        amenityWeights.put("food_court", 0.7);
+        amenityWeights.put("fast_food", 0.6);
+        amenityWeights.put("pub", 0.5);
+        amenityWeights.put("bar", 0.4);
+        amenityWeights.put("ice_cream", 0.3);
+        amenityWeights.put("shop", 0.9);
+        amenityWeights.put("marketplace", 0.8);
+        amenityWeights.put("vending_machine", 0.3);
+        amenityWeights.put("photo_booth", 0.2);
+        amenityWeights.put("luggage_locker", 0.4);
+        amenityWeights.put("library", 0.9);
+        amenityWeights.put("public_bookcase", 0.3);
+        amenityWeights.put("school", 1.0);
+        amenityWeights.put("college", 0.9);
+        amenityWeights.put("university", 1.0);
+        amenityWeights.put("prep_school", 0.8);
+        amenityWeights.put("childcare", 0.7);
+        amenityWeights.put("tourism", 0.6);
+        amenityWeights.put("police", 1.0);
+        amenityWeights.put("courthouse", 0.8);
+        amenityWeights.put("townhall", 0.7);
+        amenityWeights.put("fire_station", 0.9);
+        amenityWeights.put("post_office", 0.8);
+        amenityWeights.put("post_box", 0.4);
+        amenityWeights.put("atm", 0.7);
+        amenityWeights.put("bank", 0.9);
+        amenityWeights.put("bureau_de_change", 0.6);
+        amenityWeights.put("place_of_worship", 0.5);
+        amenityWeights.put("community_centre", 0.6);
+        amenityWeights.put("social_facility", 0.7);
+        amenityWeights.put("shelter", 0.5);
+        amenityWeights.put("information", 0.4);
+        amenityWeights.put("clock", 0.3);
+        amenityWeights.put("binoculars", 0.2);
+        amenityWeights.put("sanitary_dump_station", 0.1);
+        amenityWeights.put("recycling", 0.4);
+        amenityWeights.put("waste_basket", 0.2);
+        amenityWeights.put("fuel", 0.9);
+        amenityWeights.put("car_wash", 0.6);
+        amenityWeights.put("taxi", 0.7);
+        amenityWeights.put("bicycle_parking", 0.5);
+        amenityWeights.put("moped_parking", 0.4);
+        amenityWeights.put("car_rental", 0.8);
+        amenityWeights.put("parking_entrance", 0.5);
+        amenityWeights.put("parking", 0.7);
+        amenityWeights.put("parking_space", 0.6);
+        amenityWeights.put("charging_station", 0.8);
+    }
     public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode) {
         Map<AmenityCategory, List<GeoData>> categorizedAmenities = categorizeAmenities(list);
 
@@ -84,7 +146,7 @@ public class IndexCalculator {
         List<Integer> times = new ArrayList<>();
         for (GeoData geoData : nearestLocations) {
             // Add weight (example: use predefined weights for different categories)
-            weights.add(0.1); // Example weight, replace with actual logic TODO store weights and add the needed ones
+            weights.add(amenityWeights.get(geoData.getType())); // Example weight, replace with actual logic TODO store weights and add the needed ones
 
             int travelTime = 0; //calculateTravelTime(geoData, coordinatePostalCode); TODO make route requests to get travel times
             times.add(travelTime);
@@ -102,9 +164,8 @@ public class IndexCalculator {
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c; // Convert to kilometers
 
-        return distance;
+        return R * c;
     }
     private static double calculator(double[] weights, int[]times){
         final double beta = 0.1;

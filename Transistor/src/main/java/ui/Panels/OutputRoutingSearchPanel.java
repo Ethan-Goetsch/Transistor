@@ -86,13 +86,6 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible {
             panel.add(b);
         }
         JLabel textInPanel = new JLabel(text);
-//        Font currentFont = textInPanel.getFont();
-//
-//        // Create a new font with a smaller size
-//        Font newFont = currentFont.deriveFont(currentFont.getSize() * 0.8f); // 50% smaller
-//
-//        // Set the new font to the label
-//        textInPanel.setFont(newFont);
         panel.add(textInPanel);
         return panel;
     }

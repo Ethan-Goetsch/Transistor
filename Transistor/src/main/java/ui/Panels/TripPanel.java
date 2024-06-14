@@ -6,14 +6,10 @@ import java.awt.*;
 
 public class TripPanel extends JPanel {
     private OutputRoutingSearchPanel outputRoutingSearchPanel;
-    private int mainWidth;
-    private int mainHeight;
     private InputRoutingSearchPanel inputRoutingSearchPanel;
     public TripPanel(JPanel searchPanel, int mainWidth, int mainHeight){
         this.inputRoutingSearchPanel = (InputRoutingSearchPanel) searchPanel;
         outputRoutingSearchPanel = new OutputRoutingSearchPanel(mainWidth, mainHeight);
-        this.mainWidth = mainWidth;
-        this.mainHeight = mainHeight;
 
         this.setBackground(Color.white);
         this.setBorder(new EmptyBorder(25, 0, 0, 20)); // top, left, bottom, right padding
@@ -42,8 +38,6 @@ public class TripPanel extends JPanel {
 
     public void changeSize(int mainWidth, int mainHeight) {
         this.setPreferredSize(new Dimension(mainWidth / 3,  mainHeight));
-        this.mainWidth = mainWidth;
-        this.mainHeight = mainHeight;
         this.inputRoutingSearchPanel.changeSize(mainWidth, mainHeight);
         this.outputRoutingSearchPanel.changeSize(mainWidth, mainHeight);
     }

@@ -136,33 +136,5 @@ public class MMap extends JPanel
                 ((MapViewer) jXMapViewer).addWaypoint(waypoint);
             }
         }
-
-//        for (PathPoint p : sp)
-//        {
-//            infopanel.addBusStopInfo(p.getID(),getArrivingTimesOfBus(p.getID()));
-//            ((MapViewer) jXMapViewer).addWaypoint(new CustomWaypoint(new GeoPosition(p.coordinate().getLatitude(), p.coordinate().getLongitude()), new ImageIcon("Transistor/src/main/resources/blueDot.png"), -1, infopanel));
-//        }
-
-        // TODO: CHANGE THIS TO NOT RELY ON THE DATABASE ENTIRELY
-//    private ArrayList<LocalTime> getArrivingTimesOfBus(int stopID)
-//    {
-//        ResultSet res = DatabaseManager.executeAndReadQuery(new BusStopTimesQuery(stopID));
-//        ArrayList<LocalTime> arrivals = new ArrayList<>();
-//        try{
-//            while ( res.next() ) {
-//                String arrival = res.getString(1);
-//                arrivals.add(LocalTime.parse(arrival));
-//
-//            }
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
-//        Collections.sort(arrivals);
-//        LocalTime now = LocalTime.now();
-//
-//        // Remove all times that have passed the current time
-//        arrivals.removeIf(time -> time.isBefore(now));
-//        return arrivals;
-//    }
     }
 }

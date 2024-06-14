@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AnimatedBar extends JPanel implements Resizible {
     private int currentValue = 0;
@@ -32,13 +30,11 @@ public class AnimatedBar extends JPanel implements Resizible {
 
         int barWidth = (int) (getWidth() * (currentValue / 100.0));
         int barHeight = 10;
-        int arcWidth = barHeight;
-        int arcHeight = barHeight;
 
-        g.fillRoundRect(5, 5, barWidth, barHeight, arcWidth, arcHeight);
+        g.fillRoundRect(5, 5, barWidth, barHeight, barHeight, barHeight);
 
         g.setColor(Color.BLACK);
-        g.drawRoundRect(5, 5, getWidth() - 10, barHeight, arcWidth, arcHeight);
+        g.drawRoundRect(5, 5, getWidth() - 10, barHeight, barHeight, barHeight);
     }
 
     private void setupTimer() {

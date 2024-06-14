@@ -2,14 +2,10 @@ package ui.Panels;
 
 import entities.AccessibilityRequest;
 import utils.IAction;
-
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class AccessibilityPanel extends JPanel {
-    private int mainWidth;
-    private int mainHeight;
     private InputAccessibilityPanel inputPanel;
     private OutputAccessibilityPanel outputPanel;
 
@@ -40,8 +36,6 @@ public class AccessibilityPanel extends JPanel {
 
     public void changeSize(int mainWidth, int mainHeight) {
         this.setPreferredSize(new Dimension(mainWidth / 3,  mainHeight));
-        this.mainWidth = mainWidth;
-        this.mainHeight = mainHeight;
         inputPanel.changeSize(mainWidth,mainHeight);
         outputPanel.changeSize(mainWidth,mainHeight);
     }
