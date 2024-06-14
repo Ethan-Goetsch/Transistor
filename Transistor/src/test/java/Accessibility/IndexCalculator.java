@@ -2,14 +2,15 @@ package Accessibility;
 
 import entities.AmenityCategory;
 import entities.Coordinate;
+import entities.geoJson.GeoData;
 
 import java.util.*;
 
 public class IndexCalculator {
     private final static int MAX_TIME = 2 * 60 * 60;
 
-    public List<Double> calculateIndex(List<GeoDataTest> list, Coordinate coordinatePostalCode) {
-        Map<AmenityCategory, List<GeoDataTest>> categorizedAmenities = categorizeAmenities(list);
+    public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode) {
+        Map<AmenityCategory, List<GeoData>> categorizedAmenities = categorizeAmenities(list);
 
         List<Double> indexes = new ArrayList<>();
         indexes.add(getIndexForCategory(categorizedAmenities.getOrDefault(AmenityCategory.HEALTHCARE, new ArrayList<>()), coordinatePostalCode));
@@ -23,8 +24,8 @@ public class IndexCalculator {
         return indexes;
     }
 
-    private Map<AmenityCategory, List<GeoDataTest>> categorizeAmenities(List<GeoDataTest> list) {
-        Map<AmenityCategory, List<GeoDataTest>> categorizedAmenities = new HashMap<>();
+    private Map<AmenityCategory, List<GeoData>> categorizeAmenities(List<GeoData> list) {
+        Map<AmenityCategory, List<GeoData>> categorizedAmenities = new HashMap<>();
         categorizedAmenities.put(AmenityCategory.HEALTHCARE, new ArrayList<>());
         categorizedAmenities.put(AmenityCategory.EDUCATION, new ArrayList<>());
         categorizedAmenities.put(AmenityCategory.SHOP, new ArrayList<>());
@@ -41,20 +42,20 @@ public class IndexCalculator {
         Set<String> publicServices = new HashSet<>(Arrays.asList("police","courthouse","townhall","fire_station","post_office","post_box","atm","bank","bureau_de_change","place_of_worship","community_centre","social_facility","shelter","information","clock","binoculars","sanitary_dump_station","recycling","waste_basket"));
         Set<String> transportation = new HashSet<>(Arrays.asList("fuel", "car_wash", "taxi","bicycle_parking","moped_parking","car_rental","parking_entrance","parking","parking_space","charging_station"));
 
-        for (GeoDataTest geoData : list) {
-            if (healthcare.contains(geoData.s)) {
+        for (GeoData geoData : list) {
+            if (healthcare.contains(geoData.getType())) {
                 categorizedAmenities.get(AmenityCategory.HEALTHCARE).add(geoData);
-            } else if (entertainment.contains(geoData.s)) {
+            } else if (entertainment.contains(geoData.getType())) {
                 categorizedAmenities.get(AmenityCategory.EDUCATION).add(geoData);
-            } else if (shopping.contains(geoData.s)) {
+            } else if (shopping.contains(geoData.getType())) {
                 categorizedAmenities.get(AmenityCategory.SHOP).add(geoData);
-            } else if (education.contains(geoData.s)) {
+            } else if (education.contains(geoData.getType())) {
                 categorizedAmenities.get(AmenityCategory.ENTERTAINMENT).add(geoData);
-            } else if (tourism.contains(geoData.s)) {
+            } else if (tourism.contains(geoData.getType())) {
                 categorizedAmenities.get(AmenityCategory.TOURISM).add(geoData);
-            } else if (publicServices.contains(geoData.s)) {
+            } else if (publicServices.contains(geoData.getType())) {
                 categorizedAmenities.get(AmenityCategory.PUBLIC_SERVICES).add(geoData);
-            } else if (transportation.contains(geoData.s)) {
+            } else if (transportation.contains(geoData.getType())) {
                 categorizedAmenities.get(AmenityCategory.TRANSPORTATION).add(geoData);
             }
         }
@@ -62,17 +63,17 @@ public class IndexCalculator {
         return categorizedAmenities;
     }
 
-    private double getIndexForCategory(List<GeoDataTest> categoryData, Coordinate coordinatePostalCode) {
-        Map<String, List<GeoDataTest>> groupedAmenities = new HashMap<>();
+    private double getIndexForCategory(List<GeoData> categoryData, Coordinate coordinatePostalCode) {
+        Map<String, List<GeoData>> groupedAmenities = new HashMap<>();
 
-        for (GeoDataTest geoData : categoryData) {
-            groupedAmenities.computeIfAbsent(geoData.s, k -> new ArrayList<>()).add(geoData);
+        for (GeoData geoData : categoryData) {
+            groupedAmenities.computeIfAbsent(geoData.getType(), k -> new ArrayList<>()).add(geoData);
         }
 
-        List<GeoDataTest> nearestLocations = new ArrayList<>();
-        for (List<GeoDataTest> amenities : groupedAmenities.values()) {
-            GeoDataTest nearest = amenities.stream()
-                    .min(Comparator.comparingDouble(geoData -> getDistance(geoData.lat, geoData.lon, coordinatePostalCode.getLatitude(), coordinatePostalCode.getLongitude())))
+        List<GeoData> nearestLocations = new ArrayList<>();
+        for (List<GeoData> amenities : groupedAmenities.values()) {
+            GeoData nearest = amenities.stream()
+                    .min(Comparator.comparingDouble(geoData -> getDistance(geoData.getLatitude(), geoData.getLongitude(), coordinatePostalCode.getLatitude(), coordinatePostalCode.getLongitude())))
                     .orElse(null);
             if (nearest != null) {
                 nearestLocations.add(nearest);
@@ -81,7 +82,7 @@ public class IndexCalculator {
 
         List<Double> weights = new ArrayList<>();
         List<Integer> times = new ArrayList<>();
-        for (GeoDataTest geoData : nearestLocations) {
+        for (GeoData geoData : nearestLocations) {
             // Add weight (example: use predefined weights for different categories)
             weights.add(0.1); // Example weight, replace with actual logic TODO store weights and add the needed ones
 
