@@ -1,4 +1,4 @@
-package ui;
+package ui.Panels;
 
 import entities.RouteRequest;
 import entities.RouteType;
@@ -8,9 +8,8 @@ import utils.IAction;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.time.LocalTime;
 
-public class SearchPanel extends JPanel
+public class InputRoutingSearchPanel extends JPanel
 {
     private final IAction<RouteRequest> onCalculateClicked;
     private JTextField departureField;
@@ -24,7 +23,7 @@ public class SearchPanel extends JPanel
     private int mainWidth;
     private int mainHeight;
 
-    public SearchPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked) {
+    public InputRoutingSearchPanel(int mainWidth, int mainHeight, IAction<RouteRequest> onCalculateCLicked) {
         this.mainWidth = mainWidth;
         this.mainHeight = mainHeight;
         this.setBackground(Color.white);
@@ -152,7 +151,7 @@ public class SearchPanel extends JPanel
     {
         distanceLabel.setText(distance);
         timeLabel.setText(time);
-        routeTypeLabel.setText(routeTypeSetting.toString());
+        routeTypeLabel.setText(routeTypeSetting.toString());//todo never used to display
     }
 
     public void setRouteType(RouteType routeType){

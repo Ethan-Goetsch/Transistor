@@ -8,10 +8,8 @@ import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
-import ui.CustomComponents.BusStopInfoPanel;
 import ui.CustomComponents.CustomWaypoint;
 import ui.CustomComponents.MapViewer;
-
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.event.MouseInputListener;

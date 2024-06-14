@@ -89,7 +89,8 @@ public class IndexCalculator {
             int travelTime = 0; //calculateTravelTime(geoData, coordinatePostalCode); TODO make route requests to get travel times
             times.add(travelTime);
         }
-        return calculator(weights.stream().mapToDouble(Double::doubleValue).toArray(), times.stream().mapToInt(Integer::intValue).toArray());
+//        return calculator(weights.stream().mapToDouble(Double::doubleValue).toArray(), times.stream().mapToInt(Integer::intValue).toArray());
+        return 90;// todo test -> when fixed change
     }
 
     public static double getDistance(double lat1, double lon1, double lat2, double lon2) {

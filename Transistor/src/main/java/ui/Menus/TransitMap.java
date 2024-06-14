@@ -5,7 +5,6 @@ import org.jxmapviewer.JXMapViewer;
 import database.DatabaseManager;
 import database.queries.TransitMapDataQuery;
 import ui.CustomComponents.MapViewer;
-import ui.MMap;
 import ui.MainWindow;
 import entities.Coordinate;
 import entities.Path;

@@ -1,8 +1,10 @@
+import Accessibility.IndexCalculator;
 import application.ApplicationManager;
 import application.RequestValidator;
 import calculators.AerialCalculator;
 import calculators.IRouteCalculator;
 import calculators.PathCalculator;
+import entities.geoJson.GeoDeserializer;
 import resolvers.LocationResolver;
 import ui.UIController;
 import utils.PathLocations;
@@ -26,7 +28,10 @@ public class Program
         routeCalculators.add(new AerialCalculator());
         routeCalculators.add(new PathCalculator(PathLocations.GRAPH_RESOURCE_FOLDER));
 
-        ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, routeCalculators);
+        IndexCalculator accessibilityCalculator = new IndexCalculator();
+        GeoDeserializer geoDeserializer = new GeoDeserializer();
+
+        ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, routeCalculators, accessibilityCalculator, geoDeserializer);
         UIController controller = new UIController(manager);
     }
 

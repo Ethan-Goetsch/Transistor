@@ -1,19 +1,19 @@
-package ui.CustomComponents;
+package ui.Panels;
 
 import entities.Route;
 import entities.TransportType;
 import entities.Trip;
-
+import ui.CustomComponents.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TripInformationPanel extends JPanel implements Resizible {
+public class OutputRoutingSearchPanel extends JPanel implements Resizible {
     private JPanel contents;
     private List<Resizible> components;
 
-    public TripInformationPanel(int mainWidth, int mainHeight) {
+    public OutputRoutingSearchPanel(int mainWidth, int mainHeight) {
         components = new ArrayList<>();
         changeSize(mainWidth, mainHeight);
         setLayout(new BorderLayout());

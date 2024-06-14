@@ -1,11 +1,13 @@
 package ui;
 
-import entities.RouteRequest;
+import entities.Request;
 import org.jxmapviewer.JXMapViewer;
-import ui.CustomComponents.BusStopInfoPanel;
-import ui.CustomComponents.TripInformationPanel;
+import ui.Panels.AccessibilityPanel;
 import ui.Menus.AplicationMenuBar;
 import ui.CustomComponents.MapViewer;
+import ui.Panels.InputRoutingSearchPanel;
+import ui.Panels.OutputAccessibilityPanel;
+import ui.Panels.TripPanel;
 import utils.IObservable;
 import utils.Subject;
 
@@ -15,15 +17,16 @@ import java.awt.*;
 public class MainWindow extends JFrame {
     private int mainWidth = 990;
     private int mainHeight = 770;
-    private SearchPanel searchPanel;
+    private InputRoutingSearchPanel inputRoutingSearchPanel;
     private JXMapViewer jXMapViewer;
-
-    private TripInformationPanel tripInformationPanel;
     private MMap map;
-    private final Subject<RouteRequest> onRouteRequested;
+    private TripPanel tripPanel;
+    private AccessibilityPanel accessibilityPanel;
+    private InformationPanel informationPanel;
+    private final Subject<Request> onRequested;
 
     public MainWindow() {
-        this.onRouteRequested = new Subject<>();
+        this.onRequested = new Subject<>();
         this.setFocusable(true);
         this.setBackground(Color.white);
         this.setVisible(true);
@@ -33,8 +36,8 @@ public class MainWindow extends JFrame {
 
     }
 
-    public IObservable<RouteRequest> getRouteRequested() {
-        return onRouteRequested;
+    public IObservable<Request> getRequest() {
+        return onRequested;
     }
 
     public void configureWindow() {
@@ -49,10 +52,12 @@ public class MainWindow extends JFrame {
 
         jXMapViewer = new MapViewer(mainWidth, mainHeight);
         map = new MMap(jXMapViewer,mainWidth, mainHeight);
-        searchPanel = new SearchPanel(mainWidth, mainHeight, onRouteRequested::execute); // this is the search panel from before
-        tripInformationPanel = new TripInformationPanel(mainWidth, mainHeight);
+        inputRoutingSearchPanel = new InputRoutingSearchPanel(mainWidth, mainHeight, onRequested::execute); // this is the search panel from before
+        tripPanel = new TripPanel(inputRoutingSearchPanel, mainWidth, mainHeight);
+        accessibilityPanel = new AccessibilityPanel( mainWidth, mainHeight, onRequested::execute);
+        informationPanel = new InformationPanel(tripPanel, accessibilityPanel, mainWidth, mainHeight);
         getContentPane().add(map);
-        getContentPane().add(searchPanel);
+        getContentPane().add(inputRoutingSearchPanel);
         this.setJMenuBar(new AplicationMenuBar(this));
 
     }
@@ -64,15 +69,13 @@ public class MainWindow extends JFrame {
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup()
-                                        .addComponent(searchPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(tripInformationPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(informationPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addComponent(map, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(searchPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(tripInformationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(informationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(map, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
@@ -88,24 +91,29 @@ public class MainWindow extends JFrame {
         this.mainWidth = mainWidth;
         changeSize();
     }
-    public SearchPanel searchPanel() {
-        return searchPanel;
-    }
     public JXMapViewer getjXMapViewer() { return jXMapViewer;}
+
     public MMap getMap() {
         return map;
     }
-    public SearchPanel getSearchPanel() {return this.searchPanel;}
+    public InputRoutingSearchPanel getInputRoutingSearchPanel() {return this.inputRoutingSearchPanel;}
 
-    public TripInformationPanel getTripInformationPanel(){
-        return this.tripInformationPanel;
+    public OutputAccessibilityPanel getOutputAccessibilityPanel(){
+        return this.accessibilityPanel.getOutputPanel();
+    }
+
+    public TripPanel getTripPanel(){
+        return this.tripPanel;
+    }
+    public InformationPanel getInformationPanel() {
+        return this.informationPanel;
     }
     private void changeSize(){
         this.setSize(mainWidth+14, mainHeight+60);
         this.map.changeSize(mainWidth, mainHeight);
-        this.searchPanel.changeSize(mainWidth, mainHeight);
-        this.tripInformationPanel.changeSize(mainWidth, mainHeight);
+        this.informationPanel.changeSize(mainWidth, mainHeight);;
         ((MapViewer)this.jXMapViewer).changeSize(mainWidth, mainHeight);
     }
+
 
 }

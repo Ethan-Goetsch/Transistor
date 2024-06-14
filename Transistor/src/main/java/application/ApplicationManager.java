@@ -1,5 +1,6 @@
 package application;
 
+import Accessibility.IndexCalculator;
 import calculators.AerialCalculator;
 import calculators.IRouteCalculator;
 import calculators.TransitCalculator;
@@ -7,21 +8,53 @@ import database.DatabaseManager;
 import database.queries.GetClosetStops;
 import entities.*;
 import entities.exceptions.*;
+import entities.geoJson.GeoDeserializer;
 import entities.transit.TransitStop;
 import resolvers.LocationResolver;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationManager {
     private final LocationResolver locationResolver;
     private final RequestValidator requestValidator;
     private final List<IRouteCalculator> routeCalculators;
+    private final IndexCalculator accessibilityCalculator;
+    private final GeoDeserializer geoDeserializer;
 
-    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, List<IRouteCalculator> routeCalculators) {
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, List<IRouteCalculator> routeCalculators, IndexCalculator accessibilityCalculator, GeoDeserializer geoDeserializer) {
         this.locationResolver = locationResolver;
         this.requestValidator = requestValidator;
         this.routeCalculators = routeCalculators;
+        this.accessibilityCalculator = accessibilityCalculator;
+        this.geoDeserializer = geoDeserializer;
+    }
+
+    public AccessibilityMeasure getAccessibilityMeasure(AccessibilityRequest request){
+        String message = "";
+        List<Double> indexes = null;
+        Coordinate postalCodeLocation = null;
+        try
+        {
+            postalCodeLocation = locationResolver.getCordsFromPostCode(request.postalCode());
+
+
+            if (postalCodeLocation == null )
+            {
+                throw new InvalidCoordinateException("Invalid Input!");
+            }
+            indexes = accessibilityCalculator.calculateIndex(geoDeserializer.deserializeAllGeoData(),postalCodeLocation);
+            if(indexes == null){
+                throw new AccessibilityCalculationError("Error in accessibility calculation!");
+            }
+        }
+        catch (Exception e)
+        {
+            message = e.getMessage();
+            e.printStackTrace();
+        }
+        return new AccessibilityMeasure(indexes, postalCodeLocation, message);
     }
 
     public Route calculateRouteRequest(RouteRequest request)

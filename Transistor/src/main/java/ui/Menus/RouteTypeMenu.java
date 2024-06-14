@@ -1,16 +1,15 @@
 package ui.Menus;
 
 import entities.RouteType;
-import org.jxmapviewer.JXMapViewer;
-import ui.SearchPanel;
+import ui.Panels.InputRoutingSearchPanel;
 
 import javax.swing.*;
 
 public class RouteTypeMenu extends JMenu {
-    private final SearchPanel searchPanel;
-    public RouteTypeMenu(SearchPanel searchPanel){
+    private final InputRoutingSearchPanel inputRoutingSearchPanel;
+    public RouteTypeMenu(InputRoutingSearchPanel inputRoutingSearchPanel){
         super("Route Type");
-        this.searchPanel = searchPanel;
+        this.inputRoutingSearchPanel = inputRoutingSearchPanel;
         initItems();
     }
 
@@ -26,12 +25,12 @@ public class RouteTypeMenu extends JMenu {
     {
         jMenuItems[0].addActionListener(e ->
         {
-            searchPanel.setRouteType(RouteType.ACTUAL);
+            inputRoutingSearchPanel.setRouteType(RouteType.ACTUAL);
         });
 
         jMenuItems[1].addActionListener(e ->
         {
-            searchPanel.setRouteType(RouteType.AERIAL);
+            inputRoutingSearchPanel.setRouteType(RouteType.AERIAL);
         });
     }
 }
