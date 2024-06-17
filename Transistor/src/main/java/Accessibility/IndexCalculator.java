@@ -1,8 +1,13 @@
 package Accessibility;
 
-import entities.AmenityCategory;
-import entities.Coordinate;
+import calculators.PathCalculator;
+import calculators.TransitCalculator;
+import entities.*;
 import entities.geoJson.GeoData;
+import entities.geoJson.GeoDeserializer;
+import utils.PathLocations;
+
+import java.time.LocalTime;
 import java.util.*;
 
 public class IndexCalculator {
@@ -29,6 +34,7 @@ public class IndexCalculator {
         amenityWeights.put("bar", 0.4);
         amenityWeights.put("ice_cream", 0.3);
         amenityWeights.put("shop", 0.9);
+        amenityWeights.put("hunting_stand", 0.6);
         amenityWeights.put("marketplace", 0.8);
         amenityWeights.put("vending_machine", 0.3);
         amenityWeights.put("photo_booth", 0.2);
@@ -142,17 +148,28 @@ public class IndexCalculator {
             }
         }
 
-        List<Double> weights = new ArrayList<>();
-        List<Integer> times = new ArrayList<>();
+        double[] weights = new double[nearestLocations.size()];
+        int[] times = new int[nearestLocations.size()];
+        int i = 0;
         for (GeoData geoData : nearestLocations) {
             // Add weight (example: use predefined weights for different categories)
-            weights.add(amenityWeights.get(geoData.getType())); // Example weight, replace with actual logic TODO store weights and add the needed ones
-
+            // Example weight, replace with actual logic TODO store weights and add the needed ones
+            double weight = amenityWeights.containsKey(geoData.getType()) ? amenityWeights.get(geoData.getType()) : 0.0;
+            weights[i] = weight;
             int travelTime = 0; //calculateTravelTime(geoData, coordinatePostalCode); TODO make route requests to get travel times
-            times.add(travelTime);
+
+            RouteCalculationRequest request = new RouteCalculationRequest(new Coordinate(geoData.getLatitude(), geoData.getLongitude()), coordinatePostalCode, LocalTime.parse("00:00:00"), LocalTime.parse("15:28:00"), TransportType.BUS);
+            PathCalculator calc = new PathCalculator(PathLocations.GRAPH_RESOURCE_FOLDER);
+            Trip trip = calc.calculateRoute(request);
+            travelTime = (int) trip.getTravelTime();
+
+            times[i] = travelTime;
+            i++;
         }
-//        return calculator(weights.stream().mapToDouble(Double::doubleValue).toArray(), times.stream().mapToInt(Integer::intValue).toArray());
-        return 90;// todo test -> when fixed change
+        //return calculator(weights.stream().mapToDouble(Double::doubleValue).toArray(), times.stream().mapToInt(Integer::intValue).toArray());
+        //return 90;// todo test -> when fixed change
+        return (int) Math.round(calculator(weights, times));
+
     }
 
     public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
@@ -211,6 +228,20 @@ public class IndexCalculator {
             maxAccessibility += normalizedValues[i] * Math.exp(-beta * 5); // Assume minimum travel time of 5 minute
         }
         return maxAccessibility;
+    }
+
+    public static void main(String[] args) {
+        IndexCalculator indexCalculator = new IndexCalculator();
+        List<GeoData> list = new ArrayList<>();
+        GeoDeserializer geoDeserializer = new GeoDeserializer();
+        try {
+            list = geoDeserializer.deserializeAllGeoData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Coordinate code = new Coordinate(50.82092283, 5.708232104);
+        System.out.println(indexCalculator.getIndexForCategory(list, code));
     }
 }
 
