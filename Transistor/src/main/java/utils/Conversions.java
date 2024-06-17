@@ -5,10 +5,22 @@ import com.graphhopper.routing.util.VehicleEncodedValuesFactory;
 import entities.*;
 
 import java.awt.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Conversions
 {
+    public static int localTimeToInt(LocalTime localTime)
+    {
+        int hour = localTime.getHour();
+        int minute = localTime.getMinute();
+        int second = localTime.getSecond();
+
+        int totalSeconds = hour * 3600 + minute * 60 + second;
+
+        return totalSeconds;
+    }
+
     public static String formatTime(double totalHours)
     {
         int hours = (int) totalHours;
