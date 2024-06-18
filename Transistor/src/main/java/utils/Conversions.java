@@ -21,6 +21,15 @@ public class Conversions
         return totalSeconds;
     }
 
+    public static LocalTime intToLocalTime(int seconds)
+    {
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int remainingSeconds = seconds % 60;
+
+        return LocalTime.of(hours, minutes, remainingSeconds);
+    }
+
     public static String formatTime(double totalHours)
     {
         int hours = (int) totalHours;

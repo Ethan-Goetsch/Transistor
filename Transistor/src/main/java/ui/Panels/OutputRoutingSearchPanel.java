@@ -92,6 +92,7 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible {
 
     private void addTripInfoPanels(Trip trip) {
         String newString = trip.nodes().getFirst().name() .replaceAll("\\b" + "Maastricht, " + "\\b", "");
+        //addInfoPanel("Take bus from " + newString + "sid: " + trip.nodes().getFirst().id(), true);
         addInfoPanel("Take bus from " + newString, true);
         addInfoPanel("Next bus arriving at " + trip.nodes().getFirst().arrivalTime(), false);
         BusStopInfoPanel busStopInfo = new BusStopInfoPanel((int) this.getPreferredSize().getWidth(), (int) this.getPreferredSize().getHeight());
@@ -100,6 +101,7 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible {
         components.add(busStopInfo);
         addSeparator();
         addInfoPanel("Arrive at " + trip.nodes().getLast().name(), true);
+        //addInfoPanel("Arrive at " + trip.nodes().getLast().name() + "sid: " + trip.nodes().getLast().id(), true);
         addInfoPanel("Bus arrives at destination at " + trip.nodes().getLast().arrivalTime(), false);
     }
 

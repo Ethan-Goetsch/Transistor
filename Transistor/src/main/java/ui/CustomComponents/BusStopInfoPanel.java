@@ -49,6 +49,7 @@ public class BusStopInfoPanel extends JPanel implements Resizible {
                     continue;
                 } else {
                     String newString = stop.name() .replaceAll("\\b" + "Maastricht, " + "\\b", "");
+                    //JLabel timeText = new JLabel(stop.arrivalTime() + " at " + newString + "sid: " + stop.id());
                     JLabel timeText = new JLabel(stop.arrivalTime() + " at " + newString);
                     timePanel.add(timeText);
                 }
