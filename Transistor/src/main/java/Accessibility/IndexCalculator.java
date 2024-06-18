@@ -1,16 +1,20 @@
 package Accessibility;
 
-import calculators.PathCalculator;
-import calculators.TransitCalculator;
+import application.ApplicationManager;
 import entities.*;
 import entities.geoJson.GeoData;
 import entities.geoJson.GeoDeserializer;
-import utils.PathLocations;
-
+import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 
 public class IndexCalculator {
+
+    private ApplicationManager manager;
+
+    public void setManager(ApplicationManager manager){
+        this.manager = manager;
+    }
 
     private static final Map<String, Double> amenityWeights = new HashMap<>();
     static {
@@ -76,6 +80,19 @@ public class IndexCalculator {
         amenityWeights.put("parking", 0.7);
         amenityWeights.put("parking_space", 0.6);
         amenityWeights.put("charging_station", 0.8);
+        amenityWeights.put("apartment", 0.0);
+        amenityWeights.put("artwork", 0.0);
+        amenityWeights.put("attraction", 0.0);
+        amenityWeights.put("caravan_site", 0.0);
+        amenityWeights.put("gallery", 0.0);
+        amenityWeights.put("guest_house", 0.0);
+        amenityWeights.put("hostel", 0.0);
+        amenityWeights.put("hotel", 0.0);
+        amenityWeights.put("information", 0.0);
+        amenityWeights.put("museum", 0.0);
+        amenityWeights.put("viewpoint", 0.0);
+        amenityWeights.put("zoo", 0.0); //todo change values
+
     }
     public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode) {
         Map<AmenityCategory, List<GeoData>> categorizedAmenities = categorizeAmenities(list);
@@ -104,10 +121,10 @@ public class IndexCalculator {
 
         Set<String> healthcare = new HashSet<>(Arrays.asList("nursing_home", "hospital", "clinic", "doctors", "dentist", "veterinary", "pharmacy"));
         Set<String> entertainment = new HashSet<>(Arrays.asList("theatre", "arts_centre", "Cinema", "Nightclub", "casino", "hunting_stand", "restaurant", "cafe", "food_court", "fast_food", "pub", "bar", "ice_cream"));
-        Set<String> shopping = new HashSet<>(Arrays.asList("shop", "marketplace", "vending_machine", "photo_booth", "luggage_locker"));
+        Set<String> shopping = new HashSet<>(Arrays.asList("shop", "marketplace", "vending_machine", "photo_booth", "luggage_locker"));//3,4
         Set<String> education = new HashSet<>(Arrays.asList("library","public_bookcase","school", "college","university","prep_school","childcare"));
-        Set<String> tourism = new HashSet<>(Arrays.asList("tourism"));
-        Set<String> publicServices = new HashSet<>(Arrays.asList("police","courthouse","townhall","fire_station","post_office","post_box","atm","bank","bureau_de_change","place_of_worship","community_centre","social_facility","shelter","information","clock","binoculars","sanitary_dump_station","recycling","waste_basket"));
+        Set<String> tourism = new HashSet<>(Arrays.asList("apartment", "artwork", "attraction", "caravan_site", "gallery","guest_house", "hostel", "hotel", "information", "museum", "viewpoint", "zoo"));
+        Set<String> publicServices = new HashSet<>(Arrays.asList("police","courthouse","townhall","fire_station","post_office","post_box","atm","bank","bureau_de_change","place_of_worship","community_centre","social_facility","shelter","information","clock","binoculars","sanitary_dump_station","recycling","waste_basket"));//8
         Set<String> transportation = new HashSet<>(Arrays.asList("fuel", "car_wash", "taxi","bicycle_parking","moped_parking","car_rental","parking_entrance","parking","parking_space","charging_station"));
 
         for (GeoData geoData : list) {
@@ -152,24 +169,25 @@ public class IndexCalculator {
         int[] times = new int[nearestLocations.size()];
         int i = 0;
         for (GeoData geoData : nearestLocations) {
-            // Add weight (example: use predefined weights for different categories)
-            // Example weight, replace with actual logic TODO store weights and add the needed ones
-            double weight = amenityWeights.containsKey(geoData.getType()) ? amenityWeights.get(geoData.getType()) : 0.0;
+            double weight = amenityWeights.getOrDefault(geoData.getType(), 0.0);
             weights[i] = weight;
-            int travelTime = 0; //calculateTravelTime(geoData, coordinatePostalCode); TODO make route requests to get travel times
-
-            RouteCalculationRequest request = new RouteCalculationRequest(new Coordinate(geoData.getLatitude(), geoData.getLongitude()), coordinatePostalCode, LocalTime.parse("00:00:00"), LocalTime.parse("15:28:00"), TransportType.BUS);
-            PathCalculator calc = new PathCalculator(PathLocations.GRAPH_RESOURCE_FOLDER);
-            Trip trip = calc.calculateRoute(request);
-            travelTime = (int) trip.getTravelTime();
-
+            int travelTime = 15;  // Default travel time in minutes
+            Journey journeyToAmenity = manager.getJourney(coordinatePostalCode, new Coordinate(geoData.getLatitude(), geoData.getLongitude()), new RouteRequest("", "", TransportType.BUS, RouteType.ACTUAL));
+            if (journeyToAmenity != null) {
+                try {
+                    LocalTime departureTime = journeyToAmenity.getTrips().getFirst().getDepartureTime();
+                    LocalTime arrivalTime = journeyToAmenity.getTrips().getLast().getArrivalTime();
+                    // Calculate travel time in minutes
+                    travelTime = (int) Duration.between(departureTime, arrivalTime).toMinutes();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
             times[i] = travelTime;
             i++;
         }
-        //return calculator(weights.stream().mapToDouble(Double::doubleValue).toArray(), times.stream().mapToInt(Integer::intValue).toArray());
-        //return 90;// todo test -> when fixed change
-        return (int) Math.round(calculator(weights, times));
 
+        return Math.round(calculator(weights, times));
     }
 
     public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
@@ -184,22 +202,20 @@ public class IndexCalculator {
 
         return R * c;
     }
-    private static double calculator(double[] weights, int[]times){
+    private static double calculator(double[] weights, int[] times) {
         final double beta = 0.1;
         double[] impedanceValues = calculateImpedanceValue(times, beta);
 
-        //Normalize the weights
         double accessibility = calculateAccessibility(weights, impedanceValues);
 
-        //Find the maximum accessibility for normalization
         double maxAccessibility = calculateMaxAccessibility(weights, beta);
-        //Normalize the accessibility
-        double normalizedAccessibility = normalizeAccessibility(accessibility, maxAccessibility);
-        return normalizedAccessibility;
+
+        return normalizeAccessibility(accessibility, maxAccessibility);
     }
 
     private static double normalizeAccessibility(double accessibility, double maxAccessibility) {
-        return (accessibility / maxAccessibility) * 100;
+        double normalizedAccessibility = (accessibility / maxAccessibility) * 100;
+        return Math.max(0, normalizedAccessibility);
     }
 
     private static double calculateAccessibility(double[] normalizedValues, double[] impedanceValues) {
@@ -211,24 +227,21 @@ public class IndexCalculator {
     }
 
     private static double[] calculateImpedanceValue(int[] times, double beta) {
-        double[] impendanceValues = new double[times.length];
-        for (int i = 0; i < times.length ; i++) {
-            impendanceValues[i] = Math.exp(-beta*times[i]);
+        double[] impedanceValues = new double[times.length];
+        for (int i = 0; i < times.length; i++) {
+            impedanceValues[i] = Math.exp(-beta * times[i]);
         }
-        return impendanceValues;
+        return impedanceValues;
     }
-
-    /**
-     * The maximum accessibility value serves as a reference point for normalizing the accessibility value.
-     * It represents the upper limit of accessibility based on the given weights and the best-case travel time scenario.*/
 
     private static double calculateMaxAccessibility(double[] normalizedValues, double beta) {
         double maxAccessibility = 0;
         for (int i = 0; i < normalizedValues.length; i++) {
-            maxAccessibility += normalizedValues[i] * Math.exp(-beta * 5); // Assume minimum travel time of 5 minute
+            maxAccessibility += normalizedValues[i] * Math.exp(-beta * 1); // Assume minimum travel time of 1 minutes
         }
         return maxAccessibility;
     }
+
 
     public static void main(String[] args) {
         IndexCalculator indexCalculator = new IndexCalculator();
@@ -244,4 +257,3 @@ public class IndexCalculator {
         System.out.println(indexCalculator.getIndexForCategory(list, code));
     }
 }
-

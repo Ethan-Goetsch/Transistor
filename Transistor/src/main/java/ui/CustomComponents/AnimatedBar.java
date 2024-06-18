@@ -20,21 +20,28 @@ public class AnimatedBar extends JPanel implements Resizible {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if(targetValue <=25){
+
+        int padding = 5;
+        int barHeight = 10;
+
+        int availableWidth = getWidth() - 2 * padding;
+        int barWidth = (int) (availableWidth * (currentValue / 100.0));
+
+        // Color selection based on targetValue
+        if(targetValue <= 25){
             g.setColor(Color.RED);
         }else if(targetValue <= 50){
-            g.setColor(Color.yellow);
+            g.setColor(Color.YELLOW);
         }else{
             g.setColor(Color.GREEN);
         }
 
-        int barWidth = (int) (getWidth() * (currentValue / 100.0));
-        int barHeight = 10;
+        // Draw the bar
+        g.fillRoundRect(padding, padding, barWidth, barHeight, barHeight, barHeight);
 
-        g.fillRoundRect(5, 5, barWidth, barHeight, barHeight, barHeight);
-
+        // Draw the border
         g.setColor(Color.BLACK);
-        g.drawRoundRect(5, 5, getWidth() - 10, barHeight, barHeight, barHeight);
+        g.drawRoundRect(padding, padding, availableWidth, barHeight, barHeight, barHeight);
     }
 
     private void setupTimer() {
@@ -72,6 +79,7 @@ public class AnimatedBar extends JPanel implements Resizible {
     @Override
     public void changeSize(int mainWidth, int mainHeight) {
         setPreferredSize(new Dimension((int)(mainWidth / 2.5), 20));
+        revalidate();
+        repaint();
     }
-
 }

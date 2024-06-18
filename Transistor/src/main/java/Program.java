@@ -32,6 +32,7 @@ public class Program
         GeoDeserializer geoDeserializer = new GeoDeserializer();
 
         ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, routeCalculators, accessibilityCalculator, geoDeserializer);
+        accessibilityCalculator.setManager(manager);
         UIController controller = new UIController(manager);
     }
 

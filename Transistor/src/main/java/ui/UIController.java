@@ -6,7 +6,6 @@ import entities.AccessibilityRequest;
 import entities.Request;
 import entities.RouteRequest;
 import java.util.ArrayList;
-
 public class UIController
 {
     private final MainWindow window;
@@ -27,7 +26,7 @@ public class UIController
             var route = manager.calculateRouteRequest((RouteRequest) request);
             if (!route.responseMessage().isEmpty())
             {
-                JOptionPane.showMessageDialog(new JFrame(), route.responseMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+                showInvalidInputMessage(route.responseMessage());
                 return;
             }
 
@@ -38,10 +37,10 @@ public class UIController
 
         }else if(request instanceof AccessibilityRequest){
 
-            var accessibilityMeasure = manager.getAccessibilityMeasure((AccessibilityRequest) request);
-            if (accessibilityMeasure == null)
+            var accessibilityMeasure = manager.calculateAccessibilityMeasure((AccessibilityRequest) request);
+            if (!accessibilityMeasure.message().isEmpty())
             {
-                JOptionPane.showMessageDialog(new JFrame(), accessibilityMeasure.message(), "Error Message", JOptionPane.ERROR_MESSAGE);
+                showInvalidInputMessage(accessibilityMeasure.message());
                 return;
             }
             window.getOutputAccessibilityPanel().updateResults(accessibilityMeasure.indexes());
@@ -49,5 +48,10 @@ public class UIController
             map.updateResults(accessibilityMeasure.postalCodeLocation(), accessibilityMeasure.postalCodeLocation(), new ArrayList<>(), -1);
         }
 
+    }
+
+    private static void showInvalidInputMessage(String accessibilityMeasure) {
+        JOptionPane.showMessageDialog(new JFrame(), accessibilityMeasure, "Error Message", JOptionPane.ERROR_MESSAGE);
+        return;
     }
 }

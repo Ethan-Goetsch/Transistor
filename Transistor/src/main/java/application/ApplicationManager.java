@@ -12,8 +12,6 @@ import entities.geoJson.GeoDeserializer;
 import entities.transit.TransitStop;
 import resolvers.LocationResolver;
 
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationManager {
@@ -31,10 +29,16 @@ public class ApplicationManager {
         this.geoDeserializer = geoDeserializer;
     }
 
-    public AccessibilityMeasure getAccessibilityMeasure(AccessibilityRequest request){
+    public AccessibilityMeasure calculateAccessibilityMeasure(AccessibilityRequest request){
         String message = "";
         List<Double> indexes = null;
         Coordinate postalCodeLocation = null;
+
+        if (!requestValidator.isValidRequest(request))
+        {
+            return new AccessibilityMeasure(null,null,"Invalid Input");
+        }
+
         try
         {
             postalCodeLocation = locationResolver.getCordsFromPostCode(request.postalCode());
@@ -74,9 +78,7 @@ public class ApplicationManager {
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
-            var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 10));
-            var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
-            journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+           journey = getJourney(departureCoordinates, arrivalCoordinates, request);
 
             if (journey == null || journey.getTrips().isEmpty())
             {
@@ -137,5 +139,13 @@ public class ApplicationManager {
         }
 
         return earliestJourney;
+    }
+
+    public Journey getJourney(Coordinate departureCoordinates, Coordinate arrivalCoordinates, RouteRequest request){
+        Journey journey = null;
+        var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 10));
+        var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
+        journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+        return journey;
     }
 }
