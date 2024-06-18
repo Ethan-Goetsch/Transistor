@@ -14,5 +14,6 @@ public enum AmenityCategory {
     {
      this.name = name;
     }
-    public String getSpeedInKilometersPerSecond() { return name; }
+
+    public String getName() { return name; }
 }

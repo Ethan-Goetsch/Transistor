@@ -45,13 +45,13 @@ public class OutputAccessibilityPanel extends JPanel {
         components.add(bar7);
 
         // Create the labels for bar names
-        JLabel bar1Name = new JLabel(AmenityCategory.HEALTHCARE.name());
-        JLabel bar2Name = new JLabel(AmenityCategory.EDUCATION.name());
-        JLabel bar3Name = new JLabel(AmenityCategory.SHOP.name());
-        JLabel bar4Name = new JLabel(AmenityCategory.ENTERTAINMENT.name());
-        JLabel bar5Name = new JLabel(AmenityCategory.TOURISM.name());
-        JLabel bar6Name = new JLabel(AmenityCategory.PUBLIC_SERVICES.name());
-        JLabel bar7Name = new JLabel(AmenityCategory.TRANSPORTATION.name());
+        JLabel bar1Name = new JLabel(AmenityCategory.HEALTHCARE.getName());
+        JLabel bar2Name = new JLabel(AmenityCategory.EDUCATION.getName());
+        JLabel bar3Name = new JLabel(AmenityCategory.SHOP.getName());
+        JLabel bar4Name = new JLabel(AmenityCategory.ENTERTAINMENT.getName());
+        JLabel bar5Name = new JLabel(AmenityCategory.TOURISM.getName());
+        JLabel bar6Name = new JLabel(AmenityCategory.PUBLIC_SERVICES.getName());
+        JLabel bar7Name = new JLabel(AmenityCategory.TRANSPORTATION.getName());
 
         // Create the labels for indexes
         indexes[0] = new JLabel();
