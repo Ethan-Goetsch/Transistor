@@ -6,7 +6,6 @@ import entities.AccessibilityRequest;
 import entities.Request;
 import entities.RouteRequest;
 import java.util.ArrayList;
-
 public class UIController
 {
     private final MainWindow window;
@@ -38,7 +37,7 @@ public class UIController
 
         }else if(request instanceof AccessibilityRequest){
 
-            var accessibilityMeasure = manager.getAccessibilityMeasure((AccessibilityRequest) request);
+            var accessibilityMeasure = manager.calculateAccessibilityMeasure((AccessibilityRequest) request);
             if (!accessibilityMeasure.message().isEmpty())
             {
                 showInvalidInputMessage(accessibilityMeasure.message());

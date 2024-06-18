@@ -12,8 +12,6 @@ import entities.geoJson.GeoDeserializer;
 import entities.transit.TransitStop;
 import resolvers.LocationResolver;
 
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationManager {
@@ -31,7 +29,7 @@ public class ApplicationManager {
         this.geoDeserializer = geoDeserializer;
     }
 
-    public AccessibilityMeasure getAccessibilityMeasure(AccessibilityRequest request){
+    public AccessibilityMeasure calculateAccessibilityMeasure(AccessibilityRequest request){
         String message = "";
         List<Double> indexes = null;
         Coordinate postalCodeLocation = null;

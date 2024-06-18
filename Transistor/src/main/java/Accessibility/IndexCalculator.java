@@ -80,6 +80,19 @@ public class IndexCalculator {
         amenityWeights.put("parking", 0.7);
         amenityWeights.put("parking_space", 0.6);
         amenityWeights.put("charging_station", 0.8);
+        amenityWeights.put("apartment", 0.0);
+        amenityWeights.put("artwork", 0.0);
+        amenityWeights.put("attraction", 0.0);
+        amenityWeights.put("caravan_site", 0.0);
+        amenityWeights.put("gallery", 0.0);
+        amenityWeights.put("guest_house", 0.0);
+        amenityWeights.put("hostel", 0.0);
+        amenityWeights.put("hotel", 0.0);
+        amenityWeights.put("information", 0.0);
+        amenityWeights.put("museum", 0.0);
+        amenityWeights.put("viewpoint", 0.0);
+        amenityWeights.put("zoo", 0.0); //todo change values
+
     }
     public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode) {
         Map<AmenityCategory, List<GeoData>> categorizedAmenities = categorizeAmenities(list);
@@ -110,7 +123,7 @@ public class IndexCalculator {
         Set<String> entertainment = new HashSet<>(Arrays.asList("theatre", "arts_centre", "Cinema", "Nightclub", "casino", "hunting_stand", "restaurant", "cafe", "food_court", "fast_food", "pub", "bar", "ice_cream"));
         Set<String> shopping = new HashSet<>(Arrays.asList("shop", "marketplace", "vending_machine", "photo_booth", "luggage_locker"));//3,4
         Set<String> education = new HashSet<>(Arrays.asList("library","public_bookcase","school", "college","university","prep_school","childcare"));
-        Set<String> tourism = new HashSet<>(Arrays.asList("tourism"));
+        Set<String> tourism = new HashSet<>(Arrays.asList("apartment", "artwork", "attraction", "caravan_site", "gallery","guest_house", "hostel", "hotel", "information", "museum", "viewpoint", "zoo"));
         Set<String> publicServices = new HashSet<>(Arrays.asList("police","courthouse","townhall","fire_station","post_office","post_box","atm","bank","bureau_de_change","place_of_worship","community_centre","social_facility","shelter","information","clock","binoculars","sanitary_dump_station","recycling","waste_basket"));//8
         Set<String> transportation = new HashSet<>(Arrays.asList("fuel", "car_wash", "taxi","bicycle_parking","moped_parking","car_rental","parking_entrance","parking","parking_space","charging_station"));
 
@@ -202,8 +215,6 @@ public class IndexCalculator {
 
     private static double normalizeAccessibility(double accessibility, double maxAccessibility) {
         double normalizedAccessibility = (accessibility / maxAccessibility) * 100;
-        // Ensure the normalized value is within [0, 100]
-//        return Math.min(100, Math.max(0, normalizedAccessibility));
         return Math.max(0, normalizedAccessibility);
     }
 
