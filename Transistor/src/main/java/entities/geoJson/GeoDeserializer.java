@@ -43,7 +43,7 @@ public class GeoDeserializer {
             Map<String, Object> geometry = (Map<String, Object>) feature.get("geometry");
             List<Double> coordinates = (List<Double>) geometry.get("coordinates");
             String exactType = (String) ((Map<String, Object>) feature.get("properties")).get(type);
-            if(!Arrays.asList(allowedShopTypes).contains(exactType) == false)
+            if(Arrays.asList(allowedShopTypes).contains(exactType) == false)
                 continue;
 
             // in geojson files the coordinates start with longitude and then latitude
