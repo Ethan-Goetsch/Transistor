@@ -43,14 +43,14 @@ public class GeoDeserializer {
             Map<String, Object> geometry = (Map<String, Object>) feature.get("geometry");
             List<Double> coordinates = (List<Double>) geometry.get("coordinates");
             String exactType = (String) ((Map<String, Object>) feature.get("properties")).get(type);
-            if(Arrays.asList(allowedShopTypes).contains(exactType) == false)
+
+            if("shop".equals(type) && Arrays.asList(allowedShopTypes).contains(exactType) == false)
                 continue;
 
             // in geojson files the coordinates start with longitude and then latitude
             GeoData geoData = new GeoData(exactType, coordinates.get(1), coordinates.get(0));
             result.add(geoData);
         }
-
         return result;
     }
 
@@ -60,12 +60,5 @@ public class GeoDeserializer {
         allGeoData.addAll(deserializeGeoData("Transistor/src/main/resources/geoJson/shop.geojson", "shop"));
         allGeoData.addAll(deserializeGeoData("Transistor/src/main/resources/geoJson/tourism.geojson", "tourism"));
         return allGeoData;
-    }
-
-public static void main(String[] args) throws IOException {
-        List<GeoData> allGeoData = deserializeAllGeoData();
-        for (GeoData geoData : allGeoData) {
-            System.out.println(geoData.getType() + " " + geoData.getLatitude() + " " + geoData.getLongitude());
-        }
     }
 }
