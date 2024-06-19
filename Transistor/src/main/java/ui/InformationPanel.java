@@ -46,8 +46,11 @@ public class InformationPanel extends JPanel {
     public void showTripPanel() {
         cardLayout.show(this, "TripPanel");
     }
-
     public void showAccessibilityPanel() {
         cardLayout.show(this, "AccessibilityPanel");
+    }
+
+    public AccessibilityPanel getAccessibilityPanel() {
+        return accessibilityPanel;
     }
 }

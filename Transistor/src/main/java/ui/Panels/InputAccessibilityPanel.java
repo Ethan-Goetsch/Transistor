@@ -10,6 +10,8 @@ import java.awt.*;
 
 public class InputAccessibilityPanel extends JPanel {
     private final IAction<AccessibilityRequest> onCalculateClicked;
+
+    private boolean disabledPersonsSetting;
     private JTextField postalCodeField;
     private int mainWidth;
     private int mainHeight;
@@ -20,6 +22,7 @@ public class InputAccessibilityPanel extends JPanel {
         this.setBackground(Color.white);
         this.setBorder(new EmptyBorder(25, 0, 0, 20)); // top, left, bottom, right padding
         this.onCalculateClicked = onCalculateCLicked;
+        this.disabledPersonsSetting = false;
         changeSize(mainWidth, mainHeight);
     }
 
@@ -36,7 +39,7 @@ public class InputAccessibilityPanel extends JPanel {
         postalCodeField = new InputTextField("Choose post code...");
 
         JButton calculateButton = new CalculationButton("Find Accessibility");
-        calculateButton.addActionListener(e -> onCalculateClicked.execute(new AccessibilityRequest(postalCodeField.getText())));
+        calculateButton.addActionListener(e -> onCalculateClicked.execute(new AccessibilityRequest(postalCodeField.getText(), disabledPersonsSetting)));
 
 
         GroupLayout layout = new GroupLayout(this);
@@ -58,5 +61,9 @@ public class InputAccessibilityPanel extends JPanel {
                                 .addComponent(calculateButton, GroupLayout.PREFERRED_SIZE, mainWidth/33, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
+    }
+
+    public void changeDisabledPersonSetting(boolean value){
+        disabledPersonsSetting = value;
     }
 }

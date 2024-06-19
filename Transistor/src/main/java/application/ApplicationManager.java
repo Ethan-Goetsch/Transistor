@@ -48,7 +48,7 @@ public class ApplicationManager {
             {
                 throw new InvalidCoordinateException("Invalid Input!");
             }
-            indexes = accessibilityCalculator.calculateIndex(geoDeserializer.deserializeAllGeoData(),postalCodeLocation);
+            indexes = accessibilityCalculator.calculateIndex(geoDeserializer.deserializeAllGeoData(),postalCodeLocation, request.disabledPersonSetting());
             if(indexes == null){
                 throw new AccessibilityCalculationError("Error in accessibility calculation!");
             }

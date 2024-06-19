@@ -1,6 +1,6 @@
 package entities;
 
-public record AccessibilityRequest(String postalCode) implements Request
+public record AccessibilityRequest(String postalCode, boolean disabledPersonSetting) implements Request
 {
 
 }

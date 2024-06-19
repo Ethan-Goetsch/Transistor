@@ -43,4 +43,5 @@ public class AccessibilityPanel extends JPanel {
     public OutputAccessibilityPanel getOutputPanel(){
         return outputPanel;
     }
+    public InputAccessibilityPanel getInputPanel(){return inputPanel;}
 }

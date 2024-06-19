@@ -11,90 +11,117 @@ import java.util.*;
 public class IndexCalculator {
 
     private ApplicationManager manager;
+    private boolean disabledPersonSetting;
+
+    public IndexCalculator(){
+        disabledPersonSetting = false;
+    }
 
     public void setManager(ApplicationManager manager){
         this.manager = manager;
     }
 
-    private static final Map<String, Double> amenityWeights = new HashMap<>();
+    private static final Map<String, Double[]> amenityWeights = new HashMap<>();
     static {
-        amenityWeights.put("hospital", 1.0);
-        amenityWeights.put("clinic", 0.8);
-        amenityWeights.put("nursing_home", 0.7);
-        amenityWeights.put("doctors", 0.6);
-        amenityWeights.put("dentist", 0.5);
-        amenityWeights.put("veterinary", 0.4);
-        amenityWeights.put("pharmacy", 0.9);
-        amenityWeights.put("theatre", 0.8);
-        amenityWeights.put("arts_centre", 0.7);
-        amenityWeights.put("cinema", 0.9);
-        amenityWeights.put("nightclub", 0.6);
-        amenityWeights.put("casino", 0.5);
-        amenityWeights.put("restaurant", 0.9);
-        amenityWeights.put("cafe", 0.8);
-        amenityWeights.put("food_court", 0.7);
-        amenityWeights.put("fast_food", 0.6);
-        amenityWeights.put("pub", 0.5);
-        amenityWeights.put("bar", 0.4);
-        amenityWeights.put("ice_cream", 0.3);
-        amenityWeights.put("shop", 0.9);
-        amenityWeights.put("hunting_stand", 0.6);
-        amenityWeights.put("marketplace", 0.8);
-        amenityWeights.put("vending_machine", 0.3);
-        amenityWeights.put("photo_booth", 0.2);
-        amenityWeights.put("luggage_locker", 0.4);
-        amenityWeights.put("library", 0.9);
-        amenityWeights.put("public_bookcase", 0.3);
-        amenityWeights.put("school", 1.0);
-        amenityWeights.put("college", 0.9);
-        amenityWeights.put("university", 1.0);
-        amenityWeights.put("prep_school", 0.8);
-        amenityWeights.put("childcare", 0.7);
-        amenityWeights.put("tourism", 0.6);
-        amenityWeights.put("police", 1.0);
-        amenityWeights.put("courthouse", 0.8);
-        amenityWeights.put("townhall", 0.7);
-        amenityWeights.put("fire_station", 0.9);
-        amenityWeights.put("post_office", 0.8);
-        amenityWeights.put("post_box", 0.4);
-        amenityWeights.put("atm", 0.7);
-        amenityWeights.put("bank", 0.9);
-        amenityWeights.put("bureau_de_change", 0.6);
-        amenityWeights.put("place_of_worship", 0.5);
-        amenityWeights.put("community_centre", 0.6);
-        amenityWeights.put("social_facility", 0.7);
-        amenityWeights.put("shelter", 0.5);
-        amenityWeights.put("information", 0.4);
-        amenityWeights.put("clock", 0.3);
-        amenityWeights.put("binoculars", 0.2);
-        amenityWeights.put("sanitary_dump_station", 0.1);
-        amenityWeights.put("recycling", 0.4);
-        amenityWeights.put("waste_basket", 0.2);
-        amenityWeights.put("fuel", 0.9);
-        amenityWeights.put("car_wash", 0.6);
-        amenityWeights.put("taxi", 0.7);
-        amenityWeights.put("bicycle_parking", 0.5);
-        amenityWeights.put("moped_parking", 0.4);
-        amenityWeights.put("car_rental", 0.8);
-        amenityWeights.put("parking_entrance", 0.5);
-        amenityWeights.put("parking", 0.7);
-        amenityWeights.put("parking_space", 0.6);
-        amenityWeights.put("charging_station", 0.8);
-        amenityWeights.put("apartment", 0.0);
-        amenityWeights.put("artwork", 0.0);
-        amenityWeights.put("attraction", 0.0);
-        amenityWeights.put("caravan_site", 0.0);
-        amenityWeights.put("gallery", 0.0);
-        amenityWeights.put("guest_house", 0.0);
-        amenityWeights.put("hostel", 0.0);
-        amenityWeights.put("hotel", 0.0);
-        amenityWeights.put("information", 0.0);
-        amenityWeights.put("museum", 0.0);
-        amenityWeights.put("viewpoint", 0.0);
-        amenityWeights.put("zoo", 0.0); //todo change values
-
+        amenityWeights.put("hospital", new Double[]{1.0, 1.0});
+        amenityWeights.put("clinic", new Double[]{0.8, 0.8});
+        amenityWeights.put("nursing_home", new Double[]{0.7, 0.7});
+        amenityWeights.put("doctors", new Double[]{0.6, 0.6});
+        amenityWeights.put("dentist", new Double[]{0.5, 0.5});
+        amenityWeights.put("veterinary", new Double[]{0.4, 0.4});
+        amenityWeights.put("pharmacy", new Double[]{0.9, 0.9});
+        amenityWeights.put("theatre", new Double[]{0.8, 0.8});
+        amenityWeights.put("arts_centre", new Double[]{0.7, 0.7});
+        amenityWeights.put("cinema", new Double[]{0.9, 0.9});
+        amenityWeights.put("nightclub", new Double[]{0.6, 0.6});
+        amenityWeights.put("casino", new Double[]{0.5, 0.5});
+        amenityWeights.put("restaurant", new Double[]{0.9, 0.9});
+        amenityWeights.put("cafe", new Double[]{0.8, 0.8});
+        amenityWeights.put("food_court", new Double[]{0.7, 0.7});
+        amenityWeights.put("fast_food", new Double[]{0.6, 0.6});
+        amenityWeights.put("pub", new Double[]{0.5, 0.5});
+        amenityWeights.put("bar", new Double[]{0.4, 0.4});
+        amenityWeights.put("ice_cream", new Double[]{0.3, 0.3});
+        amenityWeights.put("shop", new Double[]{0.9, 0.9});
+        amenityWeights.put("hunting_stand", new Double[]{0.6, 0.6});
+        amenityWeights.put("marketplace", new Double[]{0.8, 0.8});
+        amenityWeights.put("vending_machine", new Double[]{0.3, 0.3});
+        amenityWeights.put("photo_booth", new Double[]{0.2, 0.2});
+        amenityWeights.put("luggage_locker", new Double[]{0.4, 0.4});
+        amenityWeights.put("library", new Double[]{0.9, 0.9});
+        amenityWeights.put("public_bookcase", new Double[]{0.3, 0.3});
+        amenityWeights.put("school", new Double[]{1.0, 1.0});
+        amenityWeights.put("college", new Double[]{0.9, 0.9});
+        amenityWeights.put("university", new Double[]{1.0, 1.0});
+        amenityWeights.put("prep_school", new Double[]{0.8, 0.8});
+        amenityWeights.put("childcare", new Double[]{0.7, 0.7});
+        amenityWeights.put("tourism", new Double[]{0.6, 0.6});
+        amenityWeights.put("police", new Double[]{1.0, 1.0});
+        amenityWeights.put("courthouse", new Double[]{0.8, 0.8});
+        amenityWeights.put("townhall", new Double[]{0.7, 0.7});
+        amenityWeights.put("fire_station", new Double[]{0.9, 0.9});
+        amenityWeights.put("post_office", new Double[]{0.8, 0.8});
+        amenityWeights.put("post_box", new Double[]{0.4, 0.4});
+        amenityWeights.put("atm", new Double[]{0.7, 0.7});
+        amenityWeights.put("bank", new Double[]{0.9, 0.9});
+        amenityWeights.put("bureau_de_change", new Double[]{0.6, 0.6});
+        amenityWeights.put("place_of_worship", new Double[]{0.5, 0.5});
+        amenityWeights.put("community_centre", new Double[]{0.6, 0.6});
+        amenityWeights.put("social_facility", new Double[]{0.7, 0.7});
+        amenityWeights.put("shelter", new Double[]{0.5, 0.5});
+        amenityWeights.put("information", new Double[]{0.4, 0.4});
+        amenityWeights.put("clock", new Double[]{0.3, 0.3});
+        amenityWeights.put("binoculars", new Double[]{0.2, 0.2});
+        amenityWeights.put("sanitary_dump_station", new Double[]{0.1, 0.1});
+        amenityWeights.put("recycling", new Double[]{0.4, 0.4});
+        amenityWeights.put("waste_basket", new Double[]{0.2, 0.2});
+        amenityWeights.put("fuel", new Double[]{0.9, 0.9});
+        amenityWeights.put("car_wash", new Double[]{0.6, 0.6});
+        amenityWeights.put("taxi", new Double[]{0.7, 0.7});
+        amenityWeights.put("bicycle_parking", new Double[]{0.5, 0.5});
+        amenityWeights.put("moped_parking", new Double[]{0.4, 0.4});
+        amenityWeights.put("car_rental", new Double[]{0.8, 0.8});
+        amenityWeights.put("parking_entrance", new Double[]{0.5, 0.5});
+        amenityWeights.put("parking", new Double[]{0.7, 0.7});
+        amenityWeights.put("parking_space", new Double[]{0.6, 0.6});
+        amenityWeights.put("charging_station", new Double[]{0.8, 0.8});
+        amenityWeights.put("apartment", new Double[]{0.1, 0.1});
+        amenityWeights.put("artwork", new Double[]{0.1, 0.1});
+        amenityWeights.put("attraction", new Double[]{0.1, 0.1});
+        amenityWeights.put("caravan_site", new Double[]{0.1, 0.1});
+        amenityWeights.put("gallery", new Double[]{0.1, 0.1});
+        amenityWeights.put("guest_house", new Double[]{0.1, 0.1});
+        amenityWeights.put("hostel", new Double[]{0.1, 0.1});
+        amenityWeights.put("hotel", new Double[]{0.1, 0.1});
+        amenityWeights.put("information", new Double[]{0.1, 0.1});
+        amenityWeights.put("museum", new Double[]{0.1, 0.1});
+        amenityWeights.put("viewpoint", new Double[]{0.1, 0.1});
+        amenityWeights.put("zoo", new Double[]{0.1, 0.1});
+        amenityWeights.put("supermarket", new Double[]{0.1, 0.1});
+        amenityWeights.put("greengrocer", new Double[]{0.1, 0.1});
+        amenityWeights.put("bakery", new Double[]{0.1, 0.1});
+        amenityWeights.put("butcher", new Double[]{0.1, 0.1});
+        amenityWeights.put("medical_supply", new Double[]{0.1, 0.1});
+        amenityWeights.put("convenience", new Double[]{0.1, 0.1});
+        amenityWeights.put("hairdresser", new Double[]{0.1, 0.1});
+        amenityWeights.put("nutrition_supplements", new Double[]{0.1, 0.1});
+        amenityWeights.put("optician", new Double[]{0.1, 0.0});
+        amenityWeights.put("books", new Double[]{0.1, 0.0});
+        amenityWeights.put("car_parts", new Double[]{0.1, 0.0});
+        amenityWeights.put("car", new Double[]{0.1, 0.0});
+        amenityWeights.put("sports", new Double[]{0.1, 0.0});
+        amenityWeights.put("massage", new Double[]{0.1, 0.0});
+        amenityWeights.put("storage_rental", new Double[]{0.1, 0.0});
+        amenityWeights.put("hearing_aids", new Double[]{0.1, 0.0});
+        amenityWeights.put("outdoor", new Double[]{0.1, 0.0});
+        amenityWeights.put("soft_drugs", new Double[]{0.1, 0.0});
+        amenityWeights.put("dry_cleaning", new Double[]{0.1, 0.0});
+        amenityWeights.put("market", new Double[]{0.1, 0.0});
     }
-    public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode) {
+
+
+    public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode, boolean disabledPersonSetting) {
+        this.disabledPersonSetting = disabledPersonSetting;
         Map<AmenityCategory, List<GeoData>> categorizedAmenities = categorizeAmenities(list);
 
         List<Double> indexes = new ArrayList<>();
@@ -120,12 +147,23 @@ public class IndexCalculator {
         categorizedAmenities.put(AmenityCategory.TRANSPORTATION, new ArrayList<>());
 
         Set<String> healthcare = new HashSet<>(Arrays.asList("nursing_home", "hospital", "clinic", "doctors", "dentist", "veterinary", "pharmacy"));
-        Set<String> entertainment = new HashSet<>(Arrays.asList("theatre", "arts_centre", "Cinema", "Nightclub", "casino", "hunting_stand", "restaurant", "cafe", "food_court", "fast_food", "pub", "bar", "ice_cream"));
-        Set<String> shopping = new HashSet<>(Arrays.asList("shop", "marketplace", "vending_machine", "photo_booth", "luggage_locker"));//3,4
+        Set<String> entertainment = new HashSet<>(Arrays.asList("theatre", "arts_centre", "Cinema", "Nightclub", "casino", "hunting_stand", "restaurant",
+                "cafe", "food_court", "fast_food", "pub", "bar", "ice_cream"));
+        Set<String> shopping = new HashSet<>(Arrays.asList(
+                "marketplace", "vending_machine", "photo_booth", "luggage_locker",
+                "supermarket", "greengrocer", "bakery", "butcher", "medical_supply", "convenience",
+                "hairdresser", "nutrition_supplements", "optician", "books", "car_parts", "car",
+                "sports", "massage",
+                "storage_rental", "hearing_aids", "outdoor", "soft_drugs", "dry_cleaning", "market"
+        ));//3,4
         Set<String> education = new HashSet<>(Arrays.asList("library","public_bookcase","school", "college","university","prep_school","childcare"));
-        Set<String> tourism = new HashSet<>(Arrays.asList("apartment", "artwork", "attraction", "caravan_site", "gallery","guest_house", "hostel", "hotel", "information", "museum", "viewpoint", "zoo"));
-        Set<String> publicServices = new HashSet<>(Arrays.asList("police","courthouse","townhall","fire_station","post_office","post_box","atm","bank","bureau_de_change","place_of_worship","community_centre","social_facility","shelter","information","clock","binoculars","sanitary_dump_station","recycling","waste_basket"));//8
-        Set<String> transportation = new HashSet<>(Arrays.asList("fuel", "car_wash", "taxi","bicycle_parking","moped_parking","car_rental","parking_entrance","parking","parking_space","charging_station"));
+        Set<String> tourism = new HashSet<>(Arrays.asList("apartment", "artwork", "attraction", "caravan_site", "gallery","guest_house",
+                "hostel", "hotel", "information", "museum", "viewpoint", "zoo"));
+        Set<String> publicServices = new HashSet<>(Arrays.asList("police","courthouse","townhall","fire_station","post_office","post_box","atm","bank",
+                "bureau_de_change","place_of_worship","community_centre","social_facility","shelter","information","clock","binoculars",
+                "sanitary_dump_station","recycling","waste_basket"));//8
+        Set<String> transportation = new HashSet<>(Arrays.asList("fuel", "car_wash", "taxi","bicycle_parking","moped_parking","car_rental",
+                "parking_entrance","parking","parking_space","charging_station"));
 
         for (GeoData geoData : list) {
             if (healthcare.contains(geoData.getType())) {
@@ -169,8 +207,13 @@ public class IndexCalculator {
         int[] times = new int[nearestLocations.size()];
         int i = 0;
         for (GeoData geoData : nearestLocations) {
-            double weight = amenityWeights.getOrDefault(geoData.getType(), 0.0);
-            weights[i] = weight;
+            Double[] weight = amenityWeights.get(geoData.getType());
+            if(disabledPersonSetting){
+                weights[i] = weight[1];
+            }else{
+                weights[i] = weight[0];
+            }
+
             int travelTime = 15;  // Default travel time in minutes
             Journey journeyToAmenity = manager.getJourney(coordinatePostalCode, new Coordinate(geoData.getLatitude(), geoData.getLongitude()), new RouteRequest("", "", TransportType.BUS, RouteType.ACTUAL));
             if (journeyToAmenity != null) {
@@ -242,18 +285,4 @@ public class IndexCalculator {
         return maxAccessibility;
     }
 
-
-    public static void main(String[] args) {
-        IndexCalculator indexCalculator = new IndexCalculator();
-        List<GeoData> list = new ArrayList<>();
-        GeoDeserializer geoDeserializer = new GeoDeserializer();
-        try {
-            list = geoDeserializer.deserializeAllGeoData();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Coordinate code = new Coordinate(50.82092283, 5.708232104);
-        System.out.println(indexCalculator.getIndexForCategory(list, code));
-    }
 }
