@@ -13,6 +13,7 @@ import java.util.Set;
 import database.DatabaseManager;
 import database.queries.GetAllTripsMaasQuery;
 import entities.TransitGraphEntities.TShape;
+import entities.TransitGraphEntities.TShapePoint;
 import entities.TransitGraphEntities.TStop;
 import entities.TransitGraphEntities.TStopTimePoint;
 import entities.TransitGraphEntities.TTrip;
@@ -37,6 +38,12 @@ public class TransitGraph
         int departureTime = Conversions.localTimeToInt(lDepartureTime);
 
         dijkstra(source, destination, departureTime);
+
+        if (destination.getShortestTime() == Integer.MAX_VALUE)
+        {
+            System.out.println("no path");
+            return null;    
+        }
 
         List<Edge> returnList = new ArrayList<Edge>();
         for (Edge edge : destination.getShortestPath())
@@ -139,6 +146,38 @@ public class TransitGraph
         }
     }
 
+    // private void buildWalkingEdges()
+    // {
+    //     for (Node node1 : nodes.values())
+    //     {
+    //         for (Node node2 : nodes.values())
+    //         {
+    //             if (node1.getStop().getId() != node2.getStop().getId())
+    //             {
+    //                 TShapePoint shapePoint1 = new TShapePoint(0, node1.getStop().getCoordinates(), 0);
+    //                 TShapePoint shapePoint2 = new TShapePoint(1, node2.getStop().getCoordinates(), 1);  
+    //                 List<TShapePoint> shapePointList = new ArrayList<TShapePoint>();
+    //                 shapePointList.add(shapePoint1);
+    //                 shapePointList.add(shapePoint2);
+                    
+    //                 TShape shape = new TShape(-1, shapePointList);
+
+    //                 int departureTime = 
+    //                 int arrivalTime = Conversions.localTimeToInt(s2.getArrivalTime());
+    //                 Node source = nodes.get(s1.getStop().getId());
+    //                 Node destination = nodes.get(s2.getStop().getId());
+    //                 int tripid = trip.getId();
+    //                 int routeid = trip.getRouteid();
+    //                 String routeShortName = trip.getRouteShortName();
+    //                 String routeLongName = trip.getRouteLongName();
+    //                 TShape shape = trip.getShape();
+    //                 int shapeDistTraveledStart = s1.getShapeDistTraveled();
+    //                 int shapeDistTraveledEnd = s2.getShapeDistTraveled();
+    //             }    
+    //         }    
+    //     }
+    // }
+
     private void buildNode(TStop stop)
     {
         if (!nodes.containsKey(stop.getId()))
@@ -172,7 +211,7 @@ public class TransitGraph
     }
 
     // 6229EM apart hotel randwyck stopid: 2578129
-    // 6211CM maastricht markt stopid: 2578364
+    // 6211CM maastricht markt stopid: 2578366
     public static void main(String[] args)
     {
         System.out.println("testing graph...");
@@ -182,18 +221,18 @@ public class TransitGraph
         TransitGraph graph = new TransitGraph();
         System.out.println("built graph with " + graph.nodes.size() + "nodes and " + graph.edgeCount + "edges");
 
-        System.out.println("testing finding path from stop 2578129 (near apart hotel randwyck) to stop 2578364 (near maastricht markt) starting at 12:00");
+        System.out.println("testing finding path from stop 2578129 (near apart hotel randwyck) to stop 2578366 (near maastricht markt) starting at 12:00");
 
-        var transitGraphPath = graph.getPathDijkstra(2578129, 2578364, LocalTime.of(12, 0, 0));
+        var transitGraphPath = graph.getPathDijkstra(2578129, 2578366, LocalTime.of(12, 0, 0));
         var path = transitGraphPath.getEdgeList();
         System.out.println("path size: " + path.size());
         for (int i = 0; i < path.size(); i++)
         {
             Edge edge = path.get(i);
-            System.out.println(edge.getSource().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getDepartureTime()).toString());
+            System.out.println(edge.getSource().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getDepartureTime()).toString() + " | bus: " + edge.getRouteShortName());
             if (i == path.size() - 1)
             {
-                System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString());
+                System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString() + " | bus: " + edge.getRouteShortName());
             }
         }
     }

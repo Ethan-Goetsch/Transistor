@@ -1,9 +1,12 @@
 package entities.TransitGraphEntities.GraphEntities;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
+import entities.TransportType;
 import entities.TransitGraphEntities.TShape;
 import entities.TransitGraphEntities.TShapePoint;
+import utils.ColorUtils;
 
 public class Edge
 {
@@ -20,7 +23,25 @@ public class Edge
     private TShape shape;
     private int shapeDistTraveledStart;
     private int shapeDistTraveledEnd;
-    
+
+    private Color color;
+    private TransportType transportType;
+
+    public Edge(int departureTime, int arrivalTime, Node source, Node destination, int tripid, int routeid, String routeShortName, String routeLongName, TShape shape, TransportType transportType)
+    {
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.source = source;
+        this.destination = destination;
+        this.tripid = tripid;
+        this.routeid = routeid;
+        this.routeShortName = routeShortName;
+        this.routeLongName = routeLongName;
+        this.shape = shape;
+        this.color = ColorUtils.intToColor(routeid);
+        this.transportType = transportType;
+    }
+
     public Edge(int departureTime, int arrivalTime, Node source, Node destination, int tripid, int routeid, String routeShortName, String routeLongName, TShape shape)
     {
         this.departureTime = departureTime;
@@ -32,24 +53,9 @@ public class Edge
         this.routeShortName = routeShortName;
         this.routeLongName = routeLongName;
         this.shape = shape;
+        this.color = ColorUtils.intToColor(routeid);
+        this.transportType = TransportType.BUS;
     }
-
-    // public int getPossibleArrivalTime(int currentTime)
-    // {
-    //     int earliestPossibleArrivalTime = Integer.MAX_VALUE;
-
-    //     int edgeDuration = arrivalTime - departureTime;
-    //     if (edgeDuration < 0 || currentTime > departureTime)
-    //     {
-    //         return earliestPossibleArrivalTime;
-    //     }
-    //     else
-    //     {
-    //         earliestPossibleArrivalTime = currentTime + (departureTime - currentTime) + edgeDuration;
-    //     }
-
-    //     return earliestPossibleArrivalTime;
-    // }
 
     // TODO: MAKE SURE THIS WORKS
     public int getPossibleArrivalTime(int currentTime)
@@ -69,6 +75,19 @@ public class Edge
 
 
         return (currentTime + ((normalDepartureTime - normalCurrentTime) + edgeDuration));   
+    }
+
+    public TShape getShape()
+    {
+        TShape returnShape = new TShape(shape.getId(), new ArrayList<TShapePoint>());
+        for (TShapePoint shapePoint : shape.getShapePoints())
+        {
+            if (shapePoint.getShapeDistTraveled() >= shapeDistTraveledStart && shapePoint.getShapeDistTraveled() <= shapeDistTraveledEnd)
+            {
+                returnShape.getShapePoints().add(shapePoint);    
+            }
+        }
+        return returnShape;
     }
 
     public int getDepartureTime()
@@ -151,21 +170,48 @@ public class Edge
         this.routeLongName = routeLongName;
     }
 
-    public TShape getShape()
-    {
-        TShape returnShape = new TShape(shape.getId(), new ArrayList<TShapePoint>());
-        for (TShapePoint shapePoint : shape.getShapePoints())
-        {
-            if (shapePoint.getShapeDistTraveled() >= shapeDistTraveledStart && shapePoint.getShapeDistTraveled() <= shapeDistTraveledEnd)
-            {
-                returnShape.getShapePoints().add(shapePoint);    
-            }
-        }
-        return returnShape;
-    }
-
     public void setShape(TShape shape)
     {
         this.shape = shape;
+    }
+
+    public int getShapeDistTraveledStart()
+    {
+        return shapeDistTraveledStart;
+    }
+
+    public void setShapeDistTraveledStart(int shapeDistTraveledStart)
+    {
+        this.shapeDistTraveledStart = shapeDistTraveledStart;
+    }
+
+    public int getShapeDistTraveledEnd()
+    {
+        return shapeDistTraveledEnd;
+    }
+
+    public void setShapeDistTraveledEnd(int shapeDistTraveledEnd)
+    {
+        this.shapeDistTraveledEnd = shapeDistTraveledEnd;
+    }
+
+    public Color getColor()
+    {
+        return color;
+    }
+
+    public void setColor(Color color)
+    {
+        this.color = color;
+    }
+
+    public TransportType getTransportType()
+    {
+        return transportType;
+    }
+
+    public void setTransportType(TransportType transportType)
+    {
+        this.transportType = transportType;
     }
 }
