@@ -72,6 +72,6 @@ public class PathCalculator implements IRouteCalculator
         nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), calculationRequest.arrivalTime(), calculationRequest.arrivalTime(), new PathShape(-1, calculationRequest.arrival())));
 
         var color = Color.GREEN;
-        return new Trip(Conversions.toPath(responsePath, color), nodes, color, calculationRequest.transportType());
+        return new Trip(Conversions.toPath(responsePath, color), nodes, calculationRequest.transportType());
     }
 }

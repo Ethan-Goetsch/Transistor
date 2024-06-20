@@ -4,14 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import java.io.*;
 
-public class GeoDeserializer {
-
+public class GeoDeserializer
+{
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static Map<String, Object> readGeoFile(String filePath) throws IOException {
+    public static Map<String, Object> readGeoFile(String filePath) throws IOException
+    {
         return objectMapper.readValue(new File(filePath), Map.class);
     }
-    static String[] allowedShopTypes = {
+    static String[] allowedShopTypes =
+            {
             "supermarket",
             "greengrocer",
             "bakery",
@@ -33,7 +35,8 @@ public class GeoDeserializer {
             "dry_cleaning",
             "market"
     };
-    public static List<GeoData> deserializeGeoData(String filePath, String type) throws IOException {
+    public static List<GeoData> deserializeGeoData(String filePath, String type) throws IOException
+    {
         List<GeoData> result = new ArrayList<>();
 
         Map<String, Object> geoDataMap = readGeoFile(filePath);
@@ -54,7 +57,8 @@ public class GeoDeserializer {
         return result;
     }
 
-    public static List<GeoData> deserializeAllGeoData() throws IOException {
+    public static List<GeoData> deserializeAllGeoData() throws IOException
+    {
         List<GeoData> allGeoData = new ArrayList<>();
         allGeoData.addAll(deserializeGeoData("Transistor/src/main/resources/geoJson/amenity.geojson", "amenity"));
         allGeoData.addAll(deserializeGeoData("Transistor/src/main/resources/geoJson/shop.geojson", "shop"));

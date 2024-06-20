@@ -1,17 +1,10 @@
-package entities.TransitGraphEntities.GraphEntities;
-
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.PriorityQueue;
-import java.util.Set;
+package calculators;
 
 import database.DatabaseManager;
 import database.queries.GetAllTripsMaasQuery;
+import entities.TransitGraphEntities.GraphEntities.Edge;
+import entities.TransitGraphEntities.GraphEntities.Node;
+import entities.TransitGraphEntities.GraphEntities.TransitGraphPath;
 import entities.TransitGraphEntities.TShape;
 import entities.TransitGraphEntities.TShapePoint;
 import entities.TransitGraphEntities.TStop;
@@ -19,23 +12,27 @@ import entities.TransitGraphEntities.TStopTimePoint;
 import entities.TransitGraphEntities.TTrip;
 import utils.Conversions;
 
-public class TransitGraph
+import java.time.LocalTime;
+import java.util.*;
+import java.util.Map.Entry;
+
+public class TransitGraphCalculator
 {
     private Map<Integer, Node> nodes;// stop id to node
     private int edgeCount = 0;
 
-    public TransitGraph()
+    public TransitGraphCalculator()
     {
         this.nodes = new HashMap<Integer, Node>();
         buildFromTripsList(DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery()));
     }
 
     // not thread safe
-    public TransitGraphPath getPathDijkstra(int originStopID, int desinationStopID, LocalTime lDepartureTime)
+    public TransitGraphPath getPathDijkstra(int originStopID, int destinationStopID, LocalTime DepartureTime)
     {
         Node source = nodes.get(originStopID);
-        Node destination = nodes.get(desinationStopID);
-        int departureTime = Conversions.localTimeToInt(lDepartureTime);
+        Node destination = nodes.get(destinationStopID);
+        int departureTime = Conversions.localTimeToInt(DepartureTime);
 
         dijkstra(source, destination, departureTime);
 
@@ -86,6 +83,8 @@ public class TransitGraph
                 break;
             }
         }
+
+        System.out.println("here");
     }
 
     private void updateShortestPathDijkstra(Node current, Node adjacent, List<Edge> edges)
@@ -217,8 +216,9 @@ public class TransitGraph
         System.out.println("testing graph...");
         System.out.println("fetching trips...");
         var trips = DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery());
+
+        var graph = new TransitGraphCalculator();
         System.out.println("fetched trips");
-        TransitGraph graph = new TransitGraph();
         System.out.println("built graph with " + graph.nodes.size() + "nodes and " + graph.edgeCount + "edges");
 
         System.out.println("testing finding path from stop 2578129 (near apart hotel randwyck) to stop 2578366 (near maastricht markt) starting at 12:00");

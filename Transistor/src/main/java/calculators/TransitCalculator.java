@@ -1,62 +1,56 @@
 package calculators;
 
-import database.DatabaseManager;
-import database.queries.GetAllShapesBetweenStops;
-import database.queries.GetAllStopsForTrip;
-import database.queries.GetShapeSequenceForTripAndStop;
-import database.queries.GetTripBetweenTwoStopsQuery;
 import entities.*;
+import entities.TransitGraphEntities.GraphEntities.Edge;
+import entities.TransitGraphEntities.GraphEntities.Node;
 import entities.transit.TransitNode;
-import entities.transit.TransitRoute;
-import entities.transit.TransitTrip;
-import entities.transit.shapes.TransitShape;
-import database.queries.GetRouteForTripQuery;
+import entities.transit.shapes.StopShape;
+import utils.Conversions;
 
+import java.awt.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TransitCalculator
 {
-    public Trip calculateRoute(int originId, int destinationId)
+    public List<Trip> calculateRoute(int originId, int destinationId)
     {
-        var trip = DatabaseManager.executeAndReadQuery(new GetTripBetweenTwoStopsQuery(originId, destinationId));
-        if (trip == null) return null;
-        var route = DatabaseManager.executeAndReadQuery(new GetRouteForTripQuery(trip.id()));
-
-        var nodes = DatabaseManager.executeAndReadQuery(new GetAllStopsForTrip(trip.id(), trip.originStopSequence(), trip.destinationStopSequence()));
-        var path = getPathForTrip(route, trip, nodes);
-
-        return new Trip(path, nodes, route.colour(), TransportType.BUS);
+        return new TransitGraphCalculator().getPathDijkstra(originId, destinationId, LocalTime.now())
+                .getEdgeList()
+                .stream()
+                .map(this::convertEdgeToTrip)
+                .collect(Collectors.toList());
     }
 
-    private Path getPathForTrip(TransitRoute route, TransitTrip trip, List<TransitNode> nodes)
+    private Trip convertEdgeToTrip(Edge edge)
     {
-        var points = new ArrayList<PathPoint>();
-        var path = new Path(points, route.colour());
+        var source = edge.getSource();
+        var destination = edge.getDestination();
 
-        for (var i = 0; i < nodes.size() - 1; i++)
-        {
-            var startNode = nodes.get(i);
-            var stopNode = nodes.get(i + 1);
+        var points = edge.getShape().getShapePoints()
+                .stream()
+                .map(shapePoint -> new PathPoint(shapePoint.getCoordinates(), PointType.Normal))
+                .toList();
 
-            var startShapeSequence = DatabaseManager.executeAndReadQuery(new GetShapeSequenceForTripAndStop(trip.id(), startNode.id()));
-            var stopShapeSequence = DatabaseManager.executeAndReadQuery(new GetShapeSequenceForTripAndStop(trip.id(), stopNode.id()));
+        var path = new Path(points, Color.BLUE);
+        var nodes = new ArrayList<TransitNode>();
 
-            var shapesBetweenStops = DatabaseManager.executeAndReadQuery(new GetAllShapesBetweenStops(trip.id(),
-                    startShapeSequence,
-                    stopShapeSequence));
+        nodes.add(convertNodeToTransitNode(edge, source));
+        nodes.add(convertNodeToTransitNode(edge, destination));
 
-            if (shapesBetweenStops.isEmpty())
-            {
-                points.add(new PathPoint(startNode.coordinate(), PointType.Normal));
-                points.add(new PathPoint(stopNode.coordinate(), PointType.Normal));
-            }
+        return new Trip(path, nodes, TransportType.BUS);
+    }
 
-            points.addAll(shapesBetweenStops.stream()
-                    .map(TransitShape::toPoint)
-                    .toList());
-        }
-
-        return path;
+    private TransitNode convertNodeToTransitNode(Edge edge, Node node)
+    {
+        var stop = node.getStop();
+        return new TransitNode(stop.getId(),
+                stop.getName(),
+                stop.getCoordinates(),
+                Conversions.intToLocalTime(edge.getArrivalTime()),
+                Conversions.intToLocalTime(edge.getDepartureTime()),
+                new StopShape(stop.getCoordinates()));
     }
 }
