@@ -21,8 +21,14 @@ public class Journey
         this.trips = trips;
     }
 
-    public void addTrip(Trip trip){
+    public void addTrip(Trip trip)
+    {
         this.trips.add(trip);
+    }
+
+    public void addTrip(List<Trip> trip)
+    {
+        this.trips.addAll(trip);
     }
 
     public LocalTime getArrivalTime()
