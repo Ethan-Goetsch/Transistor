@@ -199,7 +199,7 @@ public class TransitGraphCalculator
         int shapeDistTraveledStart = s1.getShapeDistTraveled();
         int shapeDistTraveledEnd = s2.getShapeDistTraveled();
 
-        Edge newEdge = new Edge(departureTime, arrivalTime, source, destination, tripid, routeid, routeShortName, routeLongName, shape);
+        Edge newEdge = new Edge(departureTime, arrivalTime, source, destination, tripid, routeid, routeShortName, routeLongName, shape, shapeDistTraveledStart, shapeDistTraveledEnd);
 
         if (!source.getAdjacent().containsKey(destination))
         {
@@ -215,7 +215,6 @@ public class TransitGraphCalculator
     {
         System.out.println("testing graph...");
         System.out.println("fetching trips...");
-        var trips = DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery());
 
         var graph = new TransitGraphCalculator();
         System.out.println("fetched trips");

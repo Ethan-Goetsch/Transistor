@@ -27,7 +27,7 @@ public class Edge
     private Color color;
     private TransportType transportType;
 
-    public Edge(int departureTime, int arrivalTime, Node source, Node destination, int tripid, int routeid, String routeShortName, String routeLongName, TShape shape, TransportType transportType)
+    public Edge(int departureTime, int arrivalTime, Node source, Node destination, int tripid, int routeid, String routeShortName, String routeLongName, TShape shape, int shapeDistTraveledStart, int shapeDistTraveledEnd, TransportType transportType)
     {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
@@ -38,11 +38,13 @@ public class Edge
         this.routeShortName = routeShortName;
         this.routeLongName = routeLongName;
         this.shape = shape;
+        this.shapeDistTraveledStart = shapeDistTraveledStart;
+        this.shapeDistTraveledEnd = shapeDistTraveledEnd;
         this.color = ColorUtils.intToColor(routeid);
         this.transportType = transportType;
     }
 
-    public Edge(int departureTime, int arrivalTime, Node source, Node destination, int tripid, int routeid, String routeShortName, String routeLongName, TShape shape)
+    public Edge(int departureTime, int arrivalTime, Node source, Node destination, int tripid, int routeid, String routeShortName, String routeLongName, TShape shape, int shapeDistTraveledStart, int shapeDistTraveledEnd)
     {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
@@ -53,10 +55,11 @@ public class Edge
         this.routeShortName = routeShortName;
         this.routeLongName = routeLongName;
         this.shape = shape;
+        this.shapeDistTraveledStart = shapeDistTraveledStart;
+        this.shapeDistTraveledEnd = shapeDistTraveledEnd;
         this.color = ColorUtils.intToColor(routeid);
         this.transportType = TransportType.BUS;
     }
-
     // TODO: MAKE SURE THIS WORKS
     public int getPossibleArrivalTime(int currentTime)
     {
