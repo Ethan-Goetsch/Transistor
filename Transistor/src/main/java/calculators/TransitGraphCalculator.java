@@ -23,6 +23,7 @@ public class TransitGraphCalculator
     public TransitGraphCalculator()
     {
         this.nodes = new HashMap<Integer, Node>();
+        generateGraph();
         buildFromTripsList(DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery()));
     }
 
@@ -48,6 +49,32 @@ public class TransitGraphCalculator
         TransitGraphPath returnPath = new TransitGraphPath(rDepartureTime, rArrivalTime, rDuration, returnList);
         resetGraph();
         return returnPath;
+    }
+
+    private void generateGraph()
+    {
+        System.out.println("testing graph...");
+        System.out.println("fetching trips...");
+        var trips = DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery());
+
+        System.out.println("fetched trips");
+        TransitGraphCalculator graph = new TransitGraphCalculator();
+        System.out.println("built graph with " + graph.nodes.size() + "nodes and " + graph.edgeCount + "edges");
+
+        System.out.println("testing finding path from stop 2578129 (near apart hotel randwyck) to stop 2578364 (near maastricht markt) starting at 12:00");
+
+        var transitGraphPath = graph.getPathDijkstra(2578129, 2578364, LocalTime.of(12, 0, 0));
+        var path = transitGraphPath.getEdgeList();
+        System.out.println("path size: " + path.size());
+        for (int i = 0; i < path.size(); i++)
+        {
+            Edge edge = path.get(i);
+            System.out.println(edge.getSource().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getDepartureTime()).toString());
+            if (i == path.size() - 1)
+            {
+                System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString());
+            }
+        }
     }
 
     private void dijkstra(Node source, Node destination, int departureTime)
@@ -170,28 +197,4 @@ public class TransitGraphCalculator
 
     // 6229EM apart hotel randwyck stopid: 2578129
     // 6211CM maastricht markt stopid: 2578364
-    public static void main(String[] args)
-    {
-        System.out.println("testing graph...");
-        System.out.println("fetching trips...");
-        var trips = DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery());
-        System.out.println("fetched trips");
-        TransitGraphCalculator graph = new TransitGraphCalculator();
-        System.out.println("built graph with " + graph.nodes.size() + "nodes and " + graph.edgeCount + "edges");
-
-        System.out.println("testing finding path from stop 2578129 (near apart hotel randwyck) to stop 2578364 (near maastricht markt) starting at 12:00");
-
-        var transitGraphPath = graph.getPathDijkstra(2578129, 2578364, LocalTime.of(12, 0, 0));
-        var path = transitGraphPath.getEdgeList();
-        System.out.println("path size: " + path.size());
-        for (int i = 0; i < path.size(); i++)
-        {
-            Edge edge = path.get(i);
-            System.out.println(edge.getSource().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getDepartureTime()).toString());
-            if (i == path.size() - 1)
-            {
-                System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString());
-            }
-        }
-    }
 }
