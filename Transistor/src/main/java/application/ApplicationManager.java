@@ -1,35 +1,35 @@
 package application;
 
-import Accessibility.IndexCalculator;
+import accessibility.IndexCalculator;
 import calculators.AerialCalculator;
-import calculators.IRouteCalculator;
 import calculators.TransitCalculator;
 import database.DatabaseManager;
 import database.queries.GetClosetStops;
 import entities.*;
-import entities.exceptions.*;
+import entities.exceptions.AccessibilityCalculationError;
+import entities.exceptions.InvalidCoordinateException;
+import entities.exceptions.RouteNotFoundException;
 import entities.geoJson.GeoDeserializer;
 import entities.transit.TransitStop;
 import resolvers.LocationResolver;
 
 import java.util.List;
 
-public class ApplicationManager {
+public class ApplicationManager
+{
     private final LocationResolver locationResolver;
     private final RequestValidator requestValidator;
-    private final List<IRouteCalculator> routeCalculators;
     private final IndexCalculator accessibilityCalculator;
-    private final GeoDeserializer geoDeserializer;
 
-    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, List<IRouteCalculator> routeCalculators, IndexCalculator accessibilityCalculator, GeoDeserializer geoDeserializer) {
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, IndexCalculator accessibilityCalculator)
+    {
         this.locationResolver = locationResolver;
         this.requestValidator = requestValidator;
-        this.routeCalculators = routeCalculators;
         this.accessibilityCalculator = accessibilityCalculator;
-        this.geoDeserializer = geoDeserializer;
     }
 
-    public AccessibilityMeasure calculateAccessibilityMeasure(AccessibilityRequest request){
+    public AccessibilityMeasure calculateAccessibilityMeasure(AccessibilityRequest request)
+    {
         String message = "";
         List<Double> indexes = null;
         Coordinate postalCodeLocation = null;
@@ -48,8 +48,10 @@ public class ApplicationManager {
             {
                 throw new InvalidCoordinateException("Invalid Input!");
             }
-            indexes = accessibilityCalculator.calculateIndex(geoDeserializer.deserializeAllGeoData(),postalCodeLocation, request.disabledPersonSetting());
-            if(indexes == null){
+
+            indexes = accessibilityCalculator.calculateIndex(GeoDeserializer.deserializeAllGeoData(),postalCodeLocation, request.disabledPersonSetting());
+            if (indexes == null)
+            {
                 throw new AccessibilityCalculationError("Error in accessibility calculation!");
             }
         }
@@ -58,6 +60,7 @@ public class ApplicationManager {
             message = e.getMessage();
             e.printStackTrace();
         }
+
         return new AccessibilityMeasure(indexes, postalCodeLocation, message);
     }
 
@@ -94,6 +97,13 @@ public class ApplicationManager {
         return new Route(departureCoordinates, arrivalCoordinates, journey, message);
     }
 
+    public Journey getJourney(Coordinate departureCoordinates, Coordinate arrivalCoordinates, RouteRequest request)
+    {
+        var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 1));
+        var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 1));
+        return getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+    }
+
     private Journey getRouteCalculationResult(RouteRequest request, Coordinate departureCoordinates, Coordinate arrivalCoordinates, List<TransitStop> originStops, List<TransitStop> destinationStops)
     {
         Journey earliestJourney = null;
@@ -112,24 +122,23 @@ public class ApplicationManager {
                 var locationToOriginTrip = new AerialCalculator().calculateRoute(
                         new RouteCalculationRequest(departureCoordinates,
                                 originStop.coordinate(),
-                                transitTrip.getDepartureTime(),
-                                transitTrip.getDepartureTime(),
+                                transitTrip.getLast().getDepartureTime(),
+                                transitTrip.getLast().getDepartureTime(),
                                 request.transportType()));
 
                 // Calculate route from destination bus stop to final destination
                 var destinationToFinal = new AerialCalculator().calculateRoute(
                         new RouteCalculationRequest(destinationStop.coordinate(),
                                 arrivalCoordinates,
-                                transitTrip.getArrivalTime(),
-                                transitTrip.getArrivalTime(),
+                                transitTrip.getLast().getArrivalTime(),
+                                transitTrip.getLast().getArrivalTime(),
                                 request.transportType()));
 
                 journey.addTrip(locationToOriginTrip);
                 journey.addTrip(transitTrip);
                 journey.addTrip(destinationToFinal);
 
-                double journeyTravelTime = journey.getTotalTravelTime();
-
+                var journeyTravelTime = journey.getTotalTravelTime();
                 if (journeyTravelTime < shortestTravelTime)
                 {
                     earliestJourney = journey;
@@ -139,13 +148,5 @@ public class ApplicationManager {
         }
 
         return earliestJourney;
-    }
-
-    public Journey getJourney(Coordinate departureCoordinates, Coordinate arrivalCoordinates, RouteRequest request){
-        Journey journey = null;
-        var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 10));
-        var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 10));
-        journey = getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
-        return journey;
     }
 }

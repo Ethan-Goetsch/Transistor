@@ -1,16 +1,10 @@
-import Accessibility.IndexCalculator;
+import accessibility.IndexCalculator;
 import application.ApplicationManager;
 import application.RequestValidator;
-import calculators.AerialCalculator;
-import calculators.IRouteCalculator;
-import calculators.PathCalculator;
 import entities.geoJson.GeoDeserializer;
 import resolvers.LocationResolver;
 import ui.UIController;
 import utils.PathLocations;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Program
 {
@@ -24,14 +18,10 @@ public class Program
         LocationResolver locationResolver = new LocationResolver(PathLocations.MASS_LOCATION_FILE);
         RequestValidator requestValidator = new RequestValidator();
 
-        List<IRouteCalculator> routeCalculators = new ArrayList<>();
-        routeCalculators.add(new AerialCalculator());
-        routeCalculators.add(new PathCalculator(PathLocations.GRAPH_RESOURCE_FOLDER));
-
         IndexCalculator accessibilityCalculator = new IndexCalculator();
         GeoDeserializer geoDeserializer = new GeoDeserializer();
 
-        ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, routeCalculators, accessibilityCalculator, geoDeserializer);
+        ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, accessibilityCalculator);
         accessibilityCalculator.setManager(manager);
         UIController controller = new UIController(manager);
     }
