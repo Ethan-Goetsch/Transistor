@@ -60,6 +60,7 @@ public class Edge
         this.color = ColorUtils.intToColor(routeid);
         this.transportType = TransportType.BUS;
     }
+
     // TODO: MAKE SURE THIS WORKS
     public int getPossibleArrivalTime(int currentTime)
     {
@@ -68,17 +69,35 @@ public class Edge
         int normalDepartureTime = departureTime;
         if (arrivalTime < departureTime)
         {
-            normalArrivalTime += 60*60*24;    
+            normalArrivalTime += (60*60*24);    
         }
         int edgeDuration = normalArrivalTime - departureTime;
         if (normalCurrentTime > departureTime)
         {
-            normalDepartureTime += 60*60*24;
+            normalDepartureTime += (60*60*24);
         }
 
 
         return (currentTime + ((normalDepartureTime - normalCurrentTime) + edgeDuration));   
     }
+
+    // public int getPossibleArrivalTime(int currentTime)
+    // {
+    //     System.out.println("t");
+    //     int earliestPossibleArrivalTime = Integer.MAX_VALUE;
+
+    //     int edgeDuration = arrivalTime - departureTime;
+    //     if (edgeDuration < 0 || currentTime > departureTime)
+    //     {
+    //         return earliestPossibleArrivalTime;
+    //     }
+    //     else
+    //     {
+    //         earliestPossibleArrivalTime = currentTime + (departureTime - currentTime) + edgeDuration;
+    //     }
+
+    //     return earliestPossibleArrivalTime;
+    // }
 
     public TShape getShape()
     {

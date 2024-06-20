@@ -17,6 +17,8 @@ public class TransitCalculator
 {
     public List<Trip> calculateRoute(int originId, int destinationId)
     {
+        System.out.println("originid: " + originId);
+        System.out.println("destinationid: " + destinationId);
         return new TransitGraphCalculator().getPathDijkstra(originId, destinationId, LocalTime.NOON)
                 .getEdgeList()
                 .stream()
