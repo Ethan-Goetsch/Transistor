@@ -34,7 +34,7 @@ public class TransitCalculator
                 .map(shapePoint -> new PathPoint(shapePoint.getCoordinates(), PointType.Normal))
                 .toList();
 
-        var path = new Path(points, Color.BLUE);
+        var path = new Path(points, edge.getColor());
         var nodes = new ArrayList<TransitNode>();
 
         nodes.add(convertNodeToTransitNode(edge, source));

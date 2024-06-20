@@ -83,8 +83,6 @@ public class TransitGraphCalculator
                 break;
             }
         }
-
-        System.out.println("here");
     }
 
     private void updateShortestPathDijkstra(Node current, Node adjacent, List<Edge> edges)
