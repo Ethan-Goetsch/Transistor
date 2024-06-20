@@ -34,41 +34,42 @@ public class Edge
         this.shape = shape;
     }
 
-    // TODO: MAKE THIS CONSIDER OVERNIGHT STUFF / TRIPS THAT PASS THE 0 HOUR, I TRIED AND FAILED MY ATTEMPT IS COMMENTED BELOW
-    public int getPossibleArrivalTime(int currentTime)
-    {
-        int earliestPossibleArrivalTime = Integer.MAX_VALUE;
-
-        int edgeDuration = arrivalTime - departureTime;
-        if (edgeDuration < 0 || currentTime > departureTime)
-        {
-            return earliestPossibleArrivalTime;
-        }
-        else
-        {
-            earliestPossibleArrivalTime = currentTime + (departureTime - currentTime) + edgeDuration;
-        }
-
-        return earliestPossibleArrivalTime;
-    }
     // public int getPossibleArrivalTime(int currentTime)
     // {
-    //     int normalCurrentTime = currentTime % 60*60*24;
-    //     int normalArrivalTime = arrivalTime;
-    //     int normalDepartureTime = departureTime;
-    //     if (arrivalTime < departureTime)
+    //     int earliestPossibleArrivalTime = Integer.MAX_VALUE;
+
+    //     int edgeDuration = arrivalTime - departureTime;
+    //     if (edgeDuration < 0 || currentTime > departureTime)
     //     {
-    //         normalArrivalTime += 60*60*24;    
+    //         return earliestPossibleArrivalTime;
     //     }
-    //     int edgeDuration = normalArrivalTime - departureTime;
-    //     if (normalCurrentTime > departureTime)
+    //     else
     //     {
-    //         normalDepartureTime += 60*60*24;
+    //         earliestPossibleArrivalTime = currentTime + (departureTime - currentTime) + edgeDuration;
     //     }
 
-
-    //     return (currentTime + ((normalDepartureTime - normalCurrentTime) + edgeDuration));   
+    //     return earliestPossibleArrivalTime;
     // }
+
+    // TODO: MAKE SURE THIS WORKS
+    public int getPossibleArrivalTime(int currentTime)
+    {
+        int normalCurrentTime = currentTime % (60*60*24);
+        int normalArrivalTime = arrivalTime;
+        int normalDepartureTime = departureTime;
+        if (arrivalTime < departureTime)
+        {
+            normalArrivalTime += 60*60*24;    
+        }
+        int edgeDuration = normalArrivalTime - departureTime;
+        if (normalCurrentTime > departureTime)
+        {
+            normalDepartureTime += 60*60*24;
+        }
+
+
+        return (currentTime + ((normalDepartureTime - normalCurrentTime) + edgeDuration));   
+    }
 
     public int getDepartureTime()
     {
