@@ -30,6 +30,7 @@ public class TransitGraphCalculator
     // not thread safe
     public TransitGraphPath getPathDijkstra(int originStopID, int destinationStopID, LocalTime DepartureTime)
     {
+        resetGraph();
         Node source = nodes.get(originStopID);
         Node destination = nodes.get(destinationStopID);
         int departureTime = Conversions.localTimeToInt(DepartureTime);
@@ -53,7 +54,6 @@ public class TransitGraphCalculator
         int rDuration = destination.getShortestTime() - departureTime;
 
         TransitGraphPath returnPath = new TransitGraphPath(rDepartureTime, rArrivalTime, rDuration, returnList);
-        resetGraph();
         return returnPath;
     }
 
@@ -85,16 +85,63 @@ public class TransitGraphCalculator
         }
     }
 
+    // private void updateShortestPathDijkstra(Node current, Node adjacent, List<Edge> edges)
+    // {
+    //     int newShortestTime = Integer.MAX_VALUE;
+
+    //     Edge bestEdge = null;
+    //     for (Edge edge : edges)
+    //     {
+    //         int earliestPossibleArrivalTime = edge.getPossibleArrivalTime(current.getShortestTime());
+
+    //         if (earliestPossibleArrivalTime < newShortestTime)
+    //         {
+    //             newShortestTime = earliestPossibleArrivalTime;
+    //             bestEdge = edge;
+    //         }
+    //     }
+
+    //     if (newShortestTime < adjacent.getShortestTime())
+    //     {
+    //         adjacent.setShortestTime(newShortestTime);
+
+    //         List<Edge> newShortestPath = new ArrayList<Edge>();
+    //         for (Edge edge : current.getShortestPath())
+    //         {
+    //             newShortestPath.add(edge);
+    //         }
+    //         newShortestPath.add(bestEdge);
+    //         adjacent.setShortestPath(newShortestPath);
+    //     }
+
+    // }
+
     private void updateShortestPathDijkstra(Node current, Node adjacent, List<Edge> edges)
     {
         int newShortestTime = Integer.MAX_VALUE;
+        int shortestPretendTime = Integer.MAX_VALUE;
+
+        int currentTripid = 0;
+        if (!current.getShortestPath().isEmpty())
+        {
+            currentTripid = current.getShortestPath().getLast().getTripid();  
+        }
+
         Edge bestEdge = null;
         for (Edge edge : edges)
         {
             int earliestPossibleArrivalTime = edge.getPossibleArrivalTime(current.getShortestTime());
-            if (earliestPossibleArrivalTime < newShortestTime)
+            int pretendTime = earliestPossibleArrivalTime;
+
+            if (edge.getTripid() == currentTripid)
+            {
+                pretendTime -= (60*4);    
+            }
+
+            if (pretendTime < shortestPretendTime)
             {
                 newShortestTime = earliestPossibleArrivalTime;
+                shortestPretendTime = pretendTime;
                 bestEdge = edge;
             }
         }
@@ -207,10 +254,38 @@ public class TransitGraphCalculator
         edgeCount++;
     }
 
+    private void debug()
+    {
+        Node dbgNode = nodes.get(2578413);
+        System.out.println(dbgNode.getAdjacent().keySet().size());
+        for (var edgelist : dbgNode.getAdjacent().values())
+        {
+            for (Edge edge : edgelist)
+            {
+                if (edge.getRouteShortName().equals("5"))
+                {
+                    System.out.println("b5: " + Conversions.intToLocalTime(edge.getDepartureTime()) + " | " + Conversions.intToLocalTime(edge.getArrivalTime()));    
+                }
+                if (edge.getRouteShortName().equals("8"))
+                {
+                    System.out.println("b8: " + Conversions.intToLocalTime(edge.getDepartureTime()) + " | " + Conversions.intToLocalTime(edge.getArrivalTime()));    
+                }    
+            }
+        }
+        System.out.println("xd");
+        System.out.println("xd2");
+    }
+
+    // OLD
     // 6229EM apart hotel randwyck stopid: 2578129
     // 6211CM maastricht markt stopid: 2578366
+
+    // 6229EM: 2578130
+    // 6211CM: 2578384
     public static void main(String[] args)
     {
+        int originid = 2578130;
+        int destinationid = 2578384;
         System.out.println("testing graph...");
         System.out.println("fetching trips...");
 
@@ -218,19 +293,20 @@ public class TransitGraphCalculator
         System.out.println("fetched trips");
         System.out.println("built graph with " + graph.nodes.size() + "nodes and " + graph.edgeCount + "edges");
 
-        System.out.println("testing finding path from stop 2578129 (near apart hotel randwyck) to stop 2578366 (near maastricht markt) starting at 12:00");
+        System.out.println("testing finding path from stop " + originid + " to stop " + destinationid + " starting at 12:00");
 
-        var transitGraphPath = graph.getPathDijkstra(2578129, 2578366, LocalTime.of(12, 0, 0));
+        var transitGraphPath = graph.getPathDijkstra(originid, destinationid, LocalTime.of(12, 0, 0));
         var path = transitGraphPath.getEdgeList();
         System.out.println("path size: " + path.size());
         for (int i = 0; i < path.size(); i++)
         {
             Edge edge = path.get(i);
-            System.out.println(edge.getSource().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getDepartureTime()).toString() + " | bus: " + edge.getRouteShortName());
+            System.out.println(edge.getSource().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getDepartureTime()).toString() + " | bus: " + edge.getRouteShortName() + " sid: " + edge.getSource().getStop().getId());
             if (i == path.size() - 1)
             {
-                System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString() + " | bus: " + edge.getRouteShortName());
+                System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString() + " | bus: " + edge.getRouteShortName() + " sid: " + edge.getDestination().getStop().getId());
             }
         }
+        //graph.debug();
     }
 }
