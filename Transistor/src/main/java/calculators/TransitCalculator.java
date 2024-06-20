@@ -29,18 +29,12 @@ public class TransitCalculator
         var source = edge.getSource();
         var destination = edge.getDestination();
 
-        var sourceStop = source.getStop();
-        var destinationStop = destination.getStop();
-
-        var points = new ArrayList<PathPoint>();
-        points.add(new PathPoint(sourceStop.getCoordinates(), PointType.Stop));
-        points.addAll(edge.getShape().getShapePoints()
+        var points = edge.getShape().getShapePoints()
                 .stream()
                 .map(shapePoint -> new PathPoint(shapePoint.getCoordinates(), PointType.Normal))
-                .toList());
-        points.add(new PathPoint(destinationStop.getCoordinates(), PointType.Stop));
+                .toList();
 
-        var path = new Path(points, Color.GREEN);
+        var path = new Path(points, Color.BLUE);
         var nodes = new ArrayList<TransitNode>();
 
         nodes.add(convertNodeToTransitNode(edge, source));
