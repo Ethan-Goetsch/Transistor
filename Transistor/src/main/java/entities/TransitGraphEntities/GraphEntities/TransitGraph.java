@@ -1,5 +1,6 @@
 package entities.TransitGraphEntities.GraphEntities;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,22 +26,31 @@ public class TransitGraph
     public TransitGraph()
     {
         this.nodes = new HashMap<Integer, Node>();
+        buildFromTripsList(DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery()));
     }
 
-    public TransitGraph(List<TTrip> trips)
+    // not thread safe
+    public TransitGraphPath getPathDijkstra(int originStopID, int desinationStopID, LocalTime lDepartureTime)
     {
-        this.nodes = new HashMap<Integer, Node>();
-        buildFromTripsList(trips);
-    }
-
-    public List<Edge> getPathDijkstra(int originStopID, int desinationStopID, int departureTime)
-    {
-        resetGraph();
         Node source = nodes.get(originStopID);
         Node destination = nodes.get(desinationStopID);
+        int departureTime = Conversions.localTimeToInt(lDepartureTime);
 
         dijkstra(source, destination, departureTime);
-        return destination.getShortestPath();
+
+        List<Edge> returnList = new ArrayList<Edge>();
+        for (Edge edge : destination.getShortestPath())
+        {
+            returnList.add(edge);    
+        }
+
+        LocalTime rDepartureTime = Conversions.intToLocalTime(returnList.get(0).getDepartureTime());
+        LocalTime rArrivalTime = Conversions.intToLocalTime(returnList.get(returnList.size() - 1).getArrivalTime());
+        int rDuration = destination.getShortestTime() - departureTime;
+
+        TransitGraphPath returnPath = new TransitGraphPath(rDepartureTime, rArrivalTime, rDuration, returnList);
+        resetGraph();
+        return returnPath;
     }
 
     private void dijkstra(Node source, Node destination, int departureTime)
@@ -169,12 +179,13 @@ public class TransitGraph
         System.out.println("fetching trips...");
         var trips = DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery());
         System.out.println("fetched trips");
-        TransitGraph graph = new TransitGraph(trips);
+        TransitGraph graph = new TransitGraph();
         System.out.println("built graph with " + graph.nodes.size() + "nodes and " + graph.edgeCount + "edges");
 
         System.out.println("testing finding path from stop 2578129 (near apart hotel randwyck) to stop 2578364 (near maastricht markt) starting at 12:00");
 
-        var path = graph.getPathDijkstra(2578129, 2578364, 60 * 60 * 12);
+        var transitGraphPath = graph.getPathDijkstra(2578129, 2578364, LocalTime.of(12, 0, 0));
+        var path = transitGraphPath.getEdgeList();
         System.out.println("path size: " + path.size());
         for (int i = 0; i < path.size(); i++)
         {
