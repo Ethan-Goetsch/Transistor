@@ -17,7 +17,7 @@ public class TransitCalculator
 {
     public List<Trip> calculateRoute(int originId, int destinationId)
     {
-        return new TransitGraphCalculator().getPathDijkstra(originId, destinationId, LocalTime.now())
+        return new TransitGraphCalculator().getPathDijkstra(originId, destinationId, LocalTime.NOON)
                 .getEdgeList()
                 .stream()
                 .map(this::convertEdgeToTrip)
