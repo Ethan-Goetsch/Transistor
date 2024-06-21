@@ -108,7 +108,10 @@ public class Edge
         double walkingSpeedMPS = 1.0;
         double durationS = distanceM/walkingSpeedMPS;
 
-        int retval = currentTime + (int)durationS;        
+        int retval = currentTime + (int)durationS;
+
+        departureTime = currentTime % (60*60*24);
+        arrivalTime = retval % (60*60*24);
 
         return retval;
     }

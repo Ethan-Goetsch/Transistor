@@ -17,8 +17,6 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.Map.Entry;
 
-import com.conveyal.gtfs.model.ShapePoint;
-
 public class TransitGraphCalculator
 {
     private Map<Integer, Node> nodes;// stop id to node
@@ -96,7 +94,10 @@ public class TransitGraphCalculator
         int currentTripid = 0;
         if (!current.getShortestPath().isEmpty())
         {
-            currentTripid = current.getShortestPath().getLast().getTripid();  
+            if (current.getShortestPath().getLast().getTripid() != -1)
+            {
+                currentTripid = current.getShortestPath().getLast().getTripid();
+            }
         }
 
         Edge bestEdge = null;
@@ -235,7 +236,7 @@ public class TransitGraphCalculator
 
         Edge newWalkingEdge = new Edge(departureTime, arrivalTime, source, destination, tripid, routeid, routeShortName, routeLongName, shape, shapeDistTraveledStart, shapeDistTraveledEnd, TransportType.FOOT);
 
-        if (newWalkingEdge.getPossibleArrivalTime(0) > (60*5))
+        if (newWalkingEdge.getPossibleArrivalTime(0) > (60*6))
         {
             return;
         }
@@ -249,38 +250,28 @@ public class TransitGraphCalculator
         edgeCount++;
     }
 
-    private void debug()
-    {
-        Node dbgNode = nodes.get(2578413);
-        System.out.println(dbgNode.getAdjacent().keySet().size());
-        for (var edgelist : dbgNode.getAdjacent().values())
-        {
-            for (Edge edge : edgelist)
-            {
-                if (edge.getRouteShortName().equals("5"))
-                {
-                    System.out.println("b5: " + Conversions.intToLocalTime(edge.getDepartureTime()) + " | " + Conversions.intToLocalTime(edge.getArrivalTime()));    
-                }
-                if (edge.getRouteShortName().equals("8"))
-                {
-                    System.out.println("b8: " + Conversions.intToLocalTime(edge.getDepartureTime()) + " | " + Conversions.intToLocalTime(edge.getArrivalTime()));    
-                }    
-            }
-        }
-        System.out.println("xd");
-        System.out.println("xd2");
-    }
-
     // testing postcode pairs
     // 6229EM: 2578130
     // 6211CM: 2578384
-
+    //
+    // 6211AL
+    // 6216NV
+    // 
+    // 6217KM 1104
+    // 6225DR 2081
+    //
+    // 6215KA 688
+    // 6211PK 181
+    // 
+    // 6223BV 1769
+    // 6217BX 1006
+    //
+    // 6228CS 2542
+    // 6217EP 1029
+    //
     // OLD
     // 6229EM apart hotel randwyck stopid: 2578129
     // 6211CM maastricht markt stopid: 2578366
-
-    // 6229EM: 2578130
-    // 6211CM: 2578384
     public static void main(String[] args)
     {
         int originid = 2578130;
@@ -299,10 +290,10 @@ public class TransitGraphCalculator
         for (int i = 0; i < path.size(); i++)
         {
             Edge edge = path.get(i);
-            System.out.println(edge.getSource().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getDepartureTime()).toString() + " | bus: " + edge.getRouteShortName() + " sid: " + edge.getSource().getStop().getId());
+            System.out.println(edge.getSource().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getDepartureTime()).toString() + " | bus: " + edge.getRouteShortName() + " sid: " + edge.getSource().getStop().getId() + " sp: " + edge.getShape().getShapePoints().size());
             if (i == path.size() - 1)
             {
-                System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString() + " | bus: " + edge.getRouteShortName() + " sid: " + edge.getDestination().getStop().getId());
+                System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString() + " | bus: " + edge.getRouteShortName() + " sid: " + edge.getDestination().getStop().getId()+ " sp: " + edge.getShape().getShapePoints().size());
             }
         }
         //graph.debug();
