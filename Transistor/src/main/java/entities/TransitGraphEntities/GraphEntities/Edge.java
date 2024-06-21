@@ -61,6 +61,21 @@ public class Edge
         this.transportType = TransportType.BUS;
     }
 
+    public Edge(int departureTime, int arrivalTime, Node source, Node destination) {
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.source = source;
+        this.destination = destination;
+        this.tripid = -1; // Special ID for walking transfers
+        this.routeid = -1;
+        this.routeShortName = "WALK";
+        this.routeLongName = "Walking transfer";
+        this.shape = null;
+        this.shapeDistTraveledStart = 0;
+        this.shapeDistTraveledEnd = 0;
+        this.color = Color.GRAY;
+        this.transportType = TransportType.FOOT;
+    }
     // TODO: MAKE SURE THIS WORKS
     public int getPossibleArrivalTime(int currentTime)
     {
@@ -69,7 +84,7 @@ public class Edge
         int normalDepartureTime = departureTime;
         if (arrivalTime < departureTime)
         {
-            normalArrivalTime += (60*60*24);    
+            normalArrivalTime += (60*60*24);
         }
         int edgeDuration = normalArrivalTime - departureTime;
         if (normalCurrentTime > departureTime)
@@ -78,7 +93,7 @@ public class Edge
         }
 
 
-        return (currentTime + ((normalDepartureTime - normalCurrentTime) + edgeDuration));   
+        return (currentTime + ((normalDepartureTime - normalCurrentTime) + edgeDuration));
     }
 
     // public int getPossibleArrivalTime(int currentTime)
@@ -106,7 +121,7 @@ public class Edge
         {
             if (shapePoint.getShapeDistTraveled() >= shapeDistTraveledStart && shapePoint.getShapeDistTraveled() <= shapeDistTraveledEnd)
             {
-                returnShape.getShapePoints().add(shapePoint);    
+                returnShape.getShapePoints().add(shapePoint);
             }
         }
         return returnShape;
