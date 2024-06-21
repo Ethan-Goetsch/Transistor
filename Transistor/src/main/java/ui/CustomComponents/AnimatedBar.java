@@ -27,10 +27,12 @@ public class AnimatedBar extends JPanel implements Resizible {
         int availableWidth = getWidth() - 2 * padding;
         int barWidth = (int) (availableWidth * (currentValue / 100.0));
 
-        // Color selection based on targetValue
-        if(targetValue <= 25){
+        // Color selection based on accessibility
+        if(targetValue <= 20){
             g.setColor(Color.RED);
-        }else if(targetValue <= 50){
+        }else if(targetValue <= 40){
+            g.setColor(Color.ORANGE);
+        }else if(targetValue <= 70){
             g.setColor(Color.YELLOW);
         }else{
             g.setColor(Color.GREEN);

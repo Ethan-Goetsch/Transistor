@@ -3,7 +3,6 @@ package ui.CustomComponents;
 import entities.Path;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.viewer.GeoPosition;
-
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
