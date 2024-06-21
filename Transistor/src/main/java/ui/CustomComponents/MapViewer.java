@@ -37,14 +37,8 @@ public class MapViewer extends JXMapViewer
     {
         super.paintComponent(g);
 
-        // Always paint waypoints
-        paintWayPoints();
-
-        // Only paint paths if they exist
-        if (paths.size() <= 1) return;
-        if (paths.stream().anyMatch(path -> path.points().size() <= 1)) return;
-
         var graphics2D = (Graphics2D) g;
+
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         paths.forEach(path -> paintPath(path, graphics2D));
     }

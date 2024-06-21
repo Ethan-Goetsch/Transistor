@@ -82,11 +82,14 @@ public class MainWindow extends JFrame {
         pack();
     }
 
-    public void setMainHeight(int mainHeight) {
+    public void setMainHeight(int mainHeight)
+    {
         this.mainHeight = mainHeight;
         changeSize();
     }
-    public void setMainWidth(int mainWidth) {
+
+    public void setMainWidth(int mainWidth)
+    {
         this.mainWidth = mainWidth;
         changeSize();
     }
@@ -107,12 +110,11 @@ public class MainWindow extends JFrame {
     public InformationPanel getInformationPanel() {
         return this.informationPanel;
     }
-    private void changeSize(){
+    private void changeSize()
+    {
         this.setSize(mainWidth+14, mainHeight+60);
         this.map.changeSize(mainWidth, mainHeight);
         this.informationPanel.changeSize(mainWidth, mainHeight);;
         ((MapViewer)this.jXMapViewer).changeSize(mainWidth, mainHeight);
     }
-
-
 }

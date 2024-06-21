@@ -22,7 +22,8 @@ public class UIController
 
     private void handleRequested(Request request)
     {
-        if(request instanceof RouteRequest){
+        if(request instanceof RouteRequest)
+        {
             var route = manager.calculateRouteRequest((RouteRequest) request);
             if (!route.responseMessage().isEmpty())
             {
@@ -32,10 +33,12 @@ public class UIController
 
             window.getInputRoutingSearchPanel().updateResults(route.departureDescription(), route.arrivalDescription());
             window.getTripPanel().getTripInformationPanel().updateResults(route);
-            MMap map= window.getMap();
+            MMap map = window.getMap();
             map.updateResults(route.departure(), route.arrival(), route.journey().getTrips(), -1);
 
-        }else if(request instanceof AccessibilityRequest){
+        }
+        else if(request instanceof AccessibilityRequest)
+        {
 
             var accessibilityMeasure = manager.calculateAccessibilityMeasure((AccessibilityRequest) request);
             if (!accessibilityMeasure.message().isEmpty())
@@ -50,7 +53,8 @@ public class UIController
 
     }
 
-    private static void showInvalidInputMessage(String accessibilityMeasure) {
+    private static void showInvalidInputMessage(String accessibilityMeasure)
+    {
         JOptionPane.showMessageDialog(new JFrame(), accessibilityMeasure, "Error Message", JOptionPane.ERROR_MESSAGE);
         return;
     }
