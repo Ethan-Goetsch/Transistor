@@ -34,6 +34,8 @@ public class TransitGraphCalculator
         resetGraph();
         Node source = nodes.get(originStopID);
         Node destination = nodes.get(destinationStopID);
+        int departureTime = Conversions.localTimeToInt(DepartureTime);
+
         if (source == null)
         {
             System.out.println("no source node with such id in graph");
@@ -46,10 +48,14 @@ public class TransitGraphCalculator
         }
         if (originStopID == destinationStopID)
         {
-            return new TransitGraphPath(DepartureTime, DepartureTime, 0, new ArrayList<Edge>());
+            TShape dummyShape = new TShape(-1, new ArrayList<TShapePoint>());
+            Edge dummyEdge = new Edge(departureTime, departureTime, source, destination);
+            dummyEdge.setShape(dummyShape);
+            TransitGraphPath dummyPath = new TransitGraphPath(DepartureTime, Conversions.intToLocalTime(departureTime+1), 1, new ArrayList<Edge>());
+            dummyPath.getEdgeList().add(dummyEdge);
+            
+            return dummyPath;
         }
-
-        int departureTime = Conversions.localTimeToInt(DepartureTime);
 
         dijkstra(source, destination, departureTime);
 
