@@ -149,16 +149,30 @@ public class GetAllTripsMaasQuery extends ResultQuery<List<TTrip>>
         for (TTrip trip : tripsList)
         {
             TShape shapeToSet = shapesMap.get(trip.getShape().getId());
-            if (shapeToSet != null)
+            if (shapeToSet == null)
             {
-                trip.setShape(shapeToSet);
+                shapeToSet = generateShapeFromStopPoints(trip);
             }
+            trip.setShape(shapeToSet);
         }
 
         // remove trips without a shape
-        tripsList.removeIf(trip -> (trip.getShape().getShapePoints() == null || trip.getShape().getShapePoints().isEmpty()));
+        // tripsList.removeIf(trip -> (trip.getShape().getShapePoints() == null || trip.getShape().getShapePoints().isEmpty()));
 
         return tripsList;
+    }
+
+    private TShape generateShapeFromStopPoints(TTrip trip)
+    {
+        TShape newShape = new TShape(-1, new ArrayList<TShapePoint>());
+        for (TStopTimePoint stopPoint : trip.getStopTimePoints())
+        {
+            stopPoint.setShapeDistTraveled(stopPoint.getSequence());
+            TShapePoint newShapePoint = new TShapePoint(stopPoint.getSequence(), stopPoint.getStop().getCoordinates(), stopPoint.getShapeDistTraveled());  
+            newShape.getShapePoints().add(newShapePoint);  
+        }
+
+        return newShape;
     }
 
     @Override

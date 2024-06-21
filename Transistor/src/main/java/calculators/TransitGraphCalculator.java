@@ -34,6 +34,17 @@ public class TransitGraphCalculator
         resetGraph();
         Node source = nodes.get(originStopID);
         Node destination = nodes.get(destinationStopID);
+        if (source == null)
+        {
+            System.out.println("no source node with such id in graph");
+            return null;
+        }
+        if (destination == null)
+        {
+            System.out.println("no destination node with such id in graph");
+            return null;    
+        }
+
         int departureTime = Conversions.localTimeToInt(DepartureTime);
 
         dijkstra(source, destination, departureTime);
@@ -55,6 +66,7 @@ public class TransitGraphCalculator
         int rDuration = destination.getShortestTime() - departureTime;
 
         TransitGraphPath returnPath = new TransitGraphPath(rDepartureTime, rArrivalTime, rDuration, returnList);
+        System.out.println(returnPath.getDepartureTime());
         return returnPath;
     }
 
