@@ -7,7 +7,6 @@ import entities.transit.TransitNode;
 import entities.transit.shapes.StopShape;
 import utils.Conversions;
 
-import java.awt.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;

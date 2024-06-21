@@ -5,6 +5,7 @@ import database.queries.GetAllTripsMaasQuery;
 import entities.TransitGraphEntities.GraphEntities.Edge;
 import entities.TransitGraphEntities.GraphEntities.Node;
 import entities.TransitGraphEntities.GraphEntities.TransitGraphPath;
+import entities.TransportType;
 import entities.TransitGraphEntities.TShape;
 import entities.TransitGraphEntities.TShapePoint;
 import entities.TransitGraphEntities.TStop;
@@ -15,6 +16,8 @@ import utils.Conversions;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.Map.Entry;
+
+import com.conveyal.gtfs.model.ShapePoint;
 
 public class TransitGraphCalculator
 {
@@ -85,37 +88,6 @@ public class TransitGraphCalculator
         }
     }
 
-    // private void updateShortestPathDijkstra(Node current, Node adjacent, List<Edge> edges)
-    // {
-    //     int newShortestTime = Integer.MAX_VALUE;
-
-    //     Edge bestEdge = null;
-    //     for (Edge edge : edges)
-    //     {
-    //         int earliestPossibleArrivalTime = edge.getPossibleArrivalTime(current.getShortestTime());
-
-    //         if (earliestPossibleArrivalTime < newShortestTime)
-    //         {
-    //             newShortestTime = earliestPossibleArrivalTime;
-    //             bestEdge = edge;
-    //         }
-    //     }
-
-    //     if (newShortestTime < adjacent.getShortestTime())
-    //     {
-    //         adjacent.setShortestTime(newShortestTime);
-
-    //         List<Edge> newShortestPath = new ArrayList<Edge>();
-    //         for (Edge edge : current.getShortestPath())
-    //         {
-    //             newShortestPath.add(edge);
-    //         }
-    //         newShortestPath.add(bestEdge);
-    //         adjacent.setShortestPath(newShortestPath);
-    //     }
-
-    // }
-
     private void updateShortestPathDijkstra(Node current, Node adjacent, List<Edge> edges)
     {
         int newShortestTime = Integer.MAX_VALUE;
@@ -172,6 +144,7 @@ public class TransitGraphCalculator
 
     private void buildFromTripsList(List<TTrip> trips)
     {
+        System.out.println("building graph...");
         for (TTrip trip : trips)
         {
             for (TStopTimePoint stopTimePoint : trip.getStopTimePoints())
@@ -188,39 +161,23 @@ public class TransitGraphCalculator
                 buildEdge(trip, stomTimePoints.get(i - 1), stomTimePoints.get(i));
             }
         }
+
+        buildWalkingEdges();
     }
 
-    // private void buildWalkingEdges()
-    // {
-    //     for (Node node1 : nodes.values())
-    //     {
-    //         for (Node node2 : nodes.values())
-    //         {
-    //             if (node1.getStop().getId() != node2.getStop().getId())
-    //             {
-    //                 TShapePoint shapePoint1 = new TShapePoint(0, node1.getStop().getCoordinates(), 0);
-    //                 TShapePoint shapePoint2 = new TShapePoint(1, node2.getStop().getCoordinates(), 1);  
-    //                 List<TShapePoint> shapePointList = new ArrayList<TShapePoint>();
-    //                 shapePointList.add(shapePoint1);
-    //                 shapePointList.add(shapePoint2);
-                    
-    //                 TShape shape = new TShape(-1, shapePointList);
-
-    //                 int departureTime = 
-    //                 int arrivalTime = Conversions.localTimeToInt(s2.getArrivalTime());
-    //                 Node source = nodes.get(s1.getStop().getId());
-    //                 Node destination = nodes.get(s2.getStop().getId());
-    //                 int tripid = trip.getId();
-    //                 int routeid = trip.getRouteid();
-    //                 String routeShortName = trip.getRouteShortName();
-    //                 String routeLongName = trip.getRouteLongName();
-    //                 TShape shape = trip.getShape();
-    //                 int shapeDistTraveledStart = s1.getShapeDistTraveled();
-    //                 int shapeDistTraveledEnd = s2.getShapeDistTraveled();
-    //             }    
-    //         }    
-    //     }
-    // }
+    private void buildWalkingEdges()
+    {
+        for (Node node1 : nodes.values())
+        {
+            for (Node node2 : nodes.values())
+            {
+                if (node1.getStop().getId() != node2.getStop().getId())
+                {
+                    buildWalkingEdge(node1, node2);
+                }
+            }
+        }
+    }
 
     private void buildNode(TStop stop)
     {
@@ -254,6 +211,44 @@ public class TransitGraphCalculator
         edgeCount++;
     }
 
+    private void buildWalkingEdge(Node node1, Node node2)
+    {
+        List<TShapePoint> shapePointList = new ArrayList<TShapePoint>();
+        TShapePoint shapePoint1 = new TShapePoint(0, node1.getStop().getCoordinates(), 0);
+        TShapePoint shapePoint2 = new TShapePoint(1, node2.getStop().getCoordinates(), 1);
+        shapePointList.add(shapePoint1);
+        shapePointList.add(shapePoint2);
+
+        TShape shape = new TShape(-1, shapePointList);
+
+        int departureTime = 0;
+        int arrivalTime = 1;
+        Node source = node1;
+        Node destination = node2;
+        int tripid = -1;
+        int routeid = -1;
+        String routeShortName = "walk";
+        String routeLongName = "walkchester";
+        //shape
+        int shapeDistTraveledStart = 0;
+        int shapeDistTraveledEnd = 1;
+
+        Edge newWalkingEdge = new Edge(departureTime, arrivalTime, source, destination, tripid, routeid, routeShortName, routeLongName, shape, shapeDistTraveledStart, shapeDistTraveledEnd, TransportType.FOOT);
+
+        if (newWalkingEdge.getPossibleArrivalTime(0) > (60*5))
+        {
+            return;
+        }
+
+        if (!source.getAdjacent().containsKey(destination))
+        {
+            source.getAdjacent().put(destination, new ArrayList<Edge>());
+        }
+
+        source.getAdjacent().get(destination).add(newWalkingEdge);
+        edgeCount++;
+    }
+
     private void debug()
     {
         Node dbgNode = nodes.get(2578413);
@@ -276,6 +271,10 @@ public class TransitGraphCalculator
         System.out.println("xd2");
     }
 
+    // testing postcode pairs
+    // 6229EM: 2578130
+    // 6211CM: 2578384
+
     // OLD
     // 6229EM apart hotel randwyck stopid: 2578129
     // 6211CM maastricht markt stopid: 2578366
@@ -290,7 +289,6 @@ public class TransitGraphCalculator
         System.out.println("fetching trips...");
 
         var graph = new TransitGraphCalculator();
-        System.out.println("fetched trips");
         System.out.println("built graph with " + graph.nodes.size() + "nodes and " + graph.edgeCount + "edges");
 
         System.out.println("testing finding path from stop " + originid + " to stop " + destinationid + " starting at 12:00");
