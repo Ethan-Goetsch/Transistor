@@ -7,7 +7,7 @@ import javax.swing.*;
 public class Accessibility extends JMenu {
     public Accessibility(JPanel informationPanel)
     {
-        super("accessibility");
+        super("Accessibility");
         JMenu accessibility = new JMenu("Set display");
         JMenuItem display = new JMenuItem("Show");
         JMenuItem hide = new JMenuItem("Hide");
