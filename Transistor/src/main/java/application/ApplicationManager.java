@@ -20,12 +20,14 @@ public class ApplicationManager
     private final LocationResolver locationResolver;
     private final RequestValidator requestValidator;
     private final IndexCalculator accessibilityCalculator;
+    private final TransitCalculator transitCalculator;
 
-    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, IndexCalculator accessibilityCalculator)
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, IndexCalculator accessibilityCalculator, TransitCalculator transitCalculator)
     {
         this.locationResolver = locationResolver;
         this.requestValidator = requestValidator;
         this.accessibilityCalculator = accessibilityCalculator;
+        this.transitCalculator = transitCalculator;
     }
 
     public AccessibilityMeasure calculateAccessibilityMeasure(AccessibilityRequest request)
@@ -115,7 +117,7 @@ public class ApplicationManager
             {
                 var journey = new Journey();
                 // Calculate the actual bus trip from starting bus stop to the final bus stop
-                var transitTrip = new TransitCalculator().calculateRoute(originStop.id(), destinationStop.id());
+                var transitTrip = transitCalculator.calculateRoute(originStop.id(), destinationStop.id());
                 if (transitTrip == null) continue;
 
                 // Calculate route from starting location to origin bus stop

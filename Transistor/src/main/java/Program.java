@@ -1,6 +1,8 @@
 import accessibility.IndexCalculator;
 import application.ApplicationManager;
 import application.RequestValidator;
+import calculators.TransitCalculator;
+import calculators.TransitGraphCalculator;
 import entities.geoJson.GeoDeserializer;
 import resolvers.LocationResolver;
 import ui.UIController;
@@ -19,11 +21,12 @@ public class Program
         RequestValidator requestValidator = new RequestValidator();
 
         IndexCalculator accessibilityCalculator = new IndexCalculator();
+        TransitGraphCalculator transitGraphCalculator = new TransitGraphCalculator();
+        TransitCalculator transitCalculator = new TransitCalculator(transitGraphCalculator);
         GeoDeserializer geoDeserializer = new GeoDeserializer();
 
-        ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, accessibilityCalculator);
+        ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, accessibilityCalculator, transitCalculator);
         accessibilityCalculator.setManager(manager);
         UIController controller = new UIController(manager);
     }
-
 }
