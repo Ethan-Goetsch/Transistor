@@ -51,7 +51,7 @@ public class TransitGraphCalculator
         }
 
         LocalTime rDepartureTime = Conversions.intToLocalTime(returnList.get(0).getDepartureTime());
-        LocalTime rArrivalTime = Conversions.intToLocalTime(returnList.get(returnList.size() - 1).getArrivalTime());
+        LocalTime rArrivalTime = Conversions.intToLocalTime(returnList.getLast().getArrivalTime());
         int rDuration = destination.getShortestTime() - departureTime;
 
         TransitGraphPath returnPath = new TransitGraphPath(rDepartureTime, rArrivalTime, rDuration, returnList);
