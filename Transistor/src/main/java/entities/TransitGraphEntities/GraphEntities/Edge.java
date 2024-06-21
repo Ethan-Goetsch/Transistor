@@ -7,6 +7,7 @@ import entities.TransportType;
 import entities.TransitGraphEntities.TShape;
 import entities.TransitGraphEntities.TShapePoint;
 import utils.ColorUtils;
+import utils.DistanceUtils;
 
 public class Edge
 {
@@ -64,6 +65,11 @@ public class Edge
     // TODO: MAKE SURE THIS WORKS
     public int getPossibleArrivalTime(int currentTime)
     {
+        if (transportType == TransportType.FOOT)
+        {
+            return getWalkingPossibleArrivalTime(currentTime);    
+        }
+        
         int normalCurrentTime = currentTime % (60*60*24);
         int normalArrivalTime = arrivalTime;
         int normalDepartureTime = departureTime;
@@ -81,23 +87,16 @@ public class Edge
         return (currentTime + ((normalDepartureTime - normalCurrentTime) + edgeDuration));   
     }
 
-    // public int getPossibleArrivalTime(int currentTime)
-    // {
-    //     System.out.println("t");
-    //     int earliestPossibleArrivalTime = Integer.MAX_VALUE;
+    private int getWalkingPossibleArrivalTime(int currentTime)
+    {
+        double distanceM = DistanceUtils.gcdistanceMeters(source.getStop().getCoordinates(), destination.getStop().getCoordinates());
+        double walkingSpeedMPS = 1.0;
+        double durationS = distanceM/walkingSpeedMPS;
 
-    //     int edgeDuration = arrivalTime - departureTime;
-    //     if (edgeDuration < 0 || currentTime > departureTime)
-    //     {
-    //         return earliestPossibleArrivalTime;
-    //     }
-    //     else
-    //     {
-    //         earliestPossibleArrivalTime = currentTime + (departureTime - currentTime) + edgeDuration;
-    //     }
+        int retval = currentTime + (int)durationS;        
 
-    //     return earliestPossibleArrivalTime;
-    // }
+        return retval;
+    }
 
     public TShape getShape()
     {

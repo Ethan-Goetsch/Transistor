@@ -7,6 +7,10 @@ public class ColorUtils
 {
     public static Color intToColor(int num)
     {
+        if (num == -1)
+        {
+            return Color.GREEN;
+        }
         List<Color> colors = new  ArrayList<Color>();
 
         colors.add(convertToColor(0xFFFFB300)); //Vivid Yellow
