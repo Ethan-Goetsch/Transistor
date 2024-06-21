@@ -43,7 +43,7 @@ public class AerialCalculator implements IRouteCalculator
         return new Trip(path, nodes, calculationRequest.transportType());
     }
 
-    private double distanceToPoint(Coordinate point1, Coordinate point2)
+    public double distanceToPoint(Coordinate point1, Coordinate point2)
     {
         double lat1 = Math.toRadians(point1.getLatitude());
         double lon1 = Math.toRadians(point1.getLongitude());

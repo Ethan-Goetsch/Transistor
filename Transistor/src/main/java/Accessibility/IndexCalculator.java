@@ -1,4 +1,4 @@
-package Accessibility;
+package accessibility;
 
 import application.ApplicationManager;
 import entities.*;
