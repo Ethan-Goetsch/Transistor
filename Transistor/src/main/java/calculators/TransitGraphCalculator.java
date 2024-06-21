@@ -44,6 +44,10 @@ public class TransitGraphCalculator
             System.out.println("no destination node with such id in graph");
             return null;    
         }
+        if (originStopID == destinationStopID)
+        {
+            return new TransitGraphPath(DepartureTime, DepartureTime, 0, new ArrayList<Edge>());
+        }
 
         int departureTime = Conversions.localTimeToInt(DepartureTime);
 
