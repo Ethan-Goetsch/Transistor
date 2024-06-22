@@ -6,19 +6,23 @@ import java.util.List;
 
 public class Journey
 {
-    private List<Trip> trips;
-    private double totalTravelTime;
+    private final List<Trip> trips;
+    private final double totalTravelTime;
 
-    public Journey() {
+    public Journey()
+    {
         this.trips = new ArrayList<>();
+        this.totalTravelTime = calculateTotalTravelTime();
+    }
+
+    public Journey(List<Trip> trips)
+    {
+        this.trips = trips;
+        this.totalTravelTime = calculateTotalTravelTime();
     }
 
     public List<Trip> getTrips() {
         return trips;
-    }
-
-    public void setTrips(List<Trip> trips) {
-        this.trips = trips;
     }
 
     public void addTrip(Trip trip)
@@ -36,10 +40,18 @@ public class Journey
         return trips.getLast().getArrivalTime();
     }
 
-    public double getTotalTravelTime(){
-        for (Trip trip: trips){
-            totalTravelTime += trip.getTravelTime();
-        }
+    public double getTotalTravelTime()
+    {
         return totalTravelTime;
+    }
+
+    private double calculateTotalTravelTime()
+    {
+        var time = 0.0;
+        for (Trip trip: trips)
+        {
+            time += trip.getTravelTimeHours();
+        }
+        return time;
     }
 }

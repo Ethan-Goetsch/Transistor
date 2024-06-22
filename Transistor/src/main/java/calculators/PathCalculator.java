@@ -62,14 +62,12 @@ public class PathCalculator implements IRouteCalculator
 
         var distance =  Conversions.metersToKilometers(responsePath.getDistance());
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
-
-        var timeOfTripInSeconds = LocalTime.ofSecondOfDay((long) time);
-        var arrivalTime = calculationRequest.departureTime().plusSeconds(timeOfTripInSeconds.toSecondOfDay());
+        var arrivalTime = calculationRequest.departureTime().plusSeconds((long)(time * 3600));
 
         List<TransitNode> nodes = new ArrayList<>();
 
-        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
-        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), calculationRequest.arrivalTime(), calculationRequest.arrivalTime(), new PathShape(-1, calculationRequest.arrival())));
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, new PathShape(-1, calculationRequest.arrival())));
 
         var color = Color.GREEN;
         return new Trip(Conversions.toPath(responsePath, color), nodes, calculationRequest.transportType());

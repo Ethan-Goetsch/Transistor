@@ -24,7 +24,7 @@ public class UIController
     {
         if(request instanceof RouteRequest)
         {
-            var route = manager.calculateRouteRequest((RouteRequest) request);
+            var route = manager.processRouteRequest((RouteRequest) request);
             if (!route.responseMessage().isEmpty())
             {
                 showInvalidInputMessage(route.responseMessage());
@@ -37,20 +37,19 @@ public class UIController
             map.updateResults(route.departure(), route.arrival(), route.journey().getTrips(), -1);
 
         }
-        else if(request instanceof AccessibilityRequest)
+        else if (request instanceof AccessibilityRequest)
         {
-
             var accessibilityMeasure = manager.calculateAccessibilityMeasure((AccessibilityRequest) request);
             if (!accessibilityMeasure.message().isEmpty())
             {
                 showInvalidInputMessage(accessibilityMeasure.message());
                 return;
             }
+
             window.getOutputAccessibilityPanel().updateResults(accessibilityMeasure.indexes());
             MMap map= window.getMap();
             map.updateResults(accessibilityMeasure.postalCodeLocation(), accessibilityMeasure.postalCodeLocation(), new ArrayList<>(), -1);
         }
-
     }
 
     private static void showInvalidInputMessage(String accessibilityMeasure)

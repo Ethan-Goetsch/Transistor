@@ -6,7 +6,6 @@ import entities.transit.shapes.PathShape;
 import utils.Conversions;
 
 import java.awt.*;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +26,7 @@ public class AerialCalculator implements IRouteCalculator
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
         var color = Color.GREEN;
-        var timeOfTripInSeconds = (long) (time * 3600);
-        var arrivalTime = calculationRequest.departureTime().plusSeconds(timeOfTripInSeconds);
+        var arrivalTime = calculationRequest.departureTime().plusSeconds((long)(time * 3600));
 
         var points = new ArrayList<PathPoint>();
         points.add(new PathPoint(calculationRequest.departure(), PointType.Normal));
@@ -37,13 +35,13 @@ public class AerialCalculator implements IRouteCalculator
 
         List<TransitNode> nodes = new ArrayList<>();
 
-        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
-        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, arrivalTime, new PathShape(-1, calculationRequest.arrival())));
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, new PathShape(-1, calculationRequest.arrival())));
 
         return new Trip(path, nodes, calculationRequest.transportType());
     }
 
-    public double distanceToPoint(Coordinate point1, Coordinate point2)
+    private double distanceToPoint(Coordinate point1, Coordinate point2)
     {
         double lat1 = Math.toRadians(point1.getLatitude());
         double lon1 = Math.toRadians(point1.getLongitude());

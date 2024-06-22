@@ -41,7 +41,6 @@ public class InputAccessibilityPanel extends JPanel {
         JButton calculateButton = new CalculationButton("Find Accessibility");
         calculateButton.addActionListener(e -> onCalculateClicked.execute(new AccessibilityRequest(postalCodeField.getText(), disabledPersonsSetting)));
 
-
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(

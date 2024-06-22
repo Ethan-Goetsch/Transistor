@@ -63,7 +63,6 @@ public class GetAllStopsForTrip extends ResultQuery<List<TransitNode>>
                         resultSet.getString(2),
                         coordinate,
                         arrivalTime,
-                        departureTime,
                         new StopShape(coordinate));
                 nodes.add(node);
             }

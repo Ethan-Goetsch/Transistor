@@ -2,6 +2,7 @@ package ui.Panels;
 
 import entities.RouteRequest;
 import entities.RouteType;
+import entities.TransitType;
 import entities.TransportType;
 import ui.CustomComponents.*;
 import utils.IAction;
@@ -66,7 +67,7 @@ public class InputRoutingSearchPanel extends JPanel
 
         JButton calculateButton = new CalculationButton("Calculate");
         calculateButton.addActionListener(e -> onCalculateClicked.execute(new RouteRequest(departureField.getText(),
-                arrivalField.getText(), selectedTransport, routeTypeSetting)));
+                arrivalField.getText(), selectedTransport, routeTypeSetting, TransitType.Transfer)));
 
         distanceLabel = new JLabel();
         timeLabel = new JLabel();

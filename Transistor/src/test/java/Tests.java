@@ -44,6 +44,7 @@
 //         assertNotNull(resultTrip.path());
 //     }
 
+<<<<<<< HEAD
 //     @Test
 //     void busPathTest1()
 //     {
@@ -63,9 +64,31 @@
 //         var transitCalculator = new TransitCalculator();
 //         var trip = transitCalculator.calculateRoute(2578413, 2578413);
 //         assertNull(trip);
+=======
+    @Test
+    void busPathTest1()
+    {
+        //test for actual path between two stops
+        var transitCalculator = new TransferTransitCalculator();
+        var trip = transitCalculator.calculateRoute(2578413, 2578366);
+        assertNotNull(trip);
+        LocalTime expectedArrivalTime = LocalTime.parse("08:32:00");
+        assertEquals(expectedArrivalTime, trip.getArrivalTime());
+        assertNotNull(trip.path());
+    }
+
+    @Test
+    void busPathTest2()
+    {
+        //test for path between same stops
+        var transitCalculator = new TransferTransitCalculator();
+        var trip = transitCalculator.calculateRoute(2578413, 2578413);
+        assertNull(trip);
+>>>>>>> 1dc8ed38b0b6ee5fadd5548ab553d05b6cd03145
 
 //     }
 
+<<<<<<< HEAD
 //     @Test
 //     void busPathTest3()
 //     {
@@ -84,3 +107,23 @@
 //         assertNull(trip);
 //     }
 // }
+=======
+    @Test
+    void busPathTest3()
+    {
+        //test for path between non-existing stops
+        var transitCalculator = new TransferTransitCalculator();
+        var trip = transitCalculator.calculateRoute(999999, 999999);
+        assertNull(trip);
+    }
+
+    @Test
+    void busPathTest4()
+    {
+        //test for path between existing and not existing stop
+        var transitCalculator = new TransferTransitCalculator();
+        var trip = transitCalculator.calculateRoute(2578413, 999999);
+        assertNull(trip);
+    }
+}
+>>>>>>> 1dc8ed38b0b6ee5fadd5548ab553d05b6cd03145

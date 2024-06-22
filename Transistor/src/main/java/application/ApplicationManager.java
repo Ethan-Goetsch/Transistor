@@ -13,6 +13,7 @@ import entities.geoJson.GeoDeserializer;
 import entities.transit.TransitStop;
 import resolvers.LocationResolver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationManager
@@ -20,14 +21,16 @@ public class ApplicationManager
     private final LocationResolver locationResolver;
     private final RequestValidator requestValidator;
     private final IndexCalculator accessibilityCalculator;
-    private final TransitCalculator transitCalculator;
+    private final List<TransitCalculator> transitCalculators;
+    private final AerialCalculator aerialCalculator;
 
-    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, IndexCalculator accessibilityCalculator, TransitCalculator transitCalculator)
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, IndexCalculator accessibilityCalculator, List<TransitCalculator> transitCalculators, AerialCalculator aerialCalculator)
     {
         this.locationResolver = locationResolver;
         this.requestValidator = requestValidator;
         this.accessibilityCalculator = accessibilityCalculator;
-        this.transitCalculator = transitCalculator;
+        this.transitCalculators = transitCalculators;
+        this.aerialCalculator = aerialCalculator;
     }
 
     public AccessibilityMeasure calculateAccessibilityMeasure(AccessibilityRequest request)
@@ -44,8 +47,6 @@ public class ApplicationManager
         try
         {
             postalCodeLocation = locationResolver.getCordsFromPostCode(request.postalCode());
-
-
             if (postalCodeLocation == null )
             {
                 throw new InvalidCoordinateException("Invalid Input!");
@@ -66,7 +67,12 @@ public class ApplicationManager
         return new AccessibilityMeasure(indexes, postalCodeLocation, message);
     }
 
-    public Route calculateRouteRequest(RouteRequest request)
+    public Trip calculateAerialTrip(RouteCalculationRequest request)
+    {
+        return aerialCalculator.calculateRoute(request);
+    }
+
+    public Route processRouteRequest(RouteRequest request)
     {
         if (!requestValidator.isValidRequest(request))
         {
@@ -83,7 +89,10 @@ public class ApplicationManager
             departureCoordinates = locationResolver.getCordsFromPostCode(request.departure());
             arrivalCoordinates = locationResolver.getCordsFromPostCode(request.arrival());
 
-           journey = getJourney(departureCoordinates, arrivalCoordinates, request);
+            var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 1));
+            var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 1));
+
+           journey = calculateJourney(departureCoordinates, arrivalCoordinates, originStops, destinationStops, request.transportType(), request.transitType());
 
             if (journey == null || journey.getTrips().isEmpty())
             {
@@ -99,19 +108,17 @@ public class ApplicationManager
         return new Route(departureCoordinates, arrivalCoordinates, journey, message);
     }
 
-    public Journey getJourney(Coordinate departureCoordinates, Coordinate arrivalCoordinates, RouteRequest request)
+    public Journey processJourneyRequest(JourneyRequest request)
     {
-        var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(departureCoordinates, 1));
-        var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(arrivalCoordinates, 1));
-        return getRouteCalculationResult(request, departureCoordinates, arrivalCoordinates, originStops, destinationStops);
+        var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(request.departure(), 1));
+        var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(request.arrival(), 1));
+        return calculateJourney(request.departure(), request.arrival(), originStops, destinationStops, request.transportType(), request.transitType());
     }
 
-    private Journey getRouteCalculationResult(RouteRequest request, Coordinate departureCoordinates, Coordinate arrivalCoordinates, List<TransitStop> originStops, List<TransitStop> destinationStops)
+    private Journey calculateJourney(Coordinate departureCoordinates, Coordinate arrivalCoordinates, List<TransitStop> originStops, List<TransitStop> destinationStops, TransportType transportType, TransitType transitType)
     {
         Journey earliestJourney = null;
-        double shortestTravelTime = Double.MAX_VALUE;
-
-        boolean found = false;
+        var shortestTravelTime = Double.MAX_VALUE;
 
         for (var originStop : originStops)
         {
@@ -119,27 +126,30 @@ public class ApplicationManager
             {
                 var journey = new Journey();
                 // Calculate the actual bus trip from starting bus stop to the final bus stop
-                var transitTrip = transitCalculator.calculateRoute(originStop.id(), destinationStop.id());
+                var transitTrip = transitCalculators.stream()
+                        .filter(calculator -> calculator.getTransitType() == transitType)
+                        .findFirst()
+                        .orElseThrow()
+                        .calculateRoute(originStop.id(), destinationStop.id());
+
                 if (transitTrip == null)
                 {
                     continue;
                 }
 
                 // Calculate route from starting location to origin bus stop
-                var locationToOriginTrip = new AerialCalculator().calculateRoute(
+                var locationToOriginTrip = aerialCalculator.calculateRoute(
                         new RouteCalculationRequest(departureCoordinates,
                                 originStop.coordinate(),
-                                transitTrip.getLast().getDepartureTime(),
-                                transitTrip.getLast().getDepartureTime(),
-                                request.transportType()));
+                                transitTrip.getFirst().getArrivalTime(),
+                                transportType));
 
                 // Calculate route from destination bus stop to final destination
-                var destinationToFinal = new AerialCalculator().calculateRoute(
+                var destinationToFinal = aerialCalculator.calculateRoute(
                         new RouteCalculationRequest(destinationStop.coordinate(),
                                 arrivalCoordinates,
                                 transitTrip.getLast().getArrivalTime(),
-                                transitTrip.getLast().getArrivalTime(),
-                                request.transportType()));
+                                transportType));
 
                 journey.addTrip(locationToOriginTrip);
                 journey.addTrip(transitTrip);

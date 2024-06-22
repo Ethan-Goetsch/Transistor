@@ -3,13 +3,12 @@ package accessibility;
 import application.ApplicationManager;
 import entities.*;
 import entities.geoJson.GeoData;
-import entities.geoJson.GeoDeserializer;
-import java.time.Duration;
+
 import java.time.LocalTime;
 import java.util.*;
 
-public class IndexCalculator {
-
+public class IndexCalculator
+{
     private ApplicationManager manager;
     private boolean disabledPersonSetting;
 
@@ -22,8 +21,8 @@ public class IndexCalculator {
     }
 
     private static final Map<String, Double[]> amenityWeights = new HashMap<>();
-    static {
-        //
+    static
+    {
         amenityWeights.put("hospital", new Double[]{1.0, 1.0});
         amenityWeights.put("clinic", new Double[]{0.5, 1.0});
         amenityWeights.put("nursing_home", new Double[]{0.2, 0.9});
@@ -120,7 +119,8 @@ public class IndexCalculator {
     }
 
 
-    public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode, boolean disabledPersonSetting) {
+    public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode, boolean disabledPersonSetting)
+    {
         this.disabledPersonSetting = disabledPersonSetting;
         Map<AmenityCategory, List<GeoData>> categorizedAmenities = categorizeAmenities(list);
 
@@ -136,7 +136,8 @@ public class IndexCalculator {
         return indexes;
     }
 
-    private Map<AmenityCategory, List<GeoData>> categorizeAmenities(List<GeoData> list) {
+    private Map<AmenityCategory, List<GeoData>> categorizeAmenities(List<GeoData> list)
+    {
         Map<AmenityCategory, List<GeoData>> categorizedAmenities = new HashMap<>();
         categorizedAmenities.put(AmenityCategory.HEALTHCARE, new ArrayList<>());
         categorizedAmenities.put(AmenityCategory.EDUCATION, new ArrayList<>());
@@ -165,20 +166,34 @@ public class IndexCalculator {
         Set<String> transportation = new HashSet<>(Arrays.asList("fuel", "car_wash", "taxi","bicycle_parking","moped_parking","car_rental",
                 "parking_entrance","parking","parking_space","charging_station"));
 
-        for (GeoData geoData : list) {
-            if (healthcare.contains(geoData.getType())) {
+        for (GeoData geoData : list)
+        {
+            if (healthcare.contains(geoData.getType()))
+            {
                 categorizedAmenities.get(AmenityCategory.HEALTHCARE).add(geoData);
-            } else if (entertainment.contains(geoData.getType())) {
+            }
+            else if (entertainment.contains(geoData.getType()))
+            {
                 categorizedAmenities.get(AmenityCategory.EDUCATION).add(geoData);
-            } else if (shopping.contains(geoData.getType())) {
+            }
+            else if (shopping.contains(geoData.getType()))
+            {
                 categorizedAmenities.get(AmenityCategory.SHOP).add(geoData);
-            } else if (education.contains(geoData.getType())) {
+            }
+            else if (education.contains(geoData.getType()))
+            {
                 categorizedAmenities.get(AmenityCategory.ENTERTAINMENT).add(geoData);
-            } else if (tourism.contains(geoData.getType())) {
+            }
+            else if (tourism.contains(geoData.getType()))
+            {
                 categorizedAmenities.get(AmenityCategory.TOURISM).add(geoData);
-            } else if (publicServices.contains(geoData.getType())) {
+            }
+            else if (publicServices.contains(geoData.getType()))
+            {
                 categorizedAmenities.get(AmenityCategory.PUBLIC_SERVICES).add(geoData);
-            } else if (transportation.contains(geoData.getType())) {
+            }
+            else if (transportation.contains(geoData.getType()))
+            {
                 categorizedAmenities.get(AmenityCategory.TRANSPORTATION).add(geoData);
             }
         }
@@ -186,46 +201,51 @@ public class IndexCalculator {
         return categorizedAmenities;
     }
 
-    private double getIndexForCategory(List<GeoData> categoryData, Coordinate coordinatePostalCode) {
+    private double getIndexForCategory(List<GeoData> categoryData, Coordinate coordinatePostalCode)
+    {
         Map<String, List<GeoData>> groupedAmenities = new HashMap<>();
 
-        for (GeoData geoData : categoryData) {
+        for (GeoData geoData : categoryData)
+        {
             groupedAmenities.computeIfAbsent(geoData.getType(), k -> new ArrayList<>()).add(geoData);
         }
 
         List<GeoData> nearestLocations = new ArrayList<>();
-        for (List<GeoData> amenities : groupedAmenities.values()) {
-            GeoData nearest = amenities.stream()
+        for (List<GeoData> amenities : groupedAmenities.values())
+        {
+            GeoData nearest = amenities
+                    .stream()
                     .min(Comparator.comparingDouble(geoData -> getDistance(geoData.getLatitude(), geoData.getLongitude(), coordinatePostalCode.getLatitude(), coordinatePostalCode.getLongitude())))
                     .orElse(null);
-            if (nearest != null) {
+            if (nearest != null)
+            {
                 nearestLocations.add(nearest);
             }
         }
 
         double[] weights = new double[nearestLocations.size()];
-        int[] times = new int[nearestLocations.size()];
+        double[] times = new double[nearestLocations.size()];
         int i = 0;
-        for (GeoData geoData : nearestLocations) {
+
+        for (GeoData geoData : nearestLocations)
+        {
             Double[] weight = amenityWeights.get(geoData.getType());
-            if(disabledPersonSetting){
+            if (disabledPersonSetting)
+            {
                 weights[i] = weight[1];
-            }else{
+            }
+            else
+            {
                 weights[i] = weight[0];
             }
 
-            int travelTime = 15;  // Default travel time in minutes
-            Journey journeyToAmenity = manager.getJourney(coordinatePostalCode, new Coordinate(geoData.getLatitude(), geoData.getLongitude()), new RouteRequest("", "", TransportType.BUS, RouteType.ACTUAL));
-            if (journeyToAmenity != null) {
-                try {
-                    LocalTime departureTime = journeyToAmenity.getTrips().getFirst().getDepartureTime();
-                    LocalTime arrivalTime = journeyToAmenity.getTrips().getLast().getArrivalTime();
-                    // Calculate travel time in minutes
-                    travelTime = (int) Duration.between(departureTime, arrivalTime).toMinutes();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-            }
+            var trip = manager.calculateAerialTrip(new RouteCalculationRequest(coordinatePostalCode,
+                    new Coordinate(geoData.getLatitude(), geoData.getLongitude()),
+                    LocalTime.NOON,
+                    TransportType.FOOT));
+
+            // Calculate travel time in minutes
+            var travelTime = trip.getTravelTimeHours();
             times[i] = travelTime;
             i++;
         }
@@ -233,7 +253,8 @@ public class IndexCalculator {
         return Math.round(calculator(weights, times));
     }
 
-    public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
+    public static double getDistance(double lat1, double lon1, double lat2, double lon2)
+    {
         final int R = 6371; // Radius of the earth in km
 
         double latDistance = Math.toRadians(lat2 - lat1);
@@ -245,44 +266,51 @@ public class IndexCalculator {
 
         return R * c;
     }
-    private static double calculator(double[] weights, int[] times) {
+
+    private static double calculator(double[] weights, double[] times)
+    {
         final double beta = 0.1;
         double[] impedanceValues = calculateImpedanceValue(times, beta);
 
         double accessibility = calculateAccessibility(weights, impedanceValues);
-
         double maxAccessibility = calculateMaxAccessibility(weights, beta);
 
         return normalizeAccessibility(accessibility, maxAccessibility);
     }
 
-    private static double normalizeAccessibility(double accessibility, double maxAccessibility) {
+    private static double normalizeAccessibility(double accessibility, double maxAccessibility)
+    {
         double normalizedAccessibility = (accessibility / maxAccessibility) * 100;
         return Math.max(0, normalizedAccessibility);
     }
 
-    private static double calculateAccessibility(double[] normalizedValues, double[] impedanceValues) {
+    private static double calculateAccessibility(double[] normalizedValues, double[] impedanceValues)
+    {
         double accessibility = 0;
-        for (int i = 0; i < normalizedValues.length; i++) {
+        for (int i = 0; i < normalizedValues.length; i++)
+        {
             accessibility += normalizedValues[i] * impedanceValues[i];
         }
         return accessibility;
     }
 
-    private static double[] calculateImpedanceValue(int[] times, double beta) {
+    private static double[] calculateImpedanceValue(double[] times, double beta)
+    {
         double[] impedanceValues = new double[times.length];
-        for (int i = 0; i < times.length; i++) {
+        for (int i = 0; i < times.length; i++)
+        {
             impedanceValues[i] = Math.exp(-beta * times[i]);
         }
         return impedanceValues;
     }
 
-    private static double calculateMaxAccessibility(double[] normalizedValues, double beta) {
+    private static double calculateMaxAccessibility(double[] normalizedValues, double beta)
+    {
         double maxAccessibility = 0;
-        for (int i = 0; i < normalizedValues.length; i++) {
+        for (int i = 0; i < normalizedValues.length; i++)
+        {
             maxAccessibility += normalizedValues[i] * Math.exp(-beta * 1); // Assume minimum travel time of 1 minutes
         }
         return maxAccessibility;
     }
-
 }

@@ -26,7 +26,6 @@ public class Conversions
         int hours = seconds / 3600;
         int minutes = (seconds % 3600) / 60;
         int remainingSeconds = seconds % 60;
-
         return LocalTime.of(hours, minutes, remainingSeconds);
     }
 
@@ -51,7 +50,7 @@ public class Conversions
 
     public static double calculateTime(double distanceInKilometers, TransportType type)
     {
-        double speed = type.getSpeedInKilometersPerSecond();
+        double speed = type.getSpeedInKilometersPerHour();
         return distanceInKilometers/speed;
     }
 

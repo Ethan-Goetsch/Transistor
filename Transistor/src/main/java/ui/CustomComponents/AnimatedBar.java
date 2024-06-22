@@ -6,19 +6,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AnimatedBar extends JPanel implements Resizible {
-    private int currentValue = 0;
-    private int targetValue;
+    private double currentValue = 0;
+    private double targetValue;
     private Timer timer;
 
-    public AnimatedBar(int targetValue, int mainWidth, int mainHeight) {
+    public AnimatedBar(double targetValue, int mainWidth, int mainHeight)
+    {
         this.targetValue = targetValue;
         this.setBackground(Color.white);
+
         changeSize(mainWidth, mainHeight);
         setupTimer();
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g)
+    {
         super.paintComponent(g);
 
         int padding = 5;
@@ -46,21 +49,28 @@ public class AnimatedBar extends JPanel implements Resizible {
         g.drawRoundRect(padding, padding, availableWidth, barHeight, barHeight, barHeight);
     }
 
-    private void setupTimer() {
-        if (timer != null) {
+    private void setupTimer()
+    {
+        if (timer != null)
+        {
             timer.stop();
         }
 
         int delay = 10;
         int step = 1;
 
-        timer = new Timer(delay, new ActionListener() {
+        timer = new Timer(delay, new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if (currentValue < targetValue) {
+            public void actionPerformed(ActionEvent e)
+            {
+                if (currentValue < targetValue)
+                {
                     currentValue += Math.min(step, targetValue - currentValue);
                     repaint();
-                } else {
+                }
+                else
+                {
                     timer.stop();
                 }
             }
@@ -68,18 +78,17 @@ public class AnimatedBar extends JPanel implements Resizible {
         timer.start();
     }
 
-    public void changeValue(int newValue) {
-        if (newValue < 0 || newValue > 100) {
-            throw new IllegalArgumentException("Value must be between 0 and 100.");
-        }
-
+    public void changeValue(double newValue)
+    {
+        newValue = Math.clamp(newValue, 0, 100);
         this.targetValue = newValue;
         this.currentValue = 0;
         setupTimer();
     }
 
     @Override
-    public void changeSize(int mainWidth, int mainHeight) {
+    public void changeSize(int mainWidth, int mainHeight)
+    {
         setPreferredSize(new Dimension((int)(mainWidth / 2.5), 20));
         revalidate();
         repaint();

@@ -10,13 +10,15 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutputAccessibilityPanel extends JPanel {
+public class OutputAccessibilityPanel extends JPanel
+{
     private int mainWidth;
     private int mainHeight;
     private List<Resizible> components;
     private JLabel[] indexes;
 
-    public OutputAccessibilityPanel(int mainWidth, int mainHeight) {
+    public OutputAccessibilityPanel(int mainWidth, int mainHeight)
+    {
         components = new ArrayList<>();
         indexes = new JLabel[7];
         this.mainWidth = mainWidth;
@@ -27,7 +29,8 @@ public class OutputAccessibilityPanel extends JPanel {
         setLayout();
     }
 
-    private void setLayout() {
+    private void setLayout()
+    {
         // Create the bars
         AnimatedBar bar1 = new AnimatedBar(0, mainWidth, mainHeight); // Example target values
         AnimatedBar bar2 = new AnimatedBar(0, mainWidth, mainHeight);
@@ -138,13 +141,16 @@ public class OutputAccessibilityPanel extends JPanel {
         );
     }
 
-    public void changeSize(int mainWidth, int mainHeight) {
+    public void changeSize(int mainWidth, int mainHeight)
+    {
         setPreferredSize(new Dimension(mainWidth / 3, 2 * mainHeight / 3));
         components.forEach(c -> c.changeSize((int) this.getPreferredSize().getWidth(), (int) this.getPreferredSize().getHeight()));
     }
 
-    public void updateResults(List<Double> indexes){
-        for (int i = 0; i < 7; i++) {
+    public void updateResults(List<Double> indexes)
+    {
+        for (int i = 0; i < 7; i++)
+        {
             ((AnimatedBar)components.get(i)).changeValue((indexes.get(i)).intValue());
             this.indexes[i].setText(indexes.get(i).toString() + "%");
         }
