@@ -191,7 +191,6 @@ public class TransitGraphCalculator
             {
                 if (node1.getStop().getId() != node2.getStop().getId())
                 {
-                    if (node1.getAdjacent().containsKey(node2)) continue;
                     buildWalkingEdge(node1, node2);
                 }
             }

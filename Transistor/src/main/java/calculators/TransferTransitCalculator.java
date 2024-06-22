@@ -32,14 +32,8 @@ public class TransferTransitCalculator extends TransitCalculator
     {
         System.out.println("originid: " + originId);
         System.out.println("destinationid: " + destinationId);
-        
+
         var path = transitGraphCalculator.getPathDijkstra(originId, destinationId, LocalTime.NOON);
-
-        if (path == null)
-        {
-            return null;    
-        }
-
         return path.getEdgeList().stream().map(this::convertEdgeToTrip).collect(Collectors.toList());
     }
 

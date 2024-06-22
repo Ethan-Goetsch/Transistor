@@ -236,5 +236,4 @@ public class GetAllTripsMaasQuery extends ResultQuery<List<TTrip>>
         }
         System.out.println(trips.size());
     }
-
 }
