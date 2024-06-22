@@ -129,8 +129,8 @@ public class ApplicationManager
                 var locationToOriginTrip = new AerialCalculator().calculateRoute(
                         new RouteCalculationRequest(departureCoordinates,
                                 originStop.coordinate(),
-                                transitTrip.getLast().getDepartureTime(),
-                                transitTrip.getLast().getDepartureTime(),
+                                transitTrip.getFirst().getArrivalTime(),
+                                transitTrip.getFirst().getDepartureTime(),
                                 request.transportType()));
 
                 // Calculate route from destination bus stop to final destination
