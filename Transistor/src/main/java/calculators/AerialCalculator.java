@@ -6,7 +6,6 @@ import entities.transit.shapes.PathShape;
 import utils.Conversions;
 
 import java.awt.*;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +35,8 @@ public class AerialCalculator implements IRouteCalculator
 
         List<TransitNode> nodes = new ArrayList<>();
 
-        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
-        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, arrivalTime, new PathShape(-1, calculationRequest.arrival())));
+        nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
+        nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, new PathShape(-1, calculationRequest.arrival())));
 
         return new Trip(path, nodes, calculationRequest.transportType());
     }

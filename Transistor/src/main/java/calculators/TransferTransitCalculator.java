@@ -63,7 +63,6 @@ public class TransferTransitCalculator extends TransitCalculator
                 stop.getName(),
                 stop.getCoordinates(),
                 Conversions.intToLocalTime(edge.getArrivalTime()),
-                Conversions.intToLocalTime(edge.getDepartureTime()),
                 new StopShape(stop.getCoordinates()));
     }
 }
