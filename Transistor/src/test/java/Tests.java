@@ -48,7 +48,7 @@ class Tests
     void busPathTest1()
     {
         //test for actual path between two stops
-        var transitCalculator = new TransitCalculator();
+        var transitCalculator = new TransferTransitCalculator();
         var trip = transitCalculator.calculateRoute(2578413, 2578366);
         assertNotNull(trip);
         LocalTime expectedArrivalTime = LocalTime.parse("08:32:00");
@@ -60,7 +60,7 @@ class Tests
     void busPathTest2()
     {
         //test for path between same stops
-        var transitCalculator = new TransitCalculator();
+        var transitCalculator = new TransferTransitCalculator();
         var trip = transitCalculator.calculateRoute(2578413, 2578413);
         assertNull(trip);
 
@@ -70,7 +70,7 @@ class Tests
     void busPathTest3()
     {
         //test for path between non-existing stops
-        var transitCalculator = new TransitCalculator();
+        var transitCalculator = new TransferTransitCalculator();
         var trip = transitCalculator.calculateRoute(999999, 999999);
         assertNull(trip);
     }
@@ -79,7 +79,7 @@ class Tests
     void busPathTest4()
     {
         //test for path between existing and not existing stop
-        var transitCalculator = new TransitCalculator();
+        var transitCalculator = new TransferTransitCalculator();
         var trip = transitCalculator.calculateRoute(2578413, 999999);
         assertNull(trip);
     }

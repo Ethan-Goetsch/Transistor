@@ -14,9 +14,9 @@ public record Trip(Path path, List<TransitNode> nodes, TransportType type)
     public String getDepartureDescription() { return getDepartureTime().toString(); }
     public String getArrivalDescription() { return getArrivalTime().toString(); }
 
-    public double getTravelTime()
+    public double getTravelTimeHours()
     {
         Duration travelTime = Duration.between(getDepartureTime(), getArrivalTime());
-        return travelTime.toHours();
+        return travelTime.getSeconds() / 3600.0;
     }
 }

@@ -8,9 +8,9 @@ public enum TransportType
     BUS(45);
 
     private final double speedInKilometersPerHour;
-    private TransportType(double speedInKilometersPerSecond)
+    private TransportType(double speedInKilometersPerHour)
     {
-        this.speedInKilometersPerHour = speedInKilometersPerSecond;
+        this.speedInKilometersPerHour = speedInKilometersPerHour;
     }
 
     public double getSpeedInKilometersPerHour() { return speedInKilometersPerHour; }

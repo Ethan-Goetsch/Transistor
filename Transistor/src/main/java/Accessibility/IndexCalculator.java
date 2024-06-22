@@ -3,8 +3,7 @@ package accessibility;
 import application.ApplicationManager;
 import entities.*;
 import entities.geoJson.GeoData;
-import entities.geoJson.GeoDeserializer;
-import java.time.Duration;
+
 import java.time.LocalTime;
 import java.util.*;
 
@@ -225,8 +224,9 @@ public class IndexCalculator
         }
 
         double[] weights = new double[nearestLocations.size()];
-        int[] times = new int[nearestLocations.size()];
+        double[] times = new double[nearestLocations.size()];
         int i = 0;
+
         for (GeoData geoData : nearestLocations)
         {
             Double[] weight = amenityWeights.get(geoData.getType());
@@ -239,15 +239,13 @@ public class IndexCalculator
                 weights[i] = weight[0];
             }
 
-            int travelTime = 15;  // Default travel time in minutes
-            Journey journeyToAmenity = manager.getJourney(coordinatePostalCode, new Coordinate(geoData.getLatitude(), geoData.getLongitude()), new RouteRequest("", "", TransportType.BUS, RouteType.ACTUAL));
-
-            LocalTime departureTime = journeyToAmenity.getTrips().getFirst().getDepartureTime();
-            LocalTime arrivalTime = journeyToAmenity.getTrips().getLast().getArrivalTime();
+            var trip = manager.calculateAerialTrip(new RouteCalculationRequest(coordinatePostalCode,
+                    new Coordinate(geoData.getLatitude(), geoData.getLongitude()),
+                    LocalTime.NOON,
+                    TransportType.FOOT));
 
             // Calculate travel time in minutes
-            travelTime = (int) Duration.between(departureTime, arrivalTime).toMinutes();
-
+            var travelTime = trip.getTravelTimeHours();
             times[i] = travelTime;
             i++;
         }
@@ -268,13 +266,13 @@ public class IndexCalculator
 
         return R * c;
     }
-    private static double calculator(double[] weights, int[] times)
+
+    private static double calculator(double[] weights, double[] times)
     {
         final double beta = 0.1;
         double[] impedanceValues = calculateImpedanceValue(times, beta);
 
         double accessibility = calculateAccessibility(weights, impedanceValues);
-
         double maxAccessibility = calculateMaxAccessibility(weights, beta);
 
         return normalizeAccessibility(accessibility, maxAccessibility);
@@ -289,16 +287,18 @@ public class IndexCalculator
     private static double calculateAccessibility(double[] normalizedValues, double[] impedanceValues)
     {
         double accessibility = 0;
-        for (int i = 0; i < normalizedValues.length; i++) {
+        for (int i = 0; i < normalizedValues.length; i++)
+        {
             accessibility += normalizedValues[i] * impedanceValues[i];
         }
         return accessibility;
     }
 
-    private static double[] calculateImpedanceValue(int[] times, double beta)
+    private static double[] calculateImpedanceValue(double[] times, double beta)
     {
         double[] impedanceValues = new double[times.length];
-        for (int i = 0; i < times.length; i++) {
+        for (int i = 0; i < times.length; i++)
+        {
             impedanceValues[i] = Math.exp(-beta * times[i]);
         }
         return impedanceValues;
@@ -307,7 +307,8 @@ public class IndexCalculator
     private static double calculateMaxAccessibility(double[] normalizedValues, double beta)
     {
         double maxAccessibility = 0;
-        for (int i = 0; i < normalizedValues.length; i++) {
+        for (int i = 0; i < normalizedValues.length; i++)
+        {
             maxAccessibility += normalizedValues[i] * Math.exp(-beta * 1); // Assume minimum travel time of 1 minutes
         }
         return maxAccessibility;

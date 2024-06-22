@@ -1,13 +1,13 @@
 import accessibility.IndexCalculator;
 import application.ApplicationManager;
 import application.RequestValidator;
-import calculators.AerialCalculator;
-import calculators.TransitCalculator;
-import calculators.TransitGraphCalculator;
+import calculators.*;
 import entities.geoJson.GeoDeserializer;
 import resolvers.LocationResolver;
 import ui.UIController;
 import utils.PathLocations;
+
+import java.util.ArrayList;
 
 public class Program
 {
@@ -23,11 +23,15 @@ public class Program
 
         IndexCalculator accessibilityCalculator = new IndexCalculator();
         TransitGraphCalculator transitGraphCalculator = new TransitGraphCalculator();
-        TransitCalculator transitCalculator = new TransitCalculator(transitGraphCalculator);
+
+        var transitCalculators = new ArrayList<TransitCalculator>();
+        transitCalculators.add(new DirectTransitCalculator());
+        transitCalculators.add(new TransferTransitCalculator(transitGraphCalculator));
+
         AerialCalculator aerialCalculator = new AerialCalculator();
         GeoDeserializer geoDeserializer = new GeoDeserializer();
 
-        ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, accessibilityCalculator, transitCalculator, aerialCalculator);
+        ApplicationManager manager = new ApplicationManager(locationResolver, requestValidator, accessibilityCalculator, transitCalculators, aerialCalculator);
         accessibilityCalculator.setManager(manager);
         UIController controller = new UIController(manager);
     }

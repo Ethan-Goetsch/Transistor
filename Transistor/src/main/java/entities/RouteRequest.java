@@ -1,5 +1,5 @@
 package entities;
 
-public record RouteRequest(String departure, String arrival, TransportType transportType, RouteType routeType) implements Request
+public record RouteRequest(String departure, String arrival, TransportType transportType, RouteType routeType, TransitType transitType) implements Request
 {
 }

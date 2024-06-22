@@ -27,7 +27,7 @@ public class AerialCalculator implements IRouteCalculator
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
         var color = Color.GREEN;
-        var arrivalTime = calculationRequest.departureTime().plusMinutes((long)time);
+        var arrivalTime = calculationRequest.departureTime().plusSeconds((long)(time * 3600));
 
         var points = new ArrayList<PathPoint>();
         points.add(new PathPoint(calculationRequest.departure(), PointType.Normal));
@@ -42,7 +42,7 @@ public class AerialCalculator implements IRouteCalculator
         return new Trip(path, nodes, calculationRequest.transportType());
     }
 
-    public double distanceToPoint(Coordinate point1, Coordinate point2)
+    private double distanceToPoint(Coordinate point1, Coordinate point2)
     {
         double lat1 = Math.toRadians(point1.getLatitude());
         double lon1 = Math.toRadians(point1.getLongitude());
