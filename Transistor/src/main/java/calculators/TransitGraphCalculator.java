@@ -38,30 +38,25 @@ public class TransitGraphCalculator
 
         if (source == null)
         {
-            System.out.println("no source node with such id in graph");
+            System.out.println("graph: no source node with such id in graph");
             return null;
         }
         if (destination == null)
         {
-            System.out.println("no destination node with such id in graph");
+            System.out.println("graph: no destination node with such id in graph");
             return null;    
         }
         if (originStopID == destinationStopID)
         {
-            TShape dummyShape = new TShape(-1, new ArrayList<TShapePoint>());
-            Edge dummyEdge = new Edge(departureTime, departureTime, source, destination);
-            dummyEdge.setShape(dummyShape);
-            TransitGraphPath dummyPath = new TransitGraphPath(DepartureTime, Conversions.intToLocalTime(departureTime+1), 1, new ArrayList<Edge>());
-            dummyPath.getEdgeList().add(dummyEdge);
-            
-            return dummyPath;
+            System.out.println("graph: originid same as destinationid");
+            return null;
         }
 
         dijkstra(source, destination, departureTime);
 
         if (destination.getShortestTime() == Integer.MAX_VALUE)
         {
-            System.out.println("no path");
+            System.out.println("graph: no path");
             return null;    
         }
 

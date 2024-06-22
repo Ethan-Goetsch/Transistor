@@ -111,6 +111,8 @@ public class ApplicationManager
         Journey earliestJourney = null;
         double shortestTravelTime = Double.MAX_VALUE;
 
+        boolean found = false;
+
         for (var originStop : originStops)
         {
             for (var destinationStop : destinationStops)
@@ -118,7 +120,10 @@ public class ApplicationManager
                 var journey = new Journey();
                 // Calculate the actual bus trip from starting bus stop to the final bus stop
                 var transitTrip = transitCalculator.calculateRoute(originStop.id(), destinationStop.id());
-                if (transitTrip == null) continue;
+                if (transitTrip == null)
+                {
+                    continue;
+                }
 
                 // Calculate route from starting location to origin bus stop
                 var locationToOriginTrip = new AerialCalculator().calculateRoute(

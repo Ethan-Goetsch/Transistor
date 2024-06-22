@@ -25,11 +25,15 @@ public class TransitCalculator
     {
         System.out.println("originid: " + originId);
         System.out.println("destinationid: " + destinationId);
-        return transitGraphCalculator.getPathDijkstra(originId, destinationId, LocalTime.NOON)
-                .getEdgeList()
-                .stream()
-                .map(this::convertEdgeToTrip)
-                .collect(Collectors.toList());
+        
+        var path = transitGraphCalculator.getPathDijkstra(originId, destinationId, LocalTime.NOON);
+
+        if (path == null)
+        {
+            return null;    
+        }
+
+        return path.getEdgeList().stream().map(this::convertEdgeToTrip).collect(Collectors.toList());
     }
 
     private Trip convertEdgeToTrip(Edge edge)
