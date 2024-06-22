@@ -286,6 +286,9 @@ public class TransitGraphCalculator
     // 6228CS 2542
     // 6217EP 1029
     //
+    // 2578411
+    // 2578145
+    //
     // OLD
     // 6229EM apart hotel randwyck stopid: 2578129
     // 6211CM maastricht markt stopid: 2578366
@@ -304,6 +307,7 @@ public class TransitGraphCalculator
         var transitGraphPath = graph.getPathDijkstra(originid, destinationid, LocalTime.of(12, 0, 0));
         var path = transitGraphPath.getEdgeList();
         System.out.println("path size: " + path.size());
+        System.out.println("duration: " + (transitGraphPath.getDuration() / 60) + " minutes");
         for (int i = 0; i < path.size(); i++)
         {
             Edge edge = path.get(i);
