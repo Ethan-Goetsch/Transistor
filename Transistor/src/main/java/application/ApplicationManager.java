@@ -21,13 +21,15 @@ public class ApplicationManager
     private final RequestValidator requestValidator;
     private final IndexCalculator accessibilityCalculator;
     private final TransitCalculator transitCalculator;
+    private final AerialCalculator aerialCalculator;
 
-    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, IndexCalculator accessibilityCalculator, TransitCalculator transitCalculator)
+    public ApplicationManager(LocationResolver locationResolver, RequestValidator requestValidator, IndexCalculator accessibilityCalculator, TransitCalculator transitCalculator, AerialCalculator aerialCalculator)
     {
         this.locationResolver = locationResolver;
         this.requestValidator = requestValidator;
         this.accessibilityCalculator = accessibilityCalculator;
         this.transitCalculator = transitCalculator;
+        this.aerialCalculator = aerialCalculator;
     }
 
     public AccessibilityMeasure calculateAccessibilityMeasure(AccessibilityRequest request)
@@ -44,8 +46,6 @@ public class ApplicationManager
         try
         {
             postalCodeLocation = locationResolver.getCordsFromPostCode(request.postalCode());
-
-
             if (postalCodeLocation == null )
             {
                 throw new InvalidCoordinateException("Invalid Input!");
@@ -126,7 +126,7 @@ public class ApplicationManager
                 }
 
                 // Calculate route from starting location to origin bus stop
-                var locationToOriginTrip = new AerialCalculator().calculateRoute(
+                var locationToOriginTrip = aerialCalculator.calculateRoute(
                         new RouteCalculationRequest(departureCoordinates,
                                 originStop.coordinate(),
                                 transitTrip.getFirst().getArrivalTime(),
@@ -134,11 +134,11 @@ public class ApplicationManager
                                 request.transportType()));
 
                 // Calculate route from destination bus stop to final destination
-                var destinationToFinal = new AerialCalculator().calculateRoute(
+                var destinationToFinal = aerialCalculator.calculateRoute(
                         new RouteCalculationRequest(destinationStop.coordinate(),
                                 arrivalCoordinates,
                                 transitTrip.getLast().getArrivalTime(),
-                                transitTrip.getLast().getArrivalTime(),
+                                transitTrip.getLast().getDepartureTime(),
                                 request.transportType()));
 
                 journey.addTrip(locationToOriginTrip);

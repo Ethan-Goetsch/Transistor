@@ -27,8 +27,7 @@ public class AerialCalculator implements IRouteCalculator
         var time = Conversions.calculateTime(distance, calculationRequest.transportType());
 
         var color = Color.GREEN;
-        var timeOfTripInSeconds = (long) (time * 3600);
-        var arrivalTime = calculationRequest.departureTime().plusSeconds(timeOfTripInSeconds);
+        var arrivalTime = calculationRequest.departureTime().plusMinutes((long)time);
 
         var points = new ArrayList<PathPoint>();
         points.add(new PathPoint(calculationRequest.departure(), PointType.Normal));
