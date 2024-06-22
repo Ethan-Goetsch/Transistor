@@ -12,6 +12,7 @@ public class InputAccessibilityPanel extends JPanel {
     private final IAction<AccessibilityRequest> onCalculateClicked;
 
     private boolean disabledPersonsSetting;
+    private int locationNumberSensitivity;
     private JTextField postalCodeField;
     private int mainWidth;
     private int mainHeight;
@@ -23,6 +24,7 @@ public class InputAccessibilityPanel extends JPanel {
         this.setBorder(new EmptyBorder(25, 0, 0, 20)); // top, left, bottom, right padding
         this.onCalculateClicked = onCalculateCLicked;
         this.disabledPersonsSetting = false;
+        this.locationNumberSensitivity = 1;
         changeSize(mainWidth, mainHeight);
     }
 
@@ -39,7 +41,7 @@ public class InputAccessibilityPanel extends JPanel {
         postalCodeField = new InputTextField("Choose post code...");
 
         JButton calculateButton = new CalculationButton("Find Accessibility");
-        calculateButton.addActionListener(e -> onCalculateClicked.execute(new AccessibilityRequest(postalCodeField.getText(), disabledPersonsSetting)));
+        calculateButton.addActionListener(e -> onCalculateClicked.execute(new AccessibilityRequest(postalCodeField.getText(), disabledPersonsSetting, locationNumberSensitivity)));
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
@@ -64,5 +66,9 @@ public class InputAccessibilityPanel extends JPanel {
 
     public void changeDisabledPersonSetting(boolean value){
         disabledPersonsSetting = value;
+    }
+
+    public void changeLocationNumberSensitivity(int value){
+        locationNumberSensitivity = value;
     }
 }

@@ -52,7 +52,7 @@ public class ApplicationManager
                 throw new InvalidCoordinateException("Invalid Input!");
             }
 
-            indexes = accessibilityCalculator.calculateIndex(GeoDeserializer.deserializeAllGeoData(),postalCodeLocation, request.disabledPersonSetting());
+            indexes = accessibilityCalculator.calculateIndex(GeoDeserializer.deserializeAllGeoData(),postalCodeLocation, request.disabledPersonSetting(), request.locationNumberSensitivity());
             if (indexes == null)
             {
                 throw new AccessibilityCalculationError("Error in accessibility calculation!");
