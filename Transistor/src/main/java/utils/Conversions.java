@@ -51,7 +51,7 @@ public class Conversions
 
     public static double calculateTime(double distanceInKilometers, TransportType type)
     {
-        double speed = type.getSpeedInKilometersPerSecond();
+        double speed = type.getSpeedInKilometersPerHour();
         return distanceInKilometers/speed;
     }
 

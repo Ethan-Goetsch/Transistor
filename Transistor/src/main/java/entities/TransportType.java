@@ -2,16 +2,16 @@ package entities;
 
 public enum TransportType
 {
-    FOOT(0.00139),
-    BIKE(0.00417),
-    CAR(0.01667),
-    BUS(0.01111);
+    FOOT(4.5),
+    BIKE(16),
+    CAR(22.5),
+    BUS(45);
 
-    private final double speedInKilometersPerSecond;
+    private final double speedInKilometersPerHour;
     private TransportType(double speedInKilometersPerSecond)
     {
-        this.speedInKilometersPerSecond = speedInKilometersPerSecond;
+        this.speedInKilometersPerHour = speedInKilometersPerSecond;
     }
 
-    public double getSpeedInKilometersPerSecond() { return speedInKilometersPerSecond; }
+    public double getSpeedInKilometersPerHour() { return speedInKilometersPerHour; }
 }

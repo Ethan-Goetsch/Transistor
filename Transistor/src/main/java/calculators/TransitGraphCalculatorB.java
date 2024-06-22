@@ -271,9 +271,9 @@ public class TransitGraphCalculatorB
         AerialCalculator calculator = new AerialCalculator();
         double distance = calculator.distanceToPoint(from.getCoordinates(), to.getCoordinates());
         System.out.println("Distance: " + distance);
-        System.out.println("time: " + distance / TransportType.FOOT.getSpeedInKilometersPerSecond());
+        System.out.println("time: " + distance / TransportType.FOOT.getSpeedInKilometersPerHour());
         // Convert distance to walking time (assuming average walking speed)
-        return (int) (distance / TransportType.FOOT.getSpeedInKilometersPerSecond());
+        return (int) (distance / TransportType.FOOT.getSpeedInKilometersPerHour());
     }
 
     private void debug()
