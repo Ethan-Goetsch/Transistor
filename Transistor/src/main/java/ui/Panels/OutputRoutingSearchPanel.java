@@ -1,5 +1,4 @@
 package ui.Panels;
-
 import entities.Route;
 import entities.TransportType;
 import entities.Trip;
@@ -9,13 +8,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutputRoutingSearchPanel extends JPanel implements Resizible
-{
+public class OutputRoutingSearchPanel extends JPanel implements Resizible {
     private JPanel contents;
     private List<Resizible> components;
 
-    public OutputRoutingSearchPanel(int mainWidth, int mainHeight)
-    {
+    public OutputRoutingSearchPanel(int mainWidth, int mainHeight) {
         components = new ArrayList<>();
         changeSize(mainWidth, mainHeight);
         setLayout(new BorderLayout());
@@ -26,8 +23,7 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible
         this.add(scrollPane, BorderLayout.CENTER);
     }
 
-    private JPanel createContentsPanel()
-    {
+    private JPanel createContentsPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -36,8 +32,7 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible
         return panel;
     }
 
-    private JScrollPane createScrollPane(JPanel contents)
-    {
+    private JScrollPane createScrollPane(JPanel contents) {
         JScrollPane scrollPane = new JScrollPane(contents);
         scrollPane.setVerticalScrollBar(new ScrollBarCustom());
         scrollPane.setHorizontalScrollBar(new ScrollBarCustom());
@@ -46,29 +41,24 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible
         return scrollPane;
     }
 
-    public void changeSize(int mainWidth, int mainHeight)
-    {
-        setPreferredSize(new Dimension(mainWidth / 3, 2*mainHeight / 3));
+    public void changeSize(int mainWidth, int mainHeight) {
+        setPreferredSize(new Dimension(mainWidth / 3, 2 * mainHeight / 3));
         components.forEach(c -> c.changeSize((int) this.getPreferredSize().getWidth(), (int) this.getPreferredSize().getHeight()));
     }
 
-    public void clearInfo()
-    {
+    public void clearInfo() {
         contents.removeAll();
         components.clear();
         this.revalidate();
         this.repaint();
     }
 
-    public void updateResults(Route route)
-    {
+    public void updateResults(Route route) {
         clearInfo();
         addInfoPanel("Departure at: " + route.departureDescription(), true);
 
-        for (Trip trip : route.journey().getTrips())
-        {
-            if (trip.type() == TransportType.BUS)
-            {
+        for (Trip trip : route.journey().getTrips()) {
+            if (trip.type() == TransportType.BUS) {
                 addTripInfoPanels(trip);
             }
         }
@@ -79,20 +69,18 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible
         this.repaint();
     }
 
-    private void addInfoPanel(String text, boolean blueDot)
-    {
+    private void addInfoPanel(String text, boolean blueDot) {
         WalkingInfoPanel infoPanel = createInfoPanel(text, blueDot);
         contents.add(infoPanel);
         components.add(infoPanel);
         addSeparator();
     }
 
-    private WalkingInfoPanel createInfoPanel(String text, boolean blueDot)
-    {
+    private WalkingInfoPanel createInfoPanel(String text, boolean blueDot) {
         WalkingInfoPanel panel = new WalkingInfoPanel((int) this.getPreferredSize().getWidth(), (int) this.getPreferredSize().getHeight());
         panel.setBackground(Color.white);
         panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        if(blueDot){
+        if (blueDot) {
             CircularIconButton b = new CircularIconButton(new ImageIcon("Transistor/src/main/resources/infoPanelBlueDot.png"));
             panel.add(b);
         }
@@ -101,24 +89,35 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible
         return panel;
     }
 
-    private void addTripInfoPanels(Trip trip)
-    {
-        String newString = trip.nodes().getFirst().name() .replaceAll("\\b" + "Maastricht, " + "\\b", "");
-        //addInfoPanel("Take bus from " + newString + "sid: " + trip.nodes().getFirst().id(), true);
-        addInfoPanel("Take bus from " + newString, true);
-        addInfoPanel("Next bus arriving at " + trip.nodes().getFirst().arrivalTime(), false);
-        BusStopInfoPanel busStopInfo = new BusStopInfoPanel((int) this.getPreferredSize().getWidth(), (int) this.getPreferredSize().getHeight());
-        busStopInfo.display(trip);
-        contents.add(busStopInfo);
-        components.add(busStopInfo);
+    private void addTripInfoPanels(Trip trip) {
+        // Check for null or empty nodes list
+        if (trip.nodes().isEmpty() || trip.nodes().getFirst() == null || trip.nodes().getLast() == null) {
+            System.out.println("Skipping trip due to missing nodes information.");
+            return;
+        }
+
+        String startNodeName = trip.nodes().getFirst().name().replaceAll("\\b" + "Maastricht, " + "\\b", "");
+        String endNodeName = trip.nodes().getLast().name().replaceAll("\\b" + "Maastricht, " + "\\b", "");
+
+        // Safeguard against null times
+        String startTime = trip.nodes().getFirst().arrivalTime() != null ? trip.nodes().getFirst().arrivalTime().toString() : "Unknown time";
+        String endTime = trip.nodes().getLast().arrivalTime() != null ? trip.nodes().getLast().arrivalTime().toString() : "Unknown time";
+
+        addInfoPanel("Take bus from " + startNodeName, true);
+        addInfoPanel("Next bus arriving at " + startTime, false);
+        if(trip.nodes().size() > 1){
+            BusStopInfoPanel busStopInfo = new BusStopInfoPanel((int) this.getPreferredSize().getWidth(), (int) this.getPreferredSize().getHeight());
+            busStopInfo.display(trip);
+            contents.add(busStopInfo);
+            components.add(busStopInfo);
+        }
         addSeparator();
-        addInfoPanel("Arrive at " + trip.nodes().getLast().name(), true);
-        //addInfoPanel("Arrive at " + trip.nodes().getLast().name() + "sid: " + trip.nodes().getLast().id(), true);
-        addInfoPanel("Bus arrives at destination at " + trip.nodes().getLast().arrivalTime(), false);
+
+        addInfoPanel("Arrive at " + endNodeName, true);
+        addInfoPanel("Bus arrives at destination at " + endTime, false);
     }
 
-    private void addSeparator()
-    {
+    private void addSeparator() {
         JPanel separator = new JPanel();
         separator.setMaximumSize(new Dimension(getWidth(), 2));
         separator.setPreferredSize(new Dimension(getWidth(), 2));
