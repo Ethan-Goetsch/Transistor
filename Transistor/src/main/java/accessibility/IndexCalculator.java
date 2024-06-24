@@ -233,7 +233,7 @@ public class IndexCalculator
             var trip = manager.calculateAerialTrip(new RouteCalculationRequest(coordinatePostalCode,
                     new Coordinate(geoData.getLatitude(), geoData.getLongitude()),
                     LocalTime.NOON,
-                    TransportType.BUS));
+                    TransportType.FOOT));
 
             // Convert travel time to minutes
             var travelTime = trip.getTravelTimeHours();
