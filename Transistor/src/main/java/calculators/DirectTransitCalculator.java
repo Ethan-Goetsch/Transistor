@@ -35,7 +35,7 @@ public class DirectTransitCalculator extends TransitCalculator
         var nodes = DatabaseManager.executeAndReadQuery(new GetAllStopsForTrip(trip.id(), trip.originStopSequence(), trip.destinationStopSequence()));
         var path = getPathForTrip(route, trip, nodes);
 
-        trips.add(new Trip(path, nodes, TransportType.BUS));
+        trips.add(new Trip(trip.id(), path, nodes, TransportType.BUS));
         return trips;
     }
 

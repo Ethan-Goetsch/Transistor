@@ -38,7 +38,7 @@ public class AerialCalculator implements IRouteCalculator
         nodes.add(new TransitNode(-1, "Departure", calculationRequest.departure(), calculationRequest.departureTime(), new PathShape(-1, calculationRequest.departure())));
         nodes.add(new TransitNode(-1, "Destination", calculationRequest.arrival(), arrivalTime, new PathShape(-1, calculationRequest.arrival())));
 
-        return new Trip(path, nodes, calculationRequest.transportType());
+        return new Trip(-1, path, nodes, calculationRequest.transportType());
     }
 
     private double distanceToPoint(Coordinate point1, Coordinate point2)
