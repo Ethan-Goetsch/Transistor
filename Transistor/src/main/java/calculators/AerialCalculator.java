@@ -41,12 +41,17 @@ public class AerialCalculator implements IRouteCalculator
         return new Trip(-1, path, nodes, calculationRequest.transportType());
     }
 
-    private double distanceToPoint(Coordinate point1, Coordinate point2)
+    public double distanceToPoint(Coordinate point1, Coordinate point2)
     {
-        double lat1 = Math.toRadians(point1.getLatitude());
-        double lon1 = Math.toRadians(point1.getLongitude());
-        double lat2 = Math.toRadians(point2.getLatitude());
-        double lon2 = Math.toRadians(point2.getLongitude());
-        return Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1)) * radiusEarthInKM;
+
+        double latDistance = Math.toRadians(point2.getLatitude() - point1.getLatitude());
+        double lonDistance = Math.toRadians(point2.getLongitude() - point1.getLongitude());
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(point1.getLatitude())) * Math.cos(Math.toRadians(point2.getLatitude()))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return radiusEarthInKM * c;
+
     }
 }
