@@ -34,7 +34,19 @@ public class TransferTransitCalculator extends TransitCalculator
         System.out.println("destinationid: " + destinationId);
 
         var path = transitGraphCalculator.getPathDijkstra(originId, destinationId, LocalTime.NOON);
-        return path.getEdgeList().stream().map(this::convertEdgeToTrip).collect(Collectors.toList());
+        var trips = path.getEdgeList().stream()
+                .map(this::convertEdgeToTrip)
+                .toList();
+        var mergedTrips = new ArrayList<Trip>();
+        for (var i = 0; i < trips.size(); i++)
+        {
+            mergeTrips(mergedTrips, trips.get(i));
+        }
+        for (var trip : mergedTrips)
+        {
+            System.out.println(trip);
+        }
+        return mergedTrips;
     }
 
     private Trip convertEdgeToTrip(Edge edge)
@@ -51,9 +63,9 @@ public class TransferTransitCalculator extends TransitCalculator
         var nodes = new ArrayList<TransitNode>();
 
         nodes.add(convertNodeToTransitNode(edge, source));
-        nodes.add(convertNodeToTransitNode(edge, destination));
+        //nodes.add(convertNodeToTransitNode(edge, destination));
 
-        return new Trip(path, nodes, TransportType.BUS);
+        return new Trip(edge.getTripid(), path, nodes, edge.getTransportType());
     }
 
     private TransitNode convertNodeToTransitNode(Edge edge, Node node)
@@ -64,5 +76,26 @@ public class TransferTransitCalculator extends TransitCalculator
                 stop.getCoordinates(),
                 Conversions.intToLocalTime(edge.getArrivalTime()),
                 new StopShape(stop.getCoordinates()));
+    }
+
+    private void mergeTrips(ArrayList<Trip> mergedTrips, Trip trip)
+    {
+        if (mergedTrips.size() == 0)
+        {
+            mergedTrips.add(trip);
+        }
+        else
+        {
+            var lastTrip = mergedTrips.getLast();
+            if (lastTrip.tripId() == trip.tripId())
+            {
+                mergedTrips.remove(lastTrip);
+                mergedTrips.add(lastTrip.merge(trip));
+            }
+            else
+            {
+                mergedTrips.add(trip);
+            }
+        }
     }
 }

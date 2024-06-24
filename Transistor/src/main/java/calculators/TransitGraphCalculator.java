@@ -184,19 +184,19 @@ public class TransitGraphCalculator
 
     private void buildWalkingEdges()
     {
-        for (Node node1 : nodes.values())
-        {
-            for (Node node2 : nodes.values())
-            {
-                if (node1.getStop().getId() != node2.getStop().getId())
-                {
-                    if (!node1.getAdjacent().containsKey(node2))
-                    {
-                        buildWalkingEdge(node1, node2);
-                    }
-                }
-            }
-        }
+//        for (Node node1 : nodes.values())
+//        {
+//            for (Node node2 : nodes.values())
+//            {
+//                if (node1.getStop().getId() != node2.getStop().getId())
+//                {
+//                    if (!node1.getAdjacent().containsKey(node2))
+//                    {
+//                        buildWalkingEdge(node1, node2);
+//                    }
+//                }
+//            }
+//        }
     }
 
     private void buildNode(TStop stop)
