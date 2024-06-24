@@ -63,7 +63,7 @@ public class TransferTransitCalculator extends TransitCalculator
         var nodes = new ArrayList<TransitNode>();
 
         nodes.add(convertNodeToTransitNode(edge, source));
-        //nodes.add(convertNodeToTransitNode(edge, destination));
+        nodes.add(convertNodeToTransitNode(edge, destination));
 
         return new Trip(edge.getTripid(), path, nodes, edge.getTransportType());
     }
