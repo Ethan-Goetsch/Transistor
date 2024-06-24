@@ -269,8 +269,20 @@ public class TransitGraphCalculator
         edgeCount++;
     }
 
+    private void debug()
+    {
+        System.out.println("dbg");
+        Node node1 = nodes.get(2578129);
+        Node node2 = nodes.get(2578133);
+
+        for (Edge edge : node1.getAdjacent().get(node2))
+        {
+            System.out.println(edge.getRouteShortName());    
+        }
+    }
+
     // testing postcode pairs
-    // 6229EM: 2578130
+    // 6229EM: 2578129
     // 6211CM: 2578384
     //
     // 6211AL
@@ -296,7 +308,7 @@ public class TransitGraphCalculator
     // 6211CM maastricht markt stopid: 2578366
     public static void main(String[] args)
     {
-        int originid = 2578130;
+        int originid = 2578129;
         int destinationid = 2578384;
         System.out.println("testing graph...");
         System.out.println("fetching trips...");
@@ -319,6 +331,6 @@ public class TransitGraphCalculator
                 System.out.println(edge.getDestination().getStop().getName() + " @ " + Conversions.intToLocalTime(edge.getArrivalTime()).toString() + " | bus: " + edge.getRouteShortName() + " sid: " + edge.getDestination().getStop().getId()+ " sp: " + edge.getShape().getShapePoints().size());
             }
         }
-        //graph.debug();
+        graph.debug();
     }
 }
