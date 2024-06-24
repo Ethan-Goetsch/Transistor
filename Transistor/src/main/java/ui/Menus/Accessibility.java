@@ -1,7 +1,7 @@
 package ui.Menus;
 
+import entities.TransportType;
 import ui.InformationPanel;
-
 import javax.swing.*;
 
 public class Accessibility extends JMenu {
@@ -35,14 +35,31 @@ public class Accessibility extends JMenu {
         singleLocation.addActionListener(e -> {
             ((InformationPanel)informationPanel).getAccessibilityPanel().getInputPanel().changeLocationNumberSensitivity(1);
         });
+        JMenu transportType = new JMenu("Transport considered");
+        JMenuItem walkingTransportType = new JMenuItem("Walking");
+        JMenuItem bikeTransportType = new JMenuItem("Bike");
+        JMenuItem busTransportType = new JMenuItem("Bus");
+        walkingTransportType.addActionListener(e -> {
+            ((InformationPanel)informationPanel).getAccessibilityPanel().getInputPanel().changeTransportType(TransportType.FOOT);
+        });
+        bikeTransportType.addActionListener(e -> {
+            ((InformationPanel)informationPanel).getAccessibilityPanel().getInputPanel().changeTransportType(TransportType.BIKE);
+        });
+        busTransportType.addActionListener(e -> {
+            ((InformationPanel)informationPanel).getAccessibilityPanel().getInputPanel().changeTransportType(TransportType.BUS);
+        });
         accessibility.add(display);
         accessibility.add(hide);
         disabledPeopleSetting.add(disabled);
         disabledPeopleSetting.add(general);
         locationSensitivity.add(manyLocations);
         locationSensitivity.add(singleLocation);
+        transportType.add(walkingTransportType);
+        transportType.add(bikeTransportType);
+        transportType.add(busTransportType);
         this.add(accessibility);
         this.add(disabledPeopleSetting);
         this.add(locationSensitivity);
+        this.add(transportType);
     }
 }

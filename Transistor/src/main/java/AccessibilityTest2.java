@@ -3,6 +3,7 @@ import application.RequestValidator;
 import calculators.*;
 import entities.AccessibilityMeasure;
 import entities.AccessibilityRequest;
+import entities.TransportType;
 import entities.geoJson.GeoDeserializer;
 import resolvers.LocationResolver;
 import utils.PathLocations;
@@ -49,8 +50,8 @@ public class AccessibilityTest2 {
             if (postalCode.equals("---")) {
                 continue;
             }
-            AccessibilityMeasure measureDisabled = manager.calculateAccessibilityMeasure(new AccessibilityRequest(postalCode, true, 1));
-            AccessibilityMeasure measureGeneral = manager.calculateAccessibilityMeasure(new AccessibilityRequest(postalCode, false, 1));
+            AccessibilityMeasure measureDisabled = manager.calculateAccessibilityMeasure(new AccessibilityRequest(postalCode, true, 3, TransportType.BUS));
+            AccessibilityMeasure measureGeneral = manager.calculateAccessibilityMeasure(new AccessibilityRequest(postalCode, false, 3,TransportType.BUS));
 
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(postalCode);

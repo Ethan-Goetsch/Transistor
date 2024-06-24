@@ -4,14 +4,11 @@ import calculators.*;
 import entities.AccessibilityMeasure;
 import entities.AccessibilityRequest;
 import entities.AmenityCategory;
+import entities.TransportType;
 import entities.geoJson.GeoDeserializer;
 import resolvers.LocationResolver;
-import ui.UIController;
 import utils.PathLocations;
-
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AccessibilityTester {
     public static void main(String[] args)
@@ -64,8 +61,8 @@ public class AccessibilityTester {
                 System.out.println("!!!!!!!!!!!!!!END OF NEIGHBOURHOOD!!!!!!!!!!!!!!!");
                 continue;
             }
-            AccessibilityMeasure measureDisabled = manager.calculateAccessibilityMeasure(new AccessibilityRequest(postalCode, true, 1));
-            AccessibilityMeasure measureGeneral = manager.calculateAccessibilityMeasure(new AccessibilityRequest(postalCode, false, 1));
+            AccessibilityMeasure measureDisabled = manager.calculateAccessibilityMeasure(new AccessibilityRequest(postalCode, true, 1, TransportType.BUS));
+            AccessibilityMeasure measureGeneral = manager.calculateAccessibilityMeasure(new AccessibilityRequest(postalCode, false, 1, TransportType.BUS));
             System.out.println("Disabled people measurement:"+"\n"
                     +"Postal code: " + postalCode+"\n"
                     +"Coordinate: "+measureDisabled.postalCodeLocation() +"\n"

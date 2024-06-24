@@ -1,6 +1,7 @@
 package ui.Panels;
 
 import entities.AccessibilityRequest;
+import entities.TransportType;
 import ui.CustomComponents.CalculationButton;
 import ui.CustomComponents.InputTextField;
 import utils.IAction;
@@ -16,6 +17,7 @@ public class InputAccessibilityPanel extends JPanel {
     private JTextField postalCodeField;
     private int mainWidth;
     private int mainHeight;
+    private TransportType transportType;
 
     public InputAccessibilityPanel(int mainWidth, int mainHeight, IAction<AccessibilityRequest> onCalculateCLicked) {
         this.mainWidth = mainWidth;
@@ -25,6 +27,7 @@ public class InputAccessibilityPanel extends JPanel {
         this.onCalculateClicked = onCalculateCLicked;
         this.disabledPersonsSetting = false;
         this.locationNumberSensitivity = 1;
+        this.transportType = TransportType.BUS;
         changeSize(mainWidth, mainHeight);
     }
 
@@ -41,7 +44,7 @@ public class InputAccessibilityPanel extends JPanel {
         postalCodeField = new InputTextField("Choose post code...");
 
         JButton calculateButton = new CalculationButton("Find Accessibility");
-        calculateButton.addActionListener(e -> onCalculateClicked.execute(new AccessibilityRequest(postalCodeField.getText(), disabledPersonsSetting, locationNumberSensitivity)));
+        calculateButton.addActionListener(e -> onCalculateClicked.execute(new AccessibilityRequest(postalCodeField.getText(), disabledPersonsSetting, locationNumberSensitivity, transportType)));
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
@@ -70,5 +73,9 @@ public class InputAccessibilityPanel extends JPanel {
 
     public void changeLocationNumberSensitivity(int value){
         locationNumberSensitivity = value;
+    }
+
+    public void changeTransportType(TransportType type){
+        this.transportType = type;
     }
 }

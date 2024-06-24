@@ -12,6 +12,7 @@ public class IndexCalculator
     private ApplicationManager manager;
     private int locationNumberForSensitivity;
     private boolean disabledPersonSetting;
+    private TransportType transportTypeAccessibility;
 
     public IndexCalculator(){
         disabledPersonSetting = false;
@@ -20,6 +21,8 @@ public class IndexCalculator
     public void setManager(ApplicationManager manager){
         this.manager = manager;
         locationNumberForSensitivity = 1;
+        transportTypeAccessibility = TransportType.BUS;
+
     }
 
     private static final Map<String, Double[]> amenityWeights = new HashMap<>();
@@ -120,10 +123,11 @@ public class IndexCalculator
     }
 
 
-        public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode, boolean disabledPersonSetting, int locationNumberForSensitivity)
+        public List<Double> calculateIndex(List<GeoData> list, Coordinate coordinatePostalCode, boolean disabledPersonSetting, int locationNumberForSensitivity, TransportType transportType)
     {
         this.disabledPersonSetting = disabledPersonSetting;
         this.locationNumberForSensitivity = locationNumberForSensitivity;
+        this.transportTypeAccessibility = transportType;
         Map<AmenityCategory, List<GeoData>> categorizedAmenities = categorizeAmenities(list);
 
         List<Double> indexes = new ArrayList<>();
@@ -233,7 +237,7 @@ public class IndexCalculator
             var trip = manager.calculateAerialTrip(new RouteCalculationRequest(coordinatePostalCode,
                     new Coordinate(geoData.getLatitude(), geoData.getLongitude()),
                     LocalTime.NOON,
-                    TransportType.FOOT));
+                    transportTypeAccessibility));
 
             // Convert travel time to minutes
             var travelTime = trip.getTravelTimeHours();
