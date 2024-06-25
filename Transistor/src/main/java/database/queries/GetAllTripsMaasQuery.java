@@ -158,7 +158,7 @@ public class GetAllTripsMaasQuery extends ResultQuery<List<TTrip>>
 
         // remove trips without a shape
         //tripsList.removeIf(trip -> (trip.getShape().getShapePoints() == null || trip.getShape().getShapePoints().isEmpty()));
-        tripsList.removeIf(trip -> trip.getShape().getId() == -1);
+        //tripsList.removeIf(trip -> trip.getShape().getId() == -1);
 
         return tripsList;
     }

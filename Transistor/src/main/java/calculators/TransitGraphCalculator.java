@@ -281,33 +281,7 @@ public class TransitGraphCalculator
         }
     }
 
-    // testing postcode pairs
-    // 6229EM: 2578129
-    // 6211CM: 2578384
-    //
-    // 6211AL
-    // 6216NV
-    // 
-    // 6217KM 1104
-    // 6225DR 2081
-    //
-    // 6215KA 688
-    // 6211PK 181
-    // 
-    // 6223BV 1769
-    // 6217BX 1006
-    //
-    // 6228CS 2542
-    // 6217EP 1029
-    //
-    // 2578411
-    // 2578145
-    //
-    // 6211ja 2578390
-    // 6217xm 2578303
-    // OLD
-    // 6229EM apart hotel randwyck stopid: 2578129
-    // 6211CM maastricht markt stopid: 2578366
+
     public static void main(String[] args) throws Exception
     {
         int originid = 2578390;
