@@ -13,6 +13,7 @@ import entities.geoJson.GeoDeserializer;
 import entities.transit.TransitStop;
 import resolvers.LocationResolver;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,14 +109,7 @@ public class ApplicationManager
         return new Route(departureCoordinates, arrivalCoordinates, journey, message);
     }
 
-    public Journey processJourneyRequest(JourneyRequest request)
-    {
-        var originStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(request.departure(), 1));
-        var destinationStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(request.arrival(), 1));
-        return calculateJourney(request.departure(), request.arrival(), originStops, destinationStops, request.transportType(), request.transitType());
-    }
-
-    private Journey calculateJourney(Coordinate departureCoordinates, Coordinate arrivalCoordinates, List<TransitStop> originStops, List<TransitStop> destinationStops, TransportType transportType, TransitType transitType)
+    private Journey calculateJourney(Coordinate departureCoordinates, Coordinate arrivalCoordinates, List<TransitStop> originStops, List<TransitStop> destinationStops, TransportType transportType, TransitType transitType) throws Exception
     {
         Journey earliestJourney = null;
         var shortestTravelTime = Double.MAX_VALUE;
@@ -125,24 +119,24 @@ public class ApplicationManager
             for (var destinationStop : destinationStops)
             {
                 var journey = new Journey();
+                // Calculate route from starting location to origin bus stop
+                var locationToOriginTrip = aerialCalculator.calculateRoute(
+                        new RouteCalculationRequest(departureCoordinates,
+                                originStop.coordinate(),
+                                LocalTime.NOON,
+                                transportType));
+
                 // Calculate the actual bus trip from starting bus stop to the final bus stop
                 var transitTrip = transitCalculators.stream()
                         .filter(calculator -> calculator.getTransitType() == transitType)
                         .findFirst()
                         .orElseThrow()
-                        .calculateRoute(originStop.id(), destinationStop.id());
+                        .calculateRoute(originStop.id(), destinationStop.id(), locationToOriginTrip.getArrivalTime());
 
                 if (transitTrip == null)
                 {
                     continue;
                 }
-
-                // Calculate route from starting location to origin bus stop
-                var locationToOriginTrip = aerialCalculator.calculateRoute(
-                        new RouteCalculationRequest(departureCoordinates,
-                                originStop.coordinate(),
-                                transitTrip.getFirst().getArrivalTime(),
-                                transportType));
 
                 // Calculate route from destination bus stop to final destination
                 var destinationToFinal = aerialCalculator.calculateRoute(

@@ -27,6 +27,7 @@ public record Trip(int tripId, Path path, List<TransitNode> nodes, TransportType
         mergedPoints.addAll(other.path.points());
         var mergedPath = new Path(mergedPoints, path.colour());
         var mergedNodes = new ArrayList<TransitNode>(nodes);
+        mergedNodes.removeLast(); // Remove last since this last is the merged trips' first
         mergedNodes.addAll(other.nodes);
         return new Trip(tripId, mergedPath, mergedNodes, type);
     }

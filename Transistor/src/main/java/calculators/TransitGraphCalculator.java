@@ -29,7 +29,7 @@ public class TransitGraphCalculator
     }
 
     // not thread safe
-    public TransitGraphPath getPathDijkstra(int originStopID, int destinationStopID, LocalTime DepartureTime)
+    public TransitGraphPath getPathDijkstra(int originStopID, int destinationStopID, LocalTime DepartureTime) throws Exception
     {
         resetGraph();
         Node source = nodes.get(originStopID);
@@ -38,26 +38,25 @@ public class TransitGraphCalculator
 
         if (source == null)
         {
-            System.out.println("graph: no source node with such id in graph");
-            return null;
+            var message = "No Origin ID found in graph for:" + originStopID;
+            throw new Exception(message);
         }
         if (destination == null)
         {
-            System.out.println("graph: no destination node with such id in graph");
-            return null;    
+            var message = "No Destination ID found in graph for:" + destinationStopID;
+            throw new Exception(message);
         }
         if (originStopID == destinationStopID)
         {
-            System.out.println("graph: originid same as destinationid");
-            return null;
+            var message = "Origin ID: " + originStopID + " cannot be the same as the Destination ID: " + destinationStopID;
+            throw new Exception(message);
         }
 
         dijkstra(source, destination, departureTime);
 
         if (destination.getShortestTime() == Integer.MAX_VALUE)
         {
-            System.out.println("graph: no path");
-            return null;    
+            throw new Exception("No Path Found");
         }
 
         List<Edge> returnList = new ArrayList<Edge>();
@@ -309,7 +308,7 @@ public class TransitGraphCalculator
     // OLD
     // 6229EM apart hotel randwyck stopid: 2578129
     // 6211CM maastricht markt stopid: 2578366
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
         int originid = 2578390;
         int destinationid = 2578303;

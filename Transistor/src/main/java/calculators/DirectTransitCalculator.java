@@ -12,6 +12,7 @@ import entities.transit.TransitTrip;
 import entities.transit.shapes.TransitShape;
 import database.queries.GetRouteForTripQuery;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class DirectTransitCalculator extends TransitCalculator
     }
 
     @Override
-    public List<Trip> calculateRoute(int originId, int destinationId)
+    public List<Trip> calculateRoute(int originId, int destinationId, LocalTime searchTime)
     {
         var trips = new ArrayList<Trip>();
         var trip = DatabaseManager.executeAndReadQuery(new GetTripBetweenTwoStopsQuery(originId, destinationId));

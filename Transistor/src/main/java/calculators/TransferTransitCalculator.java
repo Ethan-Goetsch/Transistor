@@ -28,12 +28,12 @@ public class TransferTransitCalculator extends TransitCalculator
     }
 
     @Override
-    public List<Trip> calculateRoute(int originId, int destinationId)
+    public List<Trip> calculateRoute(int originId, int destinationId, LocalTime searchTime) throws Exception
     {
         System.out.println("originid: " + originId);
         System.out.println("destinationid: " + destinationId);
 
-        var path = transitGraphCalculator.getPathDijkstra(originId, destinationId, LocalTime.NOON);
+        var path = transitGraphCalculator.getPathDijkstra(originId, destinationId, searchTime);
         var trips = path.getEdgeList().stream()
                 .map(this::convertEdgeToTrip)
                 .toList();
