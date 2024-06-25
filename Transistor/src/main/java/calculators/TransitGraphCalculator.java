@@ -38,17 +38,17 @@ public class TransitGraphCalculator
 
         if (source == null)
         {
-            var message = "No Origin ID found in graph for:" + originStopID;
+            var message = "No Origin ID found in graph for " + originStopID;
             throw new Exception(message);
         }
         if (destination == null)
         {
-            var message = "No Destination ID found in graph for:" + destinationStopID;
+            var message = "No Destination ID found in graph for " + destinationStopID;
             throw new Exception(message);
         }
         if (originStopID == destinationStopID)
         {
-            var message = "Origin ID: " + originStopID + " cannot be the same as the Destination ID: " + destinationStopID;
+            var message = "Origin ID: " + originStopID + " cannot be the same as the Destination ID " + destinationStopID;
             throw new Exception(message);
         }
 
