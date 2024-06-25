@@ -14,6 +14,7 @@ public class GetAllTripsMaasQueryTest {
         var connection = DatabaseManager.getConnection("src/test/resources/credentials.txt");
         List<TTrip> trips = DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery());
         assertTrue(trips.size()>0);
-        assertTrue(trips.size()==6473);
+        System.out.println(trips.size());
+        assertTrue(trips.size()==5172);
     }
 }

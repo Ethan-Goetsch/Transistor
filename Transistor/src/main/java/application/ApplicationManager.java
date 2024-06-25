@@ -52,7 +52,7 @@ public class ApplicationManager
                 throw new InvalidCoordinateException("Invalid Input!");
             }
 
-            indexes = accessibilityCalculator.calculateIndex(GeoDeserializer.deserializeAllGeoData(),postalCodeLocation, request.disabledPersonSetting(), request.locationNumberSensitivity(), request.transportType());
+            indexes = accessibilityCalculator.calculateIndex(GeoDeserializer.deserializeAllGeoData("Transistor/src/main/resources/geoJson/amenity.geojson", "Transistor/src/main/resources/geoJson/shop.geojson", "Transistor/src/main/resources/geoJson/tourism.geojson"),postalCodeLocation, request.disabledPersonSetting(), request.locationNumberSensitivity(), request.transportType());
             if (indexes == null)
             {
                 throw new AccessibilityCalculationError("Error in accessibility calculation!");

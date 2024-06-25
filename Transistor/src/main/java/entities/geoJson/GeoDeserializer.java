@@ -57,12 +57,12 @@ public class GeoDeserializer
         return result;
     }
 
-    public static List<GeoData> deserializeAllGeoData() throws IOException
+    public static List<GeoData> deserializeAllGeoData(String amenityFilePath, String shopFilePath, String tourismFilePath) throws IOException
     {
         List<GeoData> allGeoData = new ArrayList<>();
-        allGeoData.addAll(deserializeGeoData("Transistor/src/main/resources/geoJson/amenity.geojson", "amenity"));
-        allGeoData.addAll(deserializeGeoData("Transistor/src/main/resources/geoJson/shop.geojson", "shop"));
-        allGeoData.addAll(deserializeGeoData("Transistor/src/main/resources/geoJson/tourism.geojson", "tourism"));
+        allGeoData.addAll(deserializeGeoData(amenityFilePath, "amenity"));
+        allGeoData.addAll(deserializeGeoData(shopFilePath, "shop"));
+        allGeoData.addAll(deserializeGeoData(tourismFilePath, "tourism"));
         return allGeoData;
     }
 }
