@@ -10,7 +10,6 @@ public class BusStopInfoPanel extends JPanel implements Resizible {
     private JPanel contents;
 
     public BusStopInfoPanel(int mainWidth, int mainHeight) {
-        changeSize(mainWidth, mainHeight);
         setLayout(new BorderLayout());
         setBackground(Color.white);
         contents = new JPanel();

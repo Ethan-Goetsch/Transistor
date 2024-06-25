@@ -114,7 +114,7 @@ public class OutputRoutingSearchPanel extends JPanel implements Resizible {
         addSeparator();
 
         addInfoPanel("Arrive at " + endNodeName, true);
-        addInfoPanel("Bus arrives at destination at " + endTime, false);
+        addInfoPanel("Bus arrives at " + endTime, false);
     }
 
     private void addSeparator() {
