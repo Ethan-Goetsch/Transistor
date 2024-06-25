@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class GetAllTripsMaasQueryTest {
@@ -14,7 +15,6 @@ public class GetAllTripsMaasQueryTest {
         var connection = DatabaseManager.getConnection("src/test/resources/credentials.txt");
         List<TTrip> trips = DatabaseManager.executeAndReadQuery(new GetAllTripsMaasQuery());
         assertTrue(trips.size()>0);
-        System.out.println(trips.size());
-        assertTrue(trips.size()==5172);
+        assertEquals(5172, trips.size());
     }
 }

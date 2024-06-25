@@ -14,6 +14,6 @@ public class GetClosetStopsTest {
         var connection = DatabaseManager.getConnection("src/test/resources/credentials.txt");
         var stopCord = new Coordinate(50.8503582678571,5.69144829642857);
         var nearStops = DatabaseManager.executeAndReadQuery(new GetClosetStops(stopCord, 5));
-        assertTrue(nearStops.size()==5);
+        assertEquals(5, nearStops.size());
     }
 }
