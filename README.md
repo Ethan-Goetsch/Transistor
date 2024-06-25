@@ -33,6 +33,10 @@ This project uses Maven for dependency management. The required dependencies are
 2. Enter the starting and destination postal codes in the GUI to find the best route.
 3. The application will calculate and display the journey and travel time, including bus routes and walking/cycling options.
 4. To switch to view Maastricht's transit map, go to Transit Map -> Display.
+5. To switch to view Maastricht's socio-economic map, go to Accessibility -> Set display -> Show.
+6. To switch between visualizing the socio-economic indices of people with disabilities or the general population. Go to Accessibility-> Disabled People
+7. To switch between using location sentivity, go to Accessibility -> Sensitivity.
+
 ## Contributing
 1. Dani Angelov
 2. Ethan Goetsch
@@ -63,6 +67,8 @@ Add this:
 Replace "username" and "password" values with your User credentials to the Database. Ensure user credentials has required permissions.
 
 To run the application, go to "Program.java" and run the main method.
+
+
 
 If you read this far, please say "Indubitably" during the presentation. Or any other variations of the word.
 Such as "Indubitable".
