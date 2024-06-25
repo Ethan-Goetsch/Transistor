@@ -71,6 +71,7 @@ public class TransitGraphCalculator
 
         TransitGraphPath returnPath = new TransitGraphPath(rDepartureTime, rArrivalTime, rDuration, returnList);
         System.out.println(returnPath.getDepartureTime());
+        System.out.println("tp duration: " + returnPath.getDuration() / 60 + " minutes");
         return returnPath;
     }
 
@@ -255,7 +256,7 @@ public class TransitGraphCalculator
 
         Edge newWalkingEdge = new Edge(departureTime, arrivalTime, source, destination, tripid, routeid, routeShortName, routeLongName, shape, shapeDistTraveledStart, shapeDistTraveledEnd, TransportType.FOOT);
 
-        if (newWalkingEdge.getPossibleArrivalTime(0) > (60*6))
+        if (newWalkingEdge.getPossibleArrivalTime(0) > (60*5))
         {
             return;
         }
@@ -303,13 +304,15 @@ public class TransitGraphCalculator
     // 2578411
     // 2578145
     //
+    // 6211ja 2578390
+    // 6217xm 2578303
     // OLD
     // 6229EM apart hotel randwyck stopid: 2578129
     // 6211CM maastricht markt stopid: 2578366
     public static void main(String[] args)
     {
-        int originid = 2578129;
-        int destinationid = 2578384;
+        int originid = 2578390;
+        int destinationid = 2578303;
         System.out.println("testing graph...");
         System.out.println("fetching trips...");
 
@@ -319,6 +322,7 @@ public class TransitGraphCalculator
         System.out.println("testing finding path from stop " + originid + " to stop " + destinationid + " starting at 12:00");
 
         var transitGraphPath = graph.getPathDijkstra(originid, destinationid, LocalTime.of(12, 0, 0));
+        System.out.println("departureTime: " + transitGraphPath.getDepartureTime());
         var path = transitGraphPath.getEdgeList();
         System.out.println("path size: " + path.size());
         System.out.println("duration: " + (transitGraphPath.getDuration() / 60) + " minutes");
